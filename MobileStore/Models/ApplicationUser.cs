@@ -18,5 +18,16 @@ namespace MobileStore.Models
         public DateTime Birthday { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
+
+        public UserRole Role { get; set; }
+
+        public enum UserRole
+        {
+            Admin = 1,
+            Sale = 2,
+            Technical = 3,
+            WarehouseManager = 4,
+            Accountant = 5,
+        }
     }
 }
