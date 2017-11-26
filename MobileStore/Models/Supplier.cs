@@ -25,10 +25,10 @@ namespace MobileStore.Models
         public string PicEmail { get; set; }
         #endregion
 
-        #region ForeignKey BrandID
-        public int BrandID { get; set; }
-        public virtual Brand Brand { get; set; }
-        #endregion
+        //#region ForeignKey BrandID
+        //public int BrandID { get; set; }
+        //public virtual Brand Brand { get; set; }
+        //#endregion
 
 
         public enum SupplierStatus

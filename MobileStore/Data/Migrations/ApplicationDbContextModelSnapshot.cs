@@ -192,6 +192,256 @@ namespace MobileStore.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("MobileStore.Models.Brand", b =>
+                {
+                    b.Property<int>("BrandID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Country");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("BrandID");
+
+                    b.ToTable("Brand");
+                });
+
+            modelBuilder.Entity("MobileStore.Models.Customer", b =>
+                {
+                    b.Property<int>("CustomerID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address");
+
+                    b.Property<DateTime>("Birthday");
+
+                    b.Property<string>("Country");
+
+                    b.Property<int>("Gender");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Phone");
+
+                    b.HasKey("CustomerID");
+
+                    b.ToTable("Customer");
+                });
+
+            modelBuilder.Entity("MobileStore.Models.Item", b =>
+                {
+                    b.Property<int>("ItemID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("IMEI");
+
+                    b.Property<int>("ModelFromSupplierID");
+
+                    b.Property<int>("ModelID");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Note");
+
+                    b.Property<string>("SerializerNumber");
+
+                    b.Property<int>("Status");
+
+                    b.HasKey("ItemID");
+
+                    b.HasIndex("ModelFromSupplierID");
+
+                    b.HasIndex("ModelID");
+
+                    b.ToTable("Item");
+                });
+
+            modelBuilder.Entity("MobileStore.Models.Model", b =>
+                {
+                    b.Property<int>("ModelID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("BrandID");
+
+                    b.Property<string>("Color");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Specification");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("ModelID");
+
+                    b.HasIndex("BrandID");
+
+                    b.ToTable("Model");
+                });
+
+            modelBuilder.Entity("MobileStore.Models.ModelFromSupplier", b =>
+                {
+                    b.Property<int>("ModelFromSupplierID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int>("ModelID");
+
+                    b.Property<double>("PriceBought");
+
+                    b.Property<double>("PriceSold");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<int>("SupplierID");
+
+                    b.HasKey("ModelFromSupplierID");
+
+                    b.HasIndex("ModelID");
+
+                    b.HasIndex("SupplierID");
+
+                    b.ToTable("ModelFromSupplier");
+                });
+
+            modelBuilder.Entity("MobileStore.Models.Order", b =>
+                {
+                    b.Property<int>("OrderID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApplicationUserID");
+
+                    b.Property<int>("CustomerID");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<double>("Total");
+
+                    b.HasKey("OrderID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("CustomerID");
+
+                    b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("MobileStore.Models.OrderDetail", b =>
+                {
+                    b.Property<int>("OrderDetailID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ItemID");
+
+                    b.Property<int>("OrderID");
+
+                    b.Property<double>("PriceSold");
+
+                    b.HasKey("OrderDetailID");
+
+                    b.HasIndex("ItemID");
+
+                    b.HasIndex("OrderID");
+
+                    b.ToTable("OrderDetail");
+                });
+
+            modelBuilder.Entity("MobileStore.Models.ReturnItem", b =>
+                {
+                    b.Property<int>("ReturnItemID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("DefectInfo");
+
+                    b.Property<int>("NewItemID");
+
+                    b.Property<int>("OldItemID");
+
+                    b.Property<DateTime>("ReturnDate");
+
+                    b.HasKey("ReturnItemID");
+
+                    b.HasIndex("NewItemID");
+
+                    b.HasIndex("OldItemID");
+
+                    b.ToTable("ReturnItem");
+                });
+
+            modelBuilder.Entity("MobileStore.Models.Supplier", b =>
+                {
+                    b.Property<int>("SupplierID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address");
+
+                    b.Property<string>("Code");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Phone");
+
+                    b.Property<string>("PicEmail");
+
+                    b.Property<string>("PicName");
+
+                    b.Property<string>("PicPhone");
+
+                    b.Property<int>("Status");
+
+                    b.HasKey("SupplierID");
+
+                    b.ToTable("Supplier");
+                });
+
+            modelBuilder.Entity("MobileStore.Models.WarrantyCard", b =>
+                {
+                    b.Property<int>("WarrantyCardID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<int>("ItemID");
+
+                    b.Property<int>("NumberOfWarranty");
+
+                    b.Property<int>("Period");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.HasKey("WarrantyCardID");
+
+                    b.HasIndex("ItemID");
+
+                    b.ToTable("WarrantyCard");
+                });
+
+            modelBuilder.Entity("MobileStore.Models.WarrantyDetail", b =>
+                {
+                    b.Property<int>("WarrantyDetailID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("DefectInfo");
+
+                    b.Property<int>("Status");
+
+                    b.Property<int>("WarrantyCardID");
+
+                    b.HasKey("WarrantyDetailID");
+
+                    b.HasIndex("WarrantyCardID");
+
+                    b.ToTable("WarrantyDetail");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -234,6 +484,94 @@ namespace MobileStore.Data.Migrations
                     b.HasOne("MobileStore.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MobileStore.Models.Item", b =>
+                {
+                    b.HasOne("MobileStore.Models.ModelFromSupplier", "ModelFromSupplier")
+                        .WithMany("Items")
+                        .HasForeignKey("ModelFromSupplierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MobileStore.Models.Model", "Model")
+                        .WithMany("Items")
+                        .HasForeignKey("ModelID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MobileStore.Models.Model", b =>
+                {
+                    b.HasOne("MobileStore.Models.Brand", "Brand")
+                        .WithMany("Models")
+                        .HasForeignKey("BrandID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MobileStore.Models.ModelFromSupplier", b =>
+                {
+                    b.HasOne("MobileStore.Models.Model", "Model")
+                        .WithMany()
+                        .HasForeignKey("ModelID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MobileStore.Models.Supplier", "Sipplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MobileStore.Models.Order", b =>
+                {
+                    b.HasOne("MobileStore.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserID");
+
+                    b.HasOne("MobileStore.Models.Customer", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MobileStore.Models.OrderDetail", b =>
+                {
+                    b.HasOne("MobileStore.Models.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MobileStore.Models.Order", "Order")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MobileStore.Models.ReturnItem", b =>
+                {
+                    b.HasOne("MobileStore.Models.Item", "NewItem")
+                        .WithMany()
+                        .HasForeignKey("NewItemID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MobileStore.Models.Item", "OldItem")
+                        .WithMany()
+                        .HasForeignKey("OldItemID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MobileStore.Models.WarrantyCard", b =>
+                {
+                    b.HasOne("MobileStore.Models.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MobileStore.Models.WarrantyDetail", b =>
+                {
+                    b.HasOne("MobileStore.Models.WarrantyCard", "WarrantyCard")
+                        .WithMany("WarrantyDetails")
+                        .HasForeignKey("WarrantyCardID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

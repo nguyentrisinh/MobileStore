@@ -9,7 +9,14 @@ namespace MobileStore.Models
     {
         public int BrandID { get; set; }
 
+        #region Brand Information
         public string Name { get; set; }
         public string Country { get; set; }
+        public string Description { get; set; }
+        #endregion
+
+        #region Navigator Model
+        public ICollection<Model> Models { get; set; }
+        #endregion
     }
 }

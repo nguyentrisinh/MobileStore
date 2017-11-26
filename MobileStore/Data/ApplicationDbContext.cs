@@ -24,5 +24,16 @@ namespace MobileStore.Data
         }
 
         public DbSet<MobileStore.Models.ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<MobileStore.Models.Brand> Brand { get; set; }
+        public DbSet<MobileStore.Models.Customer> Customer { get; set; }
+        public DbSet<MobileStore.Models.Item> Item { get; set; }
+        public DbSet<MobileStore.Models.Model> Model { get; set; }
+        public DbSet<MobileStore.Models.ModelFromSupplier> ModelFromSupplier { get; set; }
+        public DbSet<MobileStore.Models.Order> Order { get; set; }
+        public DbSet<MobileStore.Models.OrderDetail> OrderDetail { get; set; }
+        public DbSet<MobileStore.Models.ReturnItem> ReturnItem { get; set; }
+        public DbSet<MobileStore.Models.Supplier> Supplier { get; set; }
+        public DbSet<MobileStore.Models.WarrantyCard> WarrantyCard { get; set; }
+        public DbSet<MobileStore.Models.WarrantyDetail> WarrantyDetail { get; set; }
     }
 }
