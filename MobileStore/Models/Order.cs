@@ -17,16 +17,16 @@ namespace MobileStore.Models
 
         #region ApplicationUser ForeignKey (Staff in system)
         public string ApplicationUserID { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
         #endregion
 
         #region Customer ForeignKey 
         public int CustomerID { get; set; }
-        public Customer Customer { get; set; }
+        public virtual Customer Customer { get; set; }
         #endregion
 
         #region Navigator OrderDetails
-        public ICollection<OrderDetail> OrderDetails { get; set; }
+        public IList<OrderDetail> OrderDetails { get; set; }
         #endregion
     }
 }

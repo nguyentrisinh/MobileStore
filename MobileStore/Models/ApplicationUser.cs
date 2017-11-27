@@ -21,6 +21,8 @@ namespace MobileStore.Models
 
         public UserRole Role { get; set; }
 
+        public IList<Order> Orders { get; set; }
+
         public enum UserRole
         {
             Admin = 1,

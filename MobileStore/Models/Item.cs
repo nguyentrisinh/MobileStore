@@ -19,12 +19,28 @@ namespace MobileStore.Models
 
         #region ModelFromSupplier foreign key
         public int ModelFromSupplierID { get; set; }
-        public ModelFromSupplier ModelFromSupplier { get; set; }
+        public virtual ModelFromSupplier ModelFromSupplier { get; set; }
         #endregion
 
         #region Model foreign key
         public int ModelID { get; set; }
-        public Model Model { get; set; }
+        public virtual Model Model { get; set; }
+        #endregion
+
+        #region Navigator OrderDetail
+        public virtual OrderDetail OrderDetail { get; set; }
+        #endregion
+
+        #region Navigator NewItem
+        public virtual ReturnItem NewItem { get; set; }
+        #endregion
+
+        #region Navigator OldItem
+        public virtual ReturnItem OldItem { get; set; }
+        #endregion
+
+        #region Navigator WarrantyCard
+        public IList<WarrantyCard> WarrantyCards{ get; set; }
         #endregion
 
         public enum ItemStatus

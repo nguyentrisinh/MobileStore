@@ -21,11 +21,11 @@ namespace MobileStore.Models
 
         #region Item ForeignKey
         public int ItemID { get; set; }
-        public Item Item { get; set; }
+        public virtual Item Item { get; set; }
         #endregion
 
         #region Navigator for WarrantyDetail
-        public ICollection<WarrantyDetail> WarrantyDetails { get; set; }
+        public IList<WarrantyDetail> WarrantyDetails { get; set; }
         #endregion
 
     }

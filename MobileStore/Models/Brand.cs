@@ -16,7 +16,7 @@ namespace MobileStore.Models
         #endregion
 
         #region Navigator Model
-        public ICollection<Model> Models { get; set; }
+        public IList<Model> Models { get; set; }
         #endregion
     }
 }

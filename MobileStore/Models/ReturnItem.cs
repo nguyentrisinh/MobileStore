@@ -16,14 +16,12 @@ namespace MobileStore.Models
 
         #region NewItem Foreign Key
         public int NewItemID { get; set; }
-        [ForeignKey("NewItemID")]
-        public Item NewItem { get; set; }
+        public virtual Item NewItem { get; set; }
         #endregion
 
         #region OldItem Foreign Key
         public int OldItemID { get; set; }
-        [ForeignKey("OldItemID")]
-        public Item OldItem { get; set; }
+        public virtual Item OldItem { get; set; }
         #endregion 
 
 

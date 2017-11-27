@@ -20,11 +20,15 @@ namespace MobileStore.Models
 
         #region Brand Foreignkey 
         public int BrandID { get; set; }
-        public Brand Brand { get; set; }
+        public virtual Brand Brand { get; set; }
         #endregion
 
         #region Navigator Items
-        public ICollection<Item> Items { get; set; }
+        public IList<Item> Items { get; set; }
+        #endregion
+
+        #region Navigator ModelFromSuppliers
+        public IList<ModelFromSupplier> ModelFromSuppliers { get; set; }
         #endregion
 
         public enum ModelType

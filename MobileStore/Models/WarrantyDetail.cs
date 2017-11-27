@@ -15,7 +15,7 @@ namespace MobileStore.Models
 
         #region Warranty ForeignKey
         public int WarrantyCardID { get; set; }
-        public WarrantyCard WarrantyCard { get; set; }
+        public virtual WarrantyCard WarrantyCard { get; set; }
         #endregion
 
         public enum WarrantyDetailStatus

@@ -18,16 +18,16 @@ namespace MobileStore.Models
 
         #region Supplier Foreign Key
         public int SupplierID { get; set; }
-        public Supplier Sipplier { get; set; }
+        public virtual Supplier Supplier { get; set; }
         #endregion
 
         #region Model Foreign Key
         public int ModelID { get; set; }
-        public Model Model { get; set; }
+        public virtual Model Model { get; set; }
         #endregion
 
         #region Navigators for Items
-        public ICollection<Item> Items { get; set; }
+        public IList<Item> Items { get; set; }
 
         #endregion
     }

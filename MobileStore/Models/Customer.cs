@@ -21,7 +21,7 @@ namespace MobileStore.Models
         #endregion
 
         #region Navigator Order
-        public ICollection<Order> Orders { get; set; }
+        public IList<Order> Orders { get; set; }
         #endregion
 
         public enum GenderType

@@ -13,12 +13,12 @@ namespace MobileStore.Models
 
         #region Item ForeignKey
         public int ItemID { get; set; }
-        public Item Item { get; set; }
+        public virtual Item Item { get; set; }
         #endregion
 
         #region Order ForeignKey
         public int OrderID { get; set; }
-        public Order Order { get; set; }
+        public virtual Order Order { get; set; }
         #endregion
     }
 }
