@@ -6,6 +6,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MobileStore.Models
 {
+    public enum SupplierStatus
+    {
+        Deactive = 0,
+        Active = 1,
+    }
+
     public class Supplier
     {
         public int SupplierID { get; set; }
@@ -29,10 +35,5 @@ namespace MobileStore.Models
         public IList<ModelFromSupplier> ModelFromSuppliers { get; set; }
         #endregion
 
-        public enum SupplierStatus
-        {
-            Deactive = 0,
-            Active = 1,
-        }
     }
 }
