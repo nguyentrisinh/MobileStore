@@ -12,9 +12,10 @@ using System;
 namespace MobileStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171128165238_Fix_ModelForeignKeyBrandID_Model")]
+    partial class Fix_ModelForeignKeyBrandID_Model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
