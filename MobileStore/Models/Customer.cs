@@ -6,6 +6,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MobileStore.Models
 {
+    public enum GenderType
+    {
+        Male = 1,
+        Female = 2,
+    }
     public class Customer
     {
         public int CustomerID { get; set; }
@@ -24,10 +29,5 @@ namespace MobileStore.Models
         public IList<Order> Orders { get; set; }
         #endregion
 
-        public enum GenderType
-        {
-            Male = 1,
-            Female = 2,
-        }
     }
 }
