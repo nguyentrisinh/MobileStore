@@ -7,73 +7,112 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Create</h2>
-
-<h4>Supplier</h4>
-<hr />
-
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+    <div class=" col-lg-4 offset-lg-4">
+        <div class="card">
+            <form asp-action="Create">
+            <div class="card-header">
+                <strong>Thêm nhà cung cấp</strong>
             </div>
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
+            <div class="card-body">
+               
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-md-4 form-control-label">Tên nhà cung cấp</label>
+                        <div class="col-md-8">
+                            <input asp-for="Name" type="text" class="form-control" placeholder="Nhập tên nhà cung cấp...">
+                            <span asp-validation-for="Name" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="Address" class="col-md-4 form-control-label">Địa chỉ</label>
+                        <div class="col-md-8">
+                            <textarea asp-for="Address" rows="8" class="form-control" placeholder="Nhập địa chỉ..."></textarea>
+                            <span asp-validation-for="Address" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                   
+               
+                    <div class="form-group row">
+                        <label asp-for="Phone" class="col-md-4 form-control-label">Số điện thoại</label>
+                        <div class="col-md-8">
+                            <input asp-for="Phone" type="text" class="form-control" placeholder="Nhập số điện thoại...">
+                            <span asp-validation-for="Phone" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="Email" class="col-md-4 form-control-label">Email</label>
+                        <div class="col-md-8">
+                            <input asp-for="Email" type="email" class="form-control" placeholder="Nhập email...">
+                            <span asp-validation-for="Email" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="Code" class="col-md-4 form-control-label">Code</label>
+                        <div class="col-md-8">
+                            <input asp-for="Code" type="text" class="form-control" placeholder="Nhập code...">
+                            <span asp-validation-for="Code" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+                 
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label" for="select">Trạng thái</label>
+                        <div class="col-md-8">
+                            <select class="form-control" asp-for="Status" asp-items="Html.GetEnumSelectList<SupplierStatus>()">
+                                <option selected="selected" value="">Chọn trạng thái</option>
+                            </select>
+                          
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="PicName" class="col-md-4 form-control-label">Tên người phụ trách</label>
+                        <div class="col-md-8">
+                            <input asp-for="PicName" type="text" class="form-control" placeholder="Nhập tên người phụ trách...">
+                            <span asp-validation-for="PicName" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="PicPhone" class="col-md-4 form-control-label">SĐT người phụ trách</label>
+                        <div class="col-md-8">
+                            <input asp-for="PicPhone" type="text" class="form-control" placeholder="Nhập SĐT người phụ trách...">
+                            <span asp-validation-for="PicPhone" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="PicEmail" class="col-md-4 form-control-label">Email người phụ trách</label>
+                        <div class="col-md-8">
+                            <input asp-for="PicEmail" type="text" class="form-control" placeholder="Nhập Email người phụ trách...">
+                            <span asp-validation-for="PicEmail" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                   
+                   
+                  
+                    
+                   
+               
             </div>
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Tạo</button>
+                @*<div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default"/>
+                </div>*@
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+            </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
-                <input asp-for="Code" class="form-control" />
-                <span asp-validation-for="Code" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @*<label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>*@
-                <select asp-for="Status" asp-items="Html.GetEnumSelectList<SupplierStatus>()">
-                    <option selected="selected" value="">Please select</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label asp-for="PicName" class="control-label"></label>
-                <input asp-for="PicName" class="form-control" />
-                <span asp-validation-for="PicName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PicPhone" class="control-label"></label>
-                <input asp-for="PicPhone" class="form-control" />
-                <span asp-validation-for="PicPhone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PicEmail" class="control-label"></label>
-                <input asp-for="PicEmail" class="form-control" />
-                <span asp-validation-for="PicEmail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
-    </div>
+        </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    
+    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
 
 @section Scripts {
