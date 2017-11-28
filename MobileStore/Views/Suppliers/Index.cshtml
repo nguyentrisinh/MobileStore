@@ -1,0 +1,105 @@
+﻿@model IEnumerable<MobileStore.Models.Supplier>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<form asp-controller="Suppliers" asp-action="Index" method="get">
+    <p>
+        Title: <input type="text" name="SearchString">
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+<table class="table">
+    <thead>
+    <tr>
+        <th >
+            <a asp-action="Index" asp-route-sortOrder="@ViewData["IDSortParm"]">
+                @Html.DisplayNameFor(model => model.SupplierID)
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">
+                @Html.DisplayNameFor(model => model.Name)
+            </a>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Phone)
+        </th>
+        <th>
+            
+            <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]">
+                @Html.DisplayNameFor(model => model.Email)
+                </a>
+</th>
+        <th>
+            @Html.DisplayNameFor(model => model.Code)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@ViewData["PicNameSortParm"]">
+                @Html.DisplayNameFor(model => model.PicName)
+            </a>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PicPhone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PicEmail)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SupplierID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Address)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Phone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PicName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PicPhone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PicEmail)
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.SupplierID">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.SupplierID">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.SupplierID">Delete</a>
+        </td>
+    </tr>
+}
+    </tbody>
+</table>
