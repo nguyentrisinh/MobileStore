@@ -52,7 +52,7 @@ namespace MobileStore.Data
             builder.Entity<Item>().HasOne(ent => ent.OldItem).WithOne(ent => ent.OldItem).HasForeignKey<ReturnItem>(ent => ent.OldItemID)
                 .IsRequired().OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Model>().HasOne(ent => ent.Brand).WithMany(ent => ent.Models).HasForeignKey(ent => ent.ModelID)
+            builder.Entity<Model>().HasOne(ent => ent.Brand).WithMany(ent => ent.Models).HasForeignKey(ent => ent.BrandID)
                 .IsRequired().OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<ModelFromSupplier>().HasOne(ent => ent.Supplier).WithMany(ent => ent.ModelFromSuppliers).HasForeignKey(ent => ent.SupplierID)

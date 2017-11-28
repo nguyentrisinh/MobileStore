@@ -260,7 +260,8 @@ namespace MobileStore.Migrations
 
             modelBuilder.Entity("MobileStore.Models.Model", b =>
                 {
-                    b.Property<int>("ModelID");
+                    b.Property<int>("ModelID")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("BrandID");
 
@@ -275,6 +276,8 @@ namespace MobileStore.Migrations
                     b.Property<int>("Type");
 
                     b.HasKey("ModelID");
+
+                    b.HasIndex("BrandID");
 
                     b.ToTable("Model");
                 });
@@ -505,7 +508,7 @@ namespace MobileStore.Migrations
                 {
                     b.HasOne("MobileStore.Models.Brand", "Brand")
                         .WithMany("Models")
-                        .HasForeignKey("ModelID")
+                        .HasForeignKey("BrandID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

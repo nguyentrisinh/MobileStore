@@ -12,8 +12,8 @@ using System;
 namespace MobileStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171127075905_AllDatabaseMobileStore")]
-    partial class AllDatabaseMobileStore
+    [Migration("20171128170010_CreateDatabase")]
+    partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -261,7 +261,8 @@ namespace MobileStore.Migrations
 
             modelBuilder.Entity("MobileStore.Models.Model", b =>
                 {
-                    b.Property<int>("ModelID");
+                    b.Property<int>("ModelID")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("BrandID");
 
@@ -276,6 +277,8 @@ namespace MobileStore.Migrations
                     b.Property<int>("Type");
 
                     b.HasKey("ModelID");
+
+                    b.HasIndex("BrandID");
 
                     b.ToTable("Model");
                 });
@@ -506,7 +509,7 @@ namespace MobileStore.Migrations
                 {
                     b.HasOne("MobileStore.Models.Brand", "Brand")
                         .WithMany("Models")
-                        .HasForeignKey("ModelID")
+                        .HasForeignKey("BrandID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

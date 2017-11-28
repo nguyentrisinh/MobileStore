@@ -7,6 +7,14 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MobileStore.Models
 {
+    public enum UserRole
+    {
+        Admin = 1,
+        Sale = 2,
+        Technical = 3,
+        WarehouseManager = 4,
+        Accountant = 5,
+    }
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
@@ -23,13 +31,5 @@ namespace MobileStore.Models
 
         public IList<Order> Orders { get; set; }
 
-        public enum UserRole
-        {
-            Admin = 1,
-            Sale = 2,
-            Technical = 3,
-            WarehouseManager = 4,
-            Accountant = 5,
-        }
     }
 }

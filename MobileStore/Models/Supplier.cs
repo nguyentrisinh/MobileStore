@@ -11,6 +11,7 @@ namespace MobileStore.Models
         Deactive = 0,
         Active = 1,
     }
+
     public class Supplier
     {
         
@@ -35,7 +36,6 @@ namespace MobileStore.Models
         public IList<ModelFromSupplier> ModelFromSuppliers { get; set; }
         #endregion
        
-
 
     }
     
