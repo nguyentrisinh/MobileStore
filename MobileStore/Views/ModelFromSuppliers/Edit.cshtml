@@ -6,87 +6,275 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
-
-<h4>Nhap hang</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-controller="ModelFromSuppliers" asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ModelFromSupplier.ModelFromSupplierID" />
-            <div class="form-group">
-                <label asp-for="ModelFromSupplier.Quantity" class="control-label"></label>
-                <input asp-for="ModelFromSupplier.Quantity" class="form-control" />
-                <span asp-validation-for="ModelFromSupplier.Quantity" class="text-danger"></span>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form asp-controller="ModelFromSuppliers" asp-action="CreateItem">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm sản phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="form-group">
-                <label asp-for="ModelFromSupplier.PriceBought" class="control-label"></label>
-                <input asp-for="ModelFromSupplier.PriceBought" class="form-control" />
-                <span asp-validation-for="ModelFromSupplier.PriceBought" class="text-danger"></span>
+            <div class="modal-body">
+              
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ModelFromSupplier.ModelFromSupplierID" />
+        <input type="hidden" asp-for="Item.ModelFromSupplierID" value="@ViewBag.ModelFromSupplierID" />
+                   <input type="hidden" asp-for="Item.ModelID" value="@ViewBag.ModelItemID" />
+                   
+                   <div class="form-group row">
+                       <label asp-for="Item.Name" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Item.Name)</label>
+                       <div class="col-md-8">
+                           <input asp-for="Item.Name" rows="8" class="form-control" placeholder="Nhập tên sản phẩm..."></input>
+                           <span asp-validation-for="Item.Name" class="invalid-feedback"></span>
+                       </div>
+                   </div>
+
+                   <div class="form-group row">
+                       <label asp-for="Item.IMEI" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Item.IMEI)</label>
+                       <div class="col-md-8">
+                           <input asp-for="Item.IMEI" rows="8" class="form-control" placeholder="Nhập IMEI..."></input>
+                           <span asp-validation-for="Item.IMEI" class="invalid-feedback"></span>
+                       </div>
+                   </div>
+                   
+                   <div class="form-group row">
+                       <label asp-for="Item.SerializerNumber" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Item.SerializerNumber)</label>
+                       <div class="col-md-8">
+                           <input asp-for="Item.SerializerNumber" rows="8" class="form-control" placeholder="Nhập thông số kỹ thuật..."></input>
+                           <span asp-validation-for="Item.SerializerNumber" class="invalid-feedback"></span>
+                       </div>
+                   </div>
+                   
+                   <div class="form-group row">
+                       <label asp-for="Item.Note" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Item.Note)</label>
+                       <div class="col-md-8">
+                           <input asp-for="Item.Note" rows="8" class="form-control" placeholder="Nhập ghi chú..."></input>
+                           <span asp-validation-for="Item.Note" class="invalid-feedback"></span>
+                       </div>
+                   </div>
+
+                   
+
+                   
+                  
+        <div class="form-group row">
+
+            <label class="col-md-4 form-control-label" asp-for="Item.Status"></label>
+        <div class="col-md-8">
+            <select class="form-control" asp-for="Item.Status" asp-items="Html.GetEnumSelectList<ItemStatus>()">
+                <option selected="selected" value="">Chọn trạng thái</option>
+            </select>
+            <span asp-validation-for="Item.Status" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ModelFromSupplier.PriceSold" class="control-label"></label>
-                <input asp-for="ModelFromSupplier.PriceSold" class="form-control" />
-                <span asp-validation-for="ModelFromSupplier.PriceSold" class="text-danger"></span>
+        </div>
+      
+   
             </div>
-            <div class="form-group">
-                <label asp-for="ModelFromSupplier.Date" class="control-label"></label>
-                <input asp-for="ModelFromSupplier.Date" class="form-control" />
-                <span asp-validation-for="ModelFromSupplier.Date" class="text-danger"></span>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+              
+                    <button type="submit" class="btn btn-primary">Tạo</button>
+               
             </div>
-            <div class="form-group">
-                <label asp-for="ModelFromSupplier.SupplierID" class="control-label"></label>
-                <select asp-for="ModelFromSupplier.SupplierID" class="form-control" asp-items="ViewBag.SupplierID"></select>
-                <span asp-validation-for="ModelFromSupplier.SupplierID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModelFromSupplier.ModelID" class="control-label"></label>
-                <select asp-for="ModelFromSupplier.ModelID" class="form-control" asp-items="ViewBag.ModelID"></select>
-                <span asp-validation-for="ModelFromSupplier.ModelID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
-        <form asp-controller="Items" asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Item.ModelFromSupplierID" value="@ViewBag.ModelFromSupplierID" />
-            <input type="hidden" asp-for="Item.ModelID" value="@ViewBag.ModelItemID"/>
-            <div class="form-group">
-                <label asp-for="Item.Name" class="control-label"></label>
-                <input asp-for="Item.Name" class="form-control" />
-                <span asp-validation-for="Item.Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Item.IMEI" class="control-label"></label>
-                <input asp-for="Item.IMEI" class="form-control" />
-                <span asp-validation-for="Item.IMEI" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Item.SerializerNumber" class="control-label"></label>
-                <input asp-for="Item.SerializerNumber" class="form-control" />
-                <span asp-validation-for="Item.SerializerNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Item.Note" class="control-label"></label>
-                <input asp-for="Item.Note" class="form-control" />
-                <span asp-validation-for="Item.Note" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                
-                <label asp-for="Item.Status" class="control-label"></label>
-                @*<select asp-for="Item.Status" class="form-control"></select>*@
-                <select asp-for="Item.Status" asp-items="Html.GetEnumSelectList<ItemStatus>()">
-                    <option selected="selected" value="">Chọn trạng thái</option>
-                </select>
-                <span asp-validation-for="Item.Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
+</div>
+
+<div class=" col-lg-8">
+<div class="card">
+    <form asp-controller="ModelFromSuppliers" asp-action="Edit">
+        <div class="card-header">
+            <strong>Nhập hàng</strong>
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ModelFromSupplier.ModelFromSupplierID"/>
+            <div class="form-group row">
+                <label asp-for="ModelFromSupplier.Quantity" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Quantity)</label>
+                <div class="col-md-8">
+                    <input asp-for="ModelFromSupplier.Quantity" type="text" class="form-control" placeholder="Nhập số lượng...">
+                    <span asp-validation-for="ModelFromSupplier.Quantity" class="invalid-feedback"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="ModelFromSupplier.PriceBought" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.PriceBought)</label>
+                <div class="col-md-8">
+                    <input asp-for="ModelFromSupplier.PriceBought" type="text" class="form-control" placeholder="Nhập giá mua...">
+                    <span asp-validation-for="ModelFromSupplier.PriceBought" class="invalid-feedback"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="ModelFromSupplier.PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.PriceSold)</label>
+                <div class="col-md-8">
+                    <input asp-for="ModelFromSupplier.PriceSold" type="text" class="form-control" placeholder="Nhập giá bán...">
+                    <span asp-validation-for="ModelFromSupplier.PriceSold" class="invalid-feedback"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="ModelFromSupplier.Date" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Date)</label>
+                <div class="col-md-8">
+                    <input asp-for="ModelFromSupplier.Date" type="text" class="form-control" placeholder="Ngày nhập hàng...">
+                    <span asp-validation-for="ModelFromSupplier.Date" class="invalid-feedback"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="ModelFromSupplier.SupplierID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.SupplierID)</label>
+                <div class="col-md-8">
+
+                    <select asp-for="ModelFromSupplier.SupplierID" class="form-control" asp-items="ViewBag.SupplierID"></select>
+                    @*<input asp-for="ModelFromSupplier.SupplierID" type="text" class="form-control" placeholder="Chọn nhà cung cấp..">*@
+                    <span asp-validation-for="ModelFromSupplier.SupplierID" class="invalid-feedback"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="ModelFromSupplier.ModelID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.ModelID)</label>
+                <div class="col-md-8">
+                    <select asp-for="ModelFromSupplier.ModelID" class="form-control" asp-items="ViewBag.ModelID"></select>
+                    @*<input asp-for="ModelFromSupplier.ModelID" type="text" class="form-control" placeholder="Nhập lọai sản phẩm...">*@
+                    <span asp-validation-for="ModelFromSupplier.ModelID" class="invalid-feedback"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Tạo</button>
+            @*<div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-default"/>
+                    </div>*@
+        </div>
+    </form>
+</div>
+<div class="card">
+    <div class="card-header">
+        Danh sách Nhà cung cấp
+    </div>
+    <div class="card-body">
+        <p class="mb-3">
+            <button data-toggle="modal" data-target="#exampleModal" type="button" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Thêm sản phẩm</button>
+        </p>
+
+        <div class=" table-striped table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Items.First().ItemID)
+                    </th>
+                    <th>
+
+                        @Html.DisplayNameFor(model => model.Items.First().Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Items.First().IMEI)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Items.First().SerializerNumber)
+                    </th>
+                    <th>
+
+
+                        @Html.DisplayNameFor(model => model.Items.First().Note)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Items.First().Status)
+                    </th>
+
+
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ItemID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IMEI)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SerializerNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Note)
+                        </td>
+                        <td>
+                            @switch (item.Status)
+                            {
+                                case ItemStatus.New:
+                                    <span class="badge badge-info">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </span>
+                                    break;
+                                case ItemStatus.Change:
+                                    <span class="badge badge-dark">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </span>
+                                    break;
+                                case ItemStatus.Return:
+                                    <span class="badge badge-danger">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </span>
+                                    break;
+                                case ItemStatus.Sold:
+                                    <span class="badge badge-success">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </span>
+                                    break;
+                                case ItemStatus.Warranty:
+                                    <span class="badge badge-warning">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </span>
+                                    break;
+                            }
+
+                        </td>
+
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.ItemID">
+                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i>&nbsp; Sửa</button>
+                            </a>
+
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.ItemID">
+                                    <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i>&nbsp; Chi tiết</button>
+                                </a>
+                            </td>
+                            <td>
+
+
+                                <a asp-action="Delete" asp-route-id="@item.ItemID">
+                                    <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i>&nbsp; Xóa</button>
+                                </a>
+                            </td>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>
 </div>
 
 <div>
@@ -95,4 +283,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+                                    }

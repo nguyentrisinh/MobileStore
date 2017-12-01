@@ -9,5 +9,6 @@ namespace MobileStore.Models.StockReceivingViewModels
     {
         public ModelFromSupplier ModelFromSupplier { get; set; }
         public Item Item { get; set; }
+        public IEnumerable<Item> Items { get; set; }
     }
 }

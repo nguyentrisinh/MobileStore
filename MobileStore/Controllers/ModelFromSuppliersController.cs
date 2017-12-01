@@ -80,7 +80,7 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
-
+            var listItems = await _context.Item.Where(i => i.ModelFromSupplierID == id).ToListAsync();
             var modelFromSupplier = await _context.ModelFromSupplier.SingleOrDefaultAsync(m => m.ModelFromSupplierID == id);
             if (modelFromSupplier == null)
             {
@@ -92,6 +92,7 @@ namespace MobileStore.Controllers
             ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "Name", modelFromSupplier.SupplierID);
             var stockReceivingVM =new StockReceivingViewModel();
             stockReceivingVM.ModelFromSupplier = modelFromSupplier;
+            stockReceivingVM.Items = listItems;
           
             return View(stockReceivingVM);
         }
@@ -122,8 +123,6 @@ namespace MobileStore.Controllers
                     //    SupplierID = stockReceivingVM.ModelFromSupplier.SupplierID,
                     //    ModelID = stockReceivingVM.ModelFromSupplier.ModelID
                     //};
-                    
-                     
                     _context.Update(stockReceivingVM.ModelFromSupplier);
                     await _context.SaveChangesAsync();
                 }
@@ -144,6 +143,21 @@ namespace MobileStore.Controllers
             ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID", stockReceivingVM.ModelFromSupplier.SupplierID);
            
             return View(stockReceivingVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateItem(StockReceivingViewModel stockReceivingVM)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(stockReceivingVM.Item);
+                await _context.SaveChangesAsync();
+            }
+            ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "ModelID", stockReceivingVM.ModelFromSupplier.ModelID);
+            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID", stockReceivingVM.ModelFromSupplier.SupplierID);
+
+            return RedirectToAction("Edit","ModelFromSuppliers",new {id = stockReceivingVM.ModelFromSupplier.ModelFromSupplierID});
         }
 
         // GET: ModelFromSuppliers/Delete/5
