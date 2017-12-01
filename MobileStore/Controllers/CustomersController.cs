@@ -20,9 +20,18 @@ namespace MobileStore.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public string Index(string searchString, bool notUsed)
         {
-            return View(await _context.Customer.ToListAsync());
+            return "From [HttpPost]Index: filter on " + searchString;
+        }
+        public async Task<IActionResult> Index(string searchString)
+        {
+            var customers = from c in _context.Customer select c;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                customers = customers.Where(s => s.Name.Contains(searchString));
+            }
+            return View(await customers.ToListAsync());
         }
 
         // GET: Customers/Details/5
