@@ -7,23 +7,23 @@
 <div class="row">
     <div class="col-lg-8">
         <div class="card ">
-            
-       
+
+
             <form asp-controller="ModelFromSuppliers" asp-action="Create">
                 <div class="card-header">
                     <strong>Thêm đợt hàng</strong>
                 </div>
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    
+
                     <div class="form-group row">
-                        <label asp-for="Quantity" class="col-md-4 form-control-label">@Html.DisplayNameFor(model=>model.Quantity)</label>
+                        <label asp-for="Quantity" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Quantity)</label>
                         <div class="col-md-8">
                             <input asp-for="Quantity" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model=>model.Quantity)...">
                             <span asp-validation-for="Quantity" class="invalid-feedback"></span>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <label asp-for="PriceBought" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.PriceBought)</label>
                         <div class="col-md-8">
@@ -31,7 +31,7 @@
                             <span asp-validation-for="PriceBought" class="invalid-feedback"></span>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <label asp-for="PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.PriceSold)</label>
                         <div class="col-md-8">
@@ -39,7 +39,7 @@
                             <span asp-validation-for="PriceSold" class="invalid-feedback"></span>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <label asp-for="Date" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Date)</label>
                         <div class="col-md-8">
@@ -47,37 +47,35 @@
                             <span asp-validation-for="Date" class="invalid-feedback"></span>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <label asp-for="SupplierID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.SupplierID)</label>
                         <div class="col-md-8">
-                            <select class="form-control" asp-for="SupplierID" class="form-control" asp-items="ViewBag.SupplierID">
-                            </select>
+                            <select class="form-control" asp-for="SupplierID" class="form-control" asp-items="ViewBag.SupplierID"></select>
                             <span asp-validation-for="SupplierID" class="invalid-feedback"></span>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <label asp-for="ModelID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelID)</label>
                         <div class="col-md-8">
-                            <select class="form-control" asp-for="ModelID" class="form-control" asp-items="ViewBag.ModelID">
-                            </select>
+                            <select class="form-control" asp-for="ModelID" class="form-control" asp-items="ViewBag.ModelID"></select>
                             <span asp-validation-for="ModelID" class="invalid-feedback"></span>
                         </div>
                     </div>
-                   
 
-                   
-                   
-                    
-                
-                   
+
+
+
+
+
+
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Tạo</button>
                     @*<div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-default"/>
-                </div>*@
+                            <input type="submit" value="Create" class="btn btn-default"/>
+                        </div>*@
                 </div>
             </form>
         </div>
@@ -85,7 +83,7 @@
 </div>
 
 <div>
-    
+
     <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
 

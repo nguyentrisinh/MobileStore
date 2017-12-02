@@ -11,12 +11,12 @@
         <div class="card">
             <form asp-controller="ModelFromSuppliers" asp-action="EditItem">
 
-            <div class="card-header">
-                <strong>Sửa thông tin sản phẩm</strong>
-            </div>
+                <div class="card-header">
+                    <strong>Sửa thông tin sản phẩm</strong>
+                </div>
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="ItemID"/>
+                    <input type="hidden" asp-for="ItemID" />
 
                     <div class="form-group row">
                         <label asp-for="Name" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Name)</label>
@@ -68,9 +68,9 @@
                     <div class="form-group row">
                         <label class="col-md-4 form-control-label" asp-for="ModelFromSupplierID" class="control-label"></label>
                         <div class="col-md-8">
-                        <select asp-for="ModelFromSupplierID" class="form-control" asp-items="ViewBag.ModelFromSupplierID"></select>
+                            <select asp-for="ModelFromSupplierID" class="form-control" asp-items="ViewBag.ModelFromSupplierID"></select>
                             <span asp-validation-for="ModelFromSupplierID" class="text-danger"></span>
-                            </div>
+                        </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-md-4 form-control-label" asp-for="ModelID" class="control-label"></label>
@@ -78,22 +78,22 @@
                             <select asp-for="ModelID" class="form-control" asp-items="ViewBag.ModelID"></select>
                             <span asp-validation-for="ModelID" class="text-danger"></span>
                         </div>
-                        </div>
+                    </div>
 
 
-               
+
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> Sửa</button>
 
                 </div>
-                   
+
             </form>
         </div>
-        
-       
 
-         
+
+
+
 
     </div>
 </div>

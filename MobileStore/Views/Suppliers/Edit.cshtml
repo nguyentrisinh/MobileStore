@@ -13,10 +13,10 @@
                 </div>
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    
 
-                    <input type="hidden" asp-for="SupplierID"/>
-                    
+
+                    <input type="hidden" asp-for="SupplierID" />
+
                     <div class="form-group row">
                         <label asp-for="Name" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Name)</label>
                         <div class="col-md-8">
@@ -24,7 +24,7 @@
                             <span asp-validation-for="Name" class="invalid-feedback"></span>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <label asp-for="Address" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Address)</label>
                         <div class="col-md-8">
@@ -32,7 +32,7 @@
                             <span asp-validation-for="Address" class="invalid-feedback"></span>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <label asp-for="Phone" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Phone)</label>
                         <div class="col-md-8">
@@ -40,7 +40,7 @@
                             <span asp-validation-for="Phone" class="invalid-feedback"></span>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <label asp-for="Email" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Email)</label>
                         <div class="col-md-8">
@@ -48,7 +48,7 @@
                             <span asp-validation-for="Email" class="invalid-feedback"></span>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <label asp-for="Code" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Code)</label>
                         <div class="col-md-8">
@@ -56,17 +56,17 @@
                             <span asp-validation-for="Code" class="invalid-feedback"></span>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <label class="col-md-4 form-control-label" for="select">@Html.DisplayNameFor(model => model.Status)</label>
                         <div class="col-md-8">
                             <select class="form-control" asp-for="Status" asp-items="Html.GetEnumSelectList<SupplierStatus>()">
                                 @*<option selected="selected" value="">Chọn trạng thái</option>*@
                             </select>
-                          
+
                         </div>
                     </div>
-                  
+
                     <div class="form-group row">
                         <label asp-for="PicName" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.PicName)</label>
                         <div class="col-md-8">
@@ -88,19 +88,19 @@
                             <span asp-validation-for="PicEmail" class="invalid-feedback"></span>
                         </div>
                     </div>
-                    
-                 
-                    
-                   
-                    
-               
+
+
+
+
+
+
                 </div>
                 <div class="card-footer">
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> Sửa</button>
-                        @*<div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-default"/>
-                </div>*@
-                    
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> Sửa</button>
+                    @*<div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-default"/>
+                        </div>*@
+
                 </div>
             </form>
         </div>
@@ -108,7 +108,7 @@
 </div>
 
 <div>
-    
+
     <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
 
