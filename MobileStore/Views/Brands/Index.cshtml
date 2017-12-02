@@ -2,54 +2,84 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+    <div class="row">
+        <div class="col-lg-12" style="margin:auto">
+            <div class="card">
+                <div class="card-header">Danh sách nhãn hiệu</div>
+                @*<p>
+                    <a asp-action="Create">Create New</a>
+                </p>*@
+                <div class="card-body">
+                    <form asp-controller="Brands" asp-action="Index" class="form-horizontal">
+                        <div class="form-group row">
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                     <input class="form-control" style="margin-right:10px;" type="text" name="SearchString" value="@ViewData["DataSearchString"]" placeholder="Tìm kiếm theo Tên" />
+                                     <input class="form-control" style="margin-right:10px;" type="text" name="SearchCountry" value="@ViewData["DataSearchCountry"]" placeholder="Tìm kiếm theo quốc gia"/>
+                                 
+                                    <span class="input-group-btn">
+                                        <input type="submit" value="Search" class="btn btn-primary"/>
+                                    </span>
+                                </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<form asp-controller="Brands" asp-action="Index">
-    <p>
-        Name: <input type="text" name="SearchString" value="@ViewData["DataSearchString"]">
-        Country: <input type="text" name="SearchCountry" value="@ViewData["DataSearchCountry"]" />
-        <input type="submit" value="Filter" />
-    </p>
-</form>
+                            </div>
+                        </div>
+                    </form>
+                    <p>
+                        <a asp-action="Create">
+                            <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm nhà cung cấp</button>
+                        </a>
+                    </p>
+                    <div class="table-striped table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Name)</a>
+                                    </th>
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["CountrySortParm"]">@Html.DisplayNameFor(model => model.Country)</a>
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Description)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Country)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Description)
+                                        </td>
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@item.BrandID">
+                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
+                                            </a> |
+                                            <a asp-action="Details" asp-route-id="@item.BrandID">
+                                                <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i>&nbsp; Chi tiết</button>
+                                            </a> |
+                                            <a asp-action="Delete" asp-route-id="@item.BrandID">
+                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i>&nbsp; Xóa</button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-<table class="table">
-    <thead>
-        <tr>
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Name)</a>
-</th>
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["CountrySortParm"]">@Html.DisplayNameFor(model => model.Country)</a>
-</th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Country)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BrandID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BrandID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BrandID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+            </div>
+        </div>
+    </div>
