@@ -44,9 +44,79 @@ namespace MobileStore.Controllers
         }
 
             // GET: ApplicationUsers
-            public async Task<IActionResult> Index()
+            public async Task<IActionResult> Index(string sortOrder, string currentFilter, int? page, int? pageSize)
         {
-            return View(await _context.ApplicationUser.ToListAsync());
+            // ViewData["NameSortParm"] is not the param for current sort but the sortOrder for the next sort 
+            // If sortOrder is null or empty => current will sort NameAscending => Next sort of FirstName is first_name_desc => ViewData["NameSortParm"] = first_name_desc
+            ViewData["FirstNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "first_name_desc" : "";
+            ViewData["LastNameSortParm"] = sortOrder == "last_name_asc" ? "last_name_desc" : "last_name_asc";
+            ViewData["PhoneSortParm"] = sortOrder == "phone_asc" ? "phone_desc" : "phone_asc";
+            ViewData["BirthdaySortParm"] = sortOrder == "birthday_asc" ? "birthday_desc" : "birthday_asc";
+            ViewData["AddressSortParm"] = sortOrder == "address_asc" ? "address_desc" : "address_asc";
+            ViewData["RoleSortParm"] = sortOrder == "role_asc" ? "role_desc" : "role_asc";
+            ViewData["EmailSortParm"] = sortOrder == "email_asc" ? "email_desc" : "email_asc";
+
+            var applicationUsers = from ent in _context.ApplicationUser
+                           select ent;
+
+            // Search method
+            ViewData["CurrentFilter"] = currentFilter;
+            if (!String.IsNullOrEmpty(currentFilter))
+            {
+                applicationUsers = applicationUsers.Where(ent => ent.FirstName.Contains(currentFilter)
+                                                    || ent.LastName.Contains(currentFilter) || ent.Phone.Contains(currentFilter) || ent.Address.Contains(currentFilter) 
+                                                    || ent.Email.Contains(currentFilter));
+            }
+
+            // Order with sortOrder
+            switch (sortOrder)
+            {
+                case "first_name_desc":
+                    applicationUsers = applicationUsers.OrderByDescending(s => s.FirstName);
+                    break;
+                case "last_name_desc":
+                    applicationUsers = applicationUsers.OrderByDescending(s => s.LastName);
+                    break;
+                case "last_name_asc":
+                    applicationUsers = applicationUsers.OrderBy(s => s.LastName);
+                    break;
+                case "birthday_asc":
+                    applicationUsers = applicationUsers.OrderBy(s => s.Birthday);
+                    break;
+                case "birthday_desc":
+                    applicationUsers = applicationUsers.OrderByDescending(s => s.Birthday);
+                    break;
+                case "phone_asc":
+                    applicationUsers = applicationUsers.OrderBy(s => s.Phone);
+                    break;
+                case "phone_desc":
+                    applicationUsers = applicationUsers.OrderByDescending(s => s.Phone);
+                    break;
+                case "address_asc":
+                    applicationUsers = applicationUsers.OrderBy(s => s.Address);
+                    break;
+                case "address_desc":
+                    applicationUsers = applicationUsers.OrderByDescending(s => s.Address);
+                    break;
+                case "role_asc":
+                    applicationUsers = applicationUsers.OrderBy(s => s.Role);
+                    break;
+                case "role_desc":
+                    applicationUsers = applicationUsers.OrderByDescending(s => s.Role);
+                    break;
+                case "email_asc":
+                    applicationUsers = applicationUsers.OrderBy(s => s.Email);
+                    break;
+                case "email_desc":
+                    applicationUsers = applicationUsers.OrderByDescending(s => s.Email);
+                    break;
+                default:
+                    applicationUsers = applicationUsers.OrderBy(s => s.FirstName);
+                    break;
+            }
+
+            return View(await PaginatedList<ApplicationUser>.CreateAsync(applicationUsers.AsNoTracking(), page ?? 1, pageSize ?? 10));
+
         }
 
         // GET: ApplicationUsers/Details/5
@@ -141,12 +211,32 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
 
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // AsNoTracking to get oldApplicationUser fix "this error The instance of entity type X cannot be tracked because another instance of this type with the same key is already being tracked"
+                    // Error occur because Use 2 query first is oldApplicationUser and second is when _context.Update(applicationUser)
+                    var oldApplicationUser = await _context.ApplicationUser.AsNoTracking().SingleOrDefaultAsync(m => m.Id == applicationUser.Id);
+
+                    // Remove old Role to update to new role
+                    await RemoveCurrentUserRole(applicationUser, oldApplicationUser.Role);
+
+                    // ---------------------Update new role for the ApplicationUser---------------------------
+                    var isCreatedUserRole = await CreateNewUserRole(applicationUser, applicationUser.Role);
+
+                    if (isCreatedUserRole)
+                    {
+                        _logger.LogInformation("Create UserRole successfully");
+                    }
+
+                    
+                    // -------------------------------------------End-----------------------------------------
+
                     _context.Update(applicationUser);
                     await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -247,7 +337,40 @@ namespace MobileStore.Controllers
             }
 
             // Add current user to role 
-            await _userManager.AddToRoleAsync(user, "Admin");
+            await _userManager.AddToRoleAsync(user, role);
+        }
+
+        private async Task<bool> RemoveCurrentUserRole(ApplicationUser user, UserRole role)
+        {
+            try
+            {
+                switch (role)
+                {
+                    case UserRole.Admin:
+                        await _userManager.RemoveFromRoleAsync(user, "Admin");
+                        break;
+                    case UserRole.WarehouseManager:
+                        await _userManager.RemoveFromRoleAsync(user, "WarehoustManager");
+                        break;
+                    case UserRole.Technical:
+                        await _userManager.RemoveFromRoleAsync(user, "Technical");
+                        break;
+                    case UserRole.Accountant:
+                        await _userManager.RemoveFromRoleAsync(user, "Accountant");
+                        break;
+                    case UserRole.Sale:
+                        await _userManager.RemoveFromRoleAsync(user, "Sale");
+                        break;
+                }
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return false;
+            }
         }
 
         private async Task<bool> CreateNewUserRole(ApplicationUser user, UserRole role)
