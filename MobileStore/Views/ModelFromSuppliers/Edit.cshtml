@@ -67,7 +67,7 @@
             <label class="col-md-4 form-control-label" asp-for="Item.Status"></label>
         <div class="col-md-8">
             <select class="form-control" asp-for="Item.Status" asp-items="Html.GetEnumSelectList<ItemStatus>()">
-                <option selected="selected" value="">Chọn trạng thái</option>
+                @*<option selected="selected" value="">Chọn trạng thái</option>*@
             </select>
             <span asp-validation-for="Item.Status" class="text-danger"></span>
             </div>
@@ -90,7 +90,7 @@
 <div class="card">
     <form asp-controller="ModelFromSuppliers" asp-action="Edit">
         <div class="card-header">
-            <strong>Nhập hàng</strong>
+            <strong>Sửa thông tin đợt hàng</strong>
         </div>
         <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -143,7 +143,7 @@
             </div>
         </div>
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Tạo</button>
+            <button type="submit" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Sửa</button>
             @*<div class="form-group">
                         <input type="submit" value="Create" class="btn btn-default"/>
                     </div>*@
@@ -152,11 +152,11 @@
 </div>
 <div class="card">
     <div class="card-header">
-        Danh sách Nhà cung cấp
+        Chi tiết đợt hàng
     </div>
     <div class="card-body">
         <p class="mb-3">
-            <button data-toggle="modal" data-target="#exampleModal" type="button" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Thêm sản phẩm</button>
+            <button data-toggle="modal" data-target="#exampleModal" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Thêm sản phẩm</button>
         </p>
 
         <div class=" table-striped table-responsive">
@@ -249,8 +249,8 @@
                         </td>
 
                         <td>
-                            <a asp-action="Edit" asp-route-id="@item.ItemID">
-                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i>&nbsp; Sửa</button>
+                            <a asp-action="EditItem" asp-route-id="@item.ItemID">
+                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
                             </a>
 
                             <td>
@@ -262,7 +262,7 @@
 
 
                                 <a asp-action="Delete" asp-route-id="@item.ItemID">
-                                    <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i>&nbsp; Xóa</button>
+                                    <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i>&nbsp; Xóa</button>
                                 </a>
                             </td>
                         </td>
@@ -278,7 +278,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
 
 @section Scripts {

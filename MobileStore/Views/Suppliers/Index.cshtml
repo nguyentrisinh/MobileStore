@@ -6,12 +6,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div id="ui-view" style="opacity: 1;">
-    <div class="animated fadeIn">
       
 
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                
                 <div class="card">
                     <div class="card-header">
@@ -33,264 +31,126 @@
                         </form>
                         <p>
                             <a asp-action="Create">
-                            <button  type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm nhà cung cấp</button>
+                                <button  type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm nhà cung cấp</button>
                             </a>
                         </p>
-                        <table class="table table-striped table-responsive">
-                        <thead>
-                        <tr>
-                            <th >
-                                <a asp-action="Index" asp-route-sortOrder="@ViewData["IDSortParm"]">
-                                    @Html.DisplayNameFor(model => model.SupplierID)
-                                </a>
-                            </th>
-                            <th>
-                                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">
-                                    @Html.DisplayNameFor(model => model.Name)
-                                </a>
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Address)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Phone)
-                            </th>
-                            <th>
-
-                                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]">
-                                    @Html.DisplayNameFor(model => model.Email)
-                                </a>
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Code)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Status)
-                            </th>
-                            <th>
-                                <a asp-action="Index" asp-route-sortOrder="@ViewData["PicNameSortParm"]">
-                                    @Html.DisplayNameFor(model => model.PicName)
-                                </a>
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.PicPhone)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.PicEmail)
-                            </th>
-                            <th>
-                              
-                            </th>
-                            <th>
-                              
-                            </th>
-                            <th>
-                              
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach (var item in Model)
-                        {
+                        <div class="table-striped table-responsive">
+                            <table class="table">
+                            <thead>
                             <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SupplierID)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Address)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Phone)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Email)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Code)
-                                </td>
-                                <td>
-                                    <span class="@("badge " + (item.Status == SupplierStatus.Active ? "badge-success" : "badge-secondary"))">@Html.DisplayFor(modelItem => item.Status)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PicName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PicPhone)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PicEmail)
-                                </td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@item.SupplierID">
-                                        <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i>&nbsp; Sửa</button>
+                                <th >
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["IDSortParm"]">
+                                        @Html.DisplayNameFor(model => model.SupplierID)
                                     </a>
-                                    
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">
+                                        @Html.DisplayNameFor(model => model.Name)
+                                    </a>
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Address)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Phone)
+                                </th>
+                                <th>
+
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]">
+                                        @Html.DisplayNameFor(model => model.Email)
+                                    </a>
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Code)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Status)
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["PicNameSortParm"]">
+                                        @Html.DisplayNameFor(model => model.PicName)
+                                    </a>
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PicPhone)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PicEmail)
+                                </th>
+                                <th>
+                              
+                                </th>
+                                <th>
+                              
+                                </th>
+                                <th>
+                              
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
                                     <td>
-                                        <a asp-action="Details" asp-route-id="@item.SupplierID">
-                                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i>&nbsp; Chi tiết</button>
-                                        </a>
+                                        @Html.DisplayFor(modelItem => item.SupplierID)
                                     </td>
-                                <td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Address)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Phone)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Email)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Code)
+                                    </td>
+                                    <td>
+                                        <span class="@("badge " + (item.Status == SupplierStatus.Active ? "badge-success" : "badge-secondary"))">@Html.DisplayFor(modelItem => item.Status)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PicName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PicPhone)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PicEmail)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.SupplierID">
+                                            <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
+                                        </a>
+                                    
+                                        <td>
+                                            <a asp-action="Details" asp-route-id="@item.SupplierID">
+                                                <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i>&nbsp; Chi tiết</button>
+                                            </a>
+                                        </td>
+                                        <td>
                                     
                                 
-                                    <a asp-action="Delete" asp-route-id="@item.SupplierID">
-                                        <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i>&nbsp; Xóa</button>
-                                    </a>
-                                    </td>
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
-                        @*<tbody>
-                                <tr>
-                                    <td>Vishnu Serghei</td>
-                                    <td>2012/01/01</td>
-                                    <td>Member</td>
-                                    <td>
-                                        <span class="badge badge-success">Active</span>
+                                            <a asp-action="Delete" asp-route-id="@item.SupplierID">
+                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i>&nbsp; Xóa</button>
+                                            </a>
+                                        </td>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>Zbyněk Phoibos</td>
-                                    <td>2012/02/01</td>
-                                    <td>Staff</td>
-                                    <td>
-                                        <span class="badge badge-danger">Banned</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Einar Randall</td>
-                                    <td>2012/02/01</td>
-                                    <td>Admin</td>
-                                    <td>
-                                        <span class="badge badge-secondary">Inactive</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Félix Troels</td>
-                                    <td>2012/03/01</td>
-                                    <td>Member</td>
-                                    <td>
-                                        <span class="badge badge-warning">Pending</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Aulus Agmundr</td>
-                                    <td>2012/01/21</td>
-                                    <td>Staff</td>
-                                    <td>
-                                        <span class="badge badge-success">Active</span>
-                                    </td>
-                                </tr>
+                            }
                             </tbody>
-                        </table>*@
-                    </div>
+                       
+                        </div></div>
                 </div>
             </div>
             <!--/.col-->
         </div>
         <!--/.row-->
-    </div>
-</div>
-
-@*<h2>Index</h2>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<form asp-controller="Suppliers" asp-action="Index" method="get">
-    <p>
-        Title: <input type="text" name="SearchString">
-        <input type="submit" value="Filter" />
-    </p>
-</form>
-<table class="table">
-    <thead>
-    <tr>
-        <th >
-            <a asp-action="Index" asp-route-sortOrder="@ViewData["IDSortParm"]">
-                @Html.DisplayNameFor(model => model.SupplierID)
-            </a>
-        </th>
-        <th>
-            <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">
-                @Html.DisplayNameFor(model => model.Name)
-            </a>
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Phone)
-        </th>
-        <th>
-            
-            <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]">
-                @Html.DisplayNameFor(model => model.Email)
-                </a>
-</th>
-        <th>
-            @Html.DisplayNameFor(model => model.Code)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Status)
-        </th>
-        <th>
-            <a asp-action="Index" asp-route-sortOrder="@ViewData["PicNameSortParm"]">
-                @Html.DisplayNameFor(model => model.PicName)
-            </a>
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PicPhone)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PicEmail)
-        </th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.SupplierID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Address)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Phone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Code)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PicName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PicPhone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PicEmail)
-        </td>
-        <td>
-            <a asp-action="Edit" asp-route-id="@item.SupplierID">Edit</a> |
-            <a asp-action="Details" asp-route-id="@item.SupplierID">Details</a> |
-            <a asp-action="Delete" asp-route-id="@item.SupplierID">Delete</a>
-        </td>
-    </tr>
+    
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-    </tbody>
-</table>*@

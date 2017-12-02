@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MobileStore.Data;
@@ -13,6 +14,96 @@ namespace MobileStore.Controllers
 {
     public class ModelFromSuppliersController : Controller
     {
+        public async Task<IActionResult> DeleteItem(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var item = await _context.Item
+                .Include(i => i.Model)
+                .Include(i => i.ModelFromSupplier)
+                .SingleOrDefaultAsync(m => m.ItemID == id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return View(item);
+        }
+        // GET: Items/Edit/5
+        public async Task<IActionResult> EditItem(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var item = await _context.Item.SingleOrDefaultAsync(m => m.ItemID == id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            var listModelFromSupplier = _context.ModelFromSupplier.Select(s=>new
+            {
+                s.ModelFromSupplierID,
+                DisplayName = String.Format("{0} từ {1} ngày {2}", s.Model.Name, s.Supplier.Name, s.GetDate())
+
+            });
+            
+            //    listModelFromSupplier.Select(s => new
+            //{
+            //    s.ModelFromSupplierID,
+            //    Name = s.GetStockRecevingName()
+            //});
+            ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "Name", item.ModelID);
+
+            ViewData["ModelFromSupplierID"] = new SelectList(listModelFromSupplier, "ModelFromSupplierID", "DisplayName",item.ModelFromSupplierID);
+            return View(item);
+        }
+
+        // POST: Items/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditItem(int id, [Bind("ItemID,Name,IMEI,SerializerNumber,Note,Status,ModelFromSupplierID,ModelID")] Item item)
+        {
+            if (id != item.ItemID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(item);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ItemExists(item.ItemID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Edit", new { id = item.ModelFromSupplierID });
+            }
+            ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "ModelID", item.ModelID);
+            ViewData["ModelFromSupplierID"] = new SelectList(_context.ModelFromSupplier, "ModelFromSupplierID", "ModelFromSupplierID", item.ModelFromSupplierID);
+            return View(item);
+        }
+        private bool ItemExists(int id)
+        {
+            return _context.Item.Any(e => e.ItemID == id);
+        }
+
         private readonly ApplicationDbContext _context;
 
         public ModelFromSuppliersController(ApplicationDbContext context)
@@ -64,6 +155,10 @@ namespace MobileStore.Controllers
         {
             if (ModelState.IsValid)
             {
+                //var model = _context.Model.Single(m => m.ModelID == modelFromSupplier.ModelID);
+                //var supplier = _context.Supplier.Single(s => s.SupplierID == modelFromSupplier.SupplierID);
+                //modelFromSupplier.Model = model;
+                //modelFromSupplier.Supplier = supplier;
                 _context.Add(modelFromSupplier);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -113,16 +208,6 @@ namespace MobileStore.Controllers
             {
                 try
                 {
-                    //var modelFromSupplier = new ModelFromSupplier
-                    //{
-                    //    ModelFromSupplierID = 
-                    //    Date = stockReceivingVM.ModelFromSupplier.Date,
-                    //    Quantity = stockReceivingVM.ModelFromSupplier.Quantity,
-                    //    PriceBought =  stockReceivingVM.ModelFromSupplier.PriceBought,
-                    //    PriceSold = stockReceivingVM.ModelFromSupplier.PriceSold,
-                    //    SupplierID = stockReceivingVM.ModelFromSupplier.SupplierID,
-                    //    ModelID = stockReceivingVM.ModelFromSupplier.ModelID
-                    //};
                     _context.Update(stockReceivingVM.ModelFromSupplier);
                     await _context.SaveChangesAsync();
                 }
@@ -137,7 +222,7 @@ namespace MobileStore.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit),new{id=stockReceivingVM.ModelFromSupplier.ModelFromSupplierID});
             }
             ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "ModelID", stockReceivingVM.ModelFromSupplier.ModelID);
             ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID", stockReceivingVM.ModelFromSupplier.SupplierID);
