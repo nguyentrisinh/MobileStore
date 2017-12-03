@@ -5,7 +5,7 @@
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
+@*<h2>Edit</h2>
 
 <h4>ApplicationUser</h4>
 <hr />
@@ -50,20 +50,90 @@
                 <select asp-for="Role" class="form-control" asp-items="Html.GetEnumSelectList<UserRole>()"></select>
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>*@            
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </form>
     </div>
-</div>
+</div>*@
 
 <div>
     <a asp-action="Index">Back to List</a>
+</div>
+
+<div class="row">
+    <div class=" col-lg-8">
+        <div class="card">
+            <form asp-action="Edit">
+                <div class="card-header">
+                    <strong>Cập nhật thông tin người sử dụng</strong>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="ConcurrencyStamp" />
+                    <div class="form-group row">
+                        <label asp-for="Email" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Email)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Email" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.Email)...">
+                            <span asp-validation-for="Email" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="FirstName" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.FirstName)</label>
+                        <div class="col-md-8">
+                            <input asp-for="FirstName" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.FirstName)...">
+                            <span asp-validation-for="FirstName" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="LastName" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.LastName)</label>
+                        <div class="col-md-8">
+                            <input asp-for="LastName" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.LastName)...">
+                            <span asp-validation-for="LastName" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label" for="select">@Html.DisplayNameFor(model => model.Role)</label>
+                        <div class="col-md-8">
+                            <select class="form-control" asp-for="Role" asp-items="Html.GetEnumSelectList<UserRole>()"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Birthday" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Birthday)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Birthday" class="form-control">
+                            <span asp-validation-for="Birthday" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Phone" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Phone)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Phone" type="number" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.Phone)...">
+                            <span asp-validation-for="Phone" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Address" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Address)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Address" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.Address)...">
+                            <span asp-validation-for="Address" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
 
 @section Scripts {

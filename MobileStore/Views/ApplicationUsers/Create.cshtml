@@ -6,69 +6,98 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
-
-<h4>ApplicationUser</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword" class="control-label"></label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Birthday" class="control-label"></label>
-                <input asp-for="Birthday" class="form-control" />
-                <span asp-validation-for="Birthday" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Role" class="control-label"></label>
-                <select asp-for="Role" class="form-control" asp-items="Html.GetEnumSelectList<UserRole>()"></select>
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+    <div class=" col-lg-8">
+        <div class="card">
+            <form asp-action="Create">
+                <div class="card-header">
+                    <strong>Thêm người sử dụng</strong>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group row">
+                        <label asp-for="Email" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Email)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Email" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.Email)...">
+                            <span asp-validation-for="Email" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Password" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Password)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Password" class="form-control" placeholder="Nhập @Html.DisplayNameFor(Model => Model.Password)"/>
+                            <span asp-validation-for="Password" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label asp-for="ConfirmPassword" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ConfirmPassword)</label>
+                        <div class="col-md-8">
+                            <input asp-for="ConfirmPassword" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.ConfirmPassword)...">
+                            <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="FirstName" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.FirstName)</label>
+                        <div class="col-md-8">
+                            <input asp-for="FirstName" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.FirstName)...">
+                            <span asp-validation-for="FirstName" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="LastName" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.LastName)</label>
+                        <div class="col-md-8">
+                            <input asp-for="LastName" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.LastName)...">
+                            <span asp-validation-for="LastName" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label" for="select">@Html.DisplayNameFor(model => model.Role)</label>
+                        <div class="col-md-8">
+                            <select class="form-control" asp-for="Role" asp-items="Html.GetEnumSelectList<UserRole>()"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Birthday" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Birthday)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Birthday" class="form-control">
+                            <span asp-validation-for="Birthday" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Phone" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Phone)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Phone" type="number" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.Phone)...">
+                            <span asp-validation-for="Phone" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Address" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Address)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Address" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.Address)...">
+                            <span asp-validation-for="Address" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Tạo</button>
+                    @*<div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-default"/>
+                        </div>*@
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
+
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
