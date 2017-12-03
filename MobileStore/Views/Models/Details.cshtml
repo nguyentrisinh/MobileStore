@@ -6,48 +6,50 @@
 
 <h2>Details</h2>
 
-<div>
-    <h4>Model</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Color)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Color)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Specification)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Specification)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Brand)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Brand.Name)
-        </dd>
-    </dl>
-</div>
+
+    <div>
+        <h4>Model</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                Tên Model
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt>
+                Màu Sắc
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Color)
+            </dd>
+            <dt>
+                Mô tả
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt>
+                Đặc điểm kỹ thuật
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Specification)
+            </dd>
+            <dt>
+               Loại
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Type)
+            </dd>
+            <dt>
+               Nhãn Hiệu
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Brand.Name)
+            </dd>
+        </dl>
+    </div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model.ModelID">Edit</a> |
     <a asp-action="Index">Back to List</a>

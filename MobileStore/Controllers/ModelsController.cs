@@ -20,10 +20,30 @@ namespace MobileStore.Controllers
         }
 
         // GET: Models
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string SearchString, string sortOrder)
         {
-            var applicationDbContext = _context.Model.Include(m => m.Brand);
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["DataSearchString"] = SearchString;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            var applicationDbContext = await _context.Model.Include(m => m.Brand).ToListAsync();
+
+            if(!String.IsNullOrEmpty(SearchString))
+            {
+                applicationDbContext = applicationDbContext.Where(m => m.Name.Contains(SearchString)).ToList();
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    applicationDbContext = applicationDbContext.OrderByDescending(s => s.Name).ToList();
+                    break;
+                default:
+                    applicationDbContext = applicationDbContext.OrderBy(s => s.Name).ToList();
+                    break;
+
+            }
+
+
+            return View( applicationDbContext);
         }
 
         // GET: Models/Details/5
