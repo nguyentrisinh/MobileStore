@@ -21,9 +21,10 @@
                         <div class="col-lg-6">
                             <div class="input-group">
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
                                 </span>
-                                <input name="SearchString" type="text" class="form-control" placeholder="Tìm kiếm theo tên...">
+                                <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
+                                <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo tên...">
                             </div>
                         </div>
                     </div>
@@ -39,12 +40,12 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["IDSortParm"]">
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["IDSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                         @Html.DisplayNameFor(model => model.SupplierID)
                                     </a>
                                 </th>
                                 <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                         @Html.DisplayNameFor(model => model.Name)
                                     </a>
                                 </th>
@@ -56,7 +57,7 @@
                                 </th>
                                 <th>
 
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]">
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                         @Html.DisplayNameFor(model => model.Email)
                                     </a>
                                 </th>
@@ -67,7 +68,7 @@
                                     @Html.DisplayNameFor(model => model.Status)
                                 </th>
                                 <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["PicNameSortParm"]">
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["PicNameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                         @Html.DisplayNameFor(model => model.PicName)
                                     </a>
                                 </th>

@@ -34,6 +34,7 @@ namespace MobileStore.Controllers
 
             ViewData["EmailSortParm"] = sortOrder == "Email" ? "email_desc" : "Email";
             ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
             var suppliers = from m in _context.Supplier
                 select m;
 
