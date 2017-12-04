@@ -82,12 +82,7 @@
                             <th>
 
                             </th>
-                            <th>
-
-                            </th>
-                            <th>
-
-                            </th>
+                           
                         </tr>
                         </thead>
                         <tbody>
@@ -125,23 +120,26 @@
                                     @Html.DisplayFor(modelItem => item.PicEmail)
                                 </td>
                                 <td>
-                                    <a asp-action="Edit" asp-route-id="@item.SupplierID">
-                                        <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
-                                    </a>
-
-                                    <td>
-                                        <a asp-action="Details" asp-route-id="@item.SupplierID">
-                                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i>&nbsp; Chi tiết</button>
+                                    <div class="btn-group">
+                                        <a  class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.SupplierID">
+                                           <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
                                         </a>
-                                    </td>
-                                    <td>
 
 
-                                        <a asp-action="Delete" asp-route-id="@item.SupplierID">
-                                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i>&nbsp; Xóa</button>
+                                        <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.SupplierID">
+                                            <i class="fa fa-info"></i>&nbsp; Chi tiết
                                         </a>
-                                    </td>
-                                </td>
+
+
+
+
+                                        <a  class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.SupplierID">
+                                           <i class="fa fa-trash-o"></i>&nbsp; Xóa
+                                        </a>
+                                    </div>
+                                       
+
+</td>
                             </tr>
                         }
                         </tbody>

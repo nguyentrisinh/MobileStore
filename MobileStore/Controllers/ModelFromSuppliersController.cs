@@ -14,6 +14,7 @@ namespace MobileStore.Controllers
 {
     public class ModelFromSuppliersController : Controller
     {
+        // GET: Items/Delete/5
         public async Task<IActionResult> DeleteItem(int? id)
         {
             if (id == null)
@@ -31,6 +32,17 @@ namespace MobileStore.Controllers
             }
 
             return View(item);
+        }
+
+        // POST: Items/Delete/5
+        [HttpPost, ActionName("DeleteItem")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmedItem(int id)
+        {
+            var item = await _context.Item.SingleOrDefaultAsync(m => m.ItemID == id);
+            _context.Item.Remove(item);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Edit","ModelFromSuppliers",new{id=item.ModelFromSupplierID});
         }
         // GET: Items/Edit/5
         public async Task<IActionResult> EditItem(int? id)
@@ -163,8 +175,8 @@ namespace MobileStore.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "ModelID", modelFromSupplier.ModelID);
-            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID", modelFromSupplier.SupplierID);
+            ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "Name", modelFromSupplier.ModelID);
+            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "Name", modelFromSupplier.SupplierID);
             return View(modelFromSupplier);
         }
 
@@ -270,8 +282,12 @@ namespace MobileStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var items = await _context.Item.Where(i => i.ModelFromSupplierID == id).ToListAsync();
+            _context.Item.RemoveRange(items);
+
             var modelFromSupplier = await _context.ModelFromSupplier.SingleOrDefaultAsync(m => m.ModelFromSupplierID == id);
             _context.ModelFromSupplier.Remove(modelFromSupplier);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
