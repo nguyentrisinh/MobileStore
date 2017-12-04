@@ -189,12 +189,7 @@
                                 <th>
 
                                 </th>
-                                <th>
-
-                                </th>
-                                <th>
-
-                                </th>
+                               
                             </tr>
                         </thead>
                         <tbody>
@@ -249,22 +244,22 @@
                                     </td>
 
                                     <td>
-                                        <a asp-action="EditItem" asp-route-id="@item.ItemID">
-                                            <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
+                                        <div class="btn-group">
+                                        <a class="btn btn-warning btn-sm" asp-action="EditItem" asp-route-id="@item.ItemID">
+                                           <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
                                         </a>
 
-                                    <td>
-                                        <a asp-action="Details" asp-route-id="@item.ItemID">
-                                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i>&nbsp; Chi tiết</button>
+
+                                        <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.ItemID">
+                                           <i class="fa fa-info"></i>&nbsp; Chi tiết
                                         </a>
-                                    </td>
-                                    <td>
 
 
-                                        <a asp-action="DeleteItem" asp-route-id="@item.ItemID">
-                                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i>&nbsp; Xóa</button>
+                                        <a  class="btn btn-danger btn-sm" asp-action="DeleteItem" asp-route-id="@item.ItemID">
+                                           <i class="fa fa-trash-o"></i>&nbsp; Xóa
                                         </a>
-                                    </td>
+                                        </div>
+
                                     </td>
                                 </tr>
                             }

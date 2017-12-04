@@ -48,8 +48,7 @@
                                             @Html.DisplayNameFor(model => model.SupplierID)
                                         </th>
                                         <th></th>
-                                        <th></th>
-                                        <th></th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -78,21 +77,22 @@
                                                 @Html.DisplayFor(modelItem => item.Supplier.SupplierID)
                                             </td>
                                             <td>
-                                                <a asp-action="Edit" asp-route-id="@item.ModelFromSupplierID">
-                                                    <button type="button" class="btn btn-warning btn-sm">
-                                                        <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
-                                                    </button>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a asp-action="Details" asp-route-id="@item.ModelFromSupplierID">
-                                                    <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i>&nbsp; Chi tiết</button>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a asp-action="Delete" asp-route-id="@item.ModelFromSupplierID">
-                                                    <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i>&nbsp; Xóa</button>
-                                                </a>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.ModelFromSupplierID">
+                                                       
+                                                            <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
+                                                       
+                                                    </a>
+                                           
+                                                    <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.ModelFromSupplierID">
+                                                       <i class="fa fa-info"></i>&nbsp; Chi tiết
+                                                    </a>
+                                            
+                                                    <a  class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.ModelFromSupplierID">
+                                                       <i class="fa fa-trash-o"></i>&nbsp; Xóa
+                                                    </a>
+                                                </div>
+                                               
                                             </td>
                                         </tr>
                                     }
