@@ -16,6 +16,7 @@ namespace MobileStore.Models
     public class Supplier
     {
         [DisplayName("Mã số")]
+        //[Display(Name = "Last Name")]
         public int SupplierID { get; set; }
 
         #region SupplierInfo

@@ -1,6 +1,7 @@
-﻿@model IEnumerable<MobileStore.Models.Supplier>
+﻿@*@model PaginatedList<MobileStore.Models.Supplier>*@
+@model IEnumerable<MobileStore.Models.Supplier>
 @using MobileStore.Models
-
+@using MobileStore
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -38,95 +39,95 @@
                 <div class="table-striped table-responsive">
                     <table class="table">
                         <thead>
-                            <tr>
-                                <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["IDSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                        @Html.DisplayNameFor(model => model.SupplierID)
-                                    </a>
-                                </th>
-                                <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                        @Html.DisplayNameFor(model => model.Name)
-                                    </a>
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Address)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Phone)
-                                </th>
-                                <th>
+                        <tr>
+                            <th>
+                                <a asp-action="Index" asp-route-sortOrder="@ViewData["IDSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                    @Html.DisplayNameFor(model => model.SupplierID)
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </a>
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Address)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Phone)
+                            </th>
+                            <th>
 
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                        @Html.DisplayNameFor(model => model.Email)
-                                    </a>
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Code)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Status)
-                                </th>
-                                <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["PicNameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                        @Html.DisplayNameFor(model => model.PicName)
-                                    </a>
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.PicPhone)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.PicEmail)
-                                </th>
-                                <th>
+                                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                    @Html.DisplayNameFor(model => model.Email)
+                                </a>
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Code)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th>
+                                <a asp-action="Index" asp-route-sortOrder="@ViewData["PicNameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                    @Html.DisplayNameFor(model => model.PicName)
+                                </a>
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PicPhone)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PicEmail)
+                            </th>
+                            <th>
 
-                                </th>
-                                <th>
+                            </th>
+                            <th>
 
-                                </th>
-                                <th>
+                            </th>
+                            <th>
 
-                                </th>
-                            </tr>
+                            </th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.SupplierID)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Address)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Phone)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Email)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Code)
-                                    </td>
-                                    <td>
-                                        <span class="@("badge " + (item.Status == SupplierStatus.Active ? "badge-success" : "badge-secondary"))">@Html.DisplayFor(modelItem => item.Status)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PicName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PicPhone)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PicEmail)
-                                    </td>
-                                    <td>
-                                        <a asp-action="Edit" asp-route-id="@item.SupplierID">
-                                            <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
-                                        </a>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SupplierID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Address)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Phone)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Code)
+                                </td>
+                                <td>
+                                    <span class="@("badge " + (item.Status == SupplierStatus.Active ? "badge-success" : "badge-secondary"))">@Html.DisplayFor(modelItem => item.Status)</span>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PicName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PicPhone)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PicEmail)
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.SupplierID">
+                                        <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
+                                    </a>
 
                                     <td>
                                         <a asp-action="Details" asp-route-id="@item.SupplierID">
@@ -140,11 +141,81 @@
                                             <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i>&nbsp; Xóa</button>
                                         </a>
                                     </td>
-                                    </td>
-                                </tr>
-                            }
+                                </td>
+                            </tr>
+                        }
                         </tbody>
+                    </table>
+                    @{
 
+                        PaginatedList<MobileStore.Models.Supplier> PaginatedModel = Model as PaginatedList<MobileStore.Models.Supplier>;
+
+                        string prevDisabled = !PaginatedModel.HasPreviousPage ? "disabled" : "";
+
+                        string nextDisabled = !PaginatedModel.HasNextPage ? "disabled" : "";
+
+
+                    }
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item @prevDisabled"><a asp-action="Index"
+
+                                                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+
+                                                     asp-route-page="@(PaginatedModel.PageIndex - 1)"
+
+                                                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+
+                                                     class="page-link" >Previous</a></li>
+                            @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
+                            {
+                                <li class="page-item @( @PaginatedModel.PageIndex == i ? "active" : " " )"><a asp-action="Index"
+
+                                                         asp-route-sortOrder="@ViewData["CurrentSort"]"
+
+                                                         asp-route-page="@i"
+
+                                                         asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a></li>
+
+                            }
+                            <li class="page-item @nextDisabled"><a asp-action="Index"
+
+                                                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+
+                                                     asp-route-page="@(PaginatedModel.PageIndex + 1)"
+
+                                                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+
+                                                    class="page-link" >Next</a></li>
+                        </ul>
+                    </nav>
+                    @*<a asp-action="Index"
+
+                           asp-route-sortOrder="@ViewData["CurrentSortOrder"]"
+
+                           asp-route-page="@(PaginatedModel.PageIndex - 1)"
+
+                           asp-route-currentFilter="@ViewData["FilterParam"]"
+
+                           class="btn btn-default @prevDisabled">
+
+                            Previous
+
+                        </a>*@
+
+                    @*<a asp-action="Index"
+
+                         asp-route-sortOrder="@ViewData["CurrentSortOrder"]"
+
+                          asp-route-page="@(PaginatedModel.PageIndex + 1)"
+
+                          asp-route-currentFilter="@ViewData["FilterParam"]"
+
+                         class="btn btn-default @nextDisabled">
+
+                          Next
+
+                       </a>*@
                 </div>
             </div>
         </div>

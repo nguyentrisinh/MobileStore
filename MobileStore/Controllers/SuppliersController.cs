@@ -25,16 +25,24 @@ namespace MobileStore.Controllers
         {
             return "From [HttpPost]Index: filter on " + searchString;
         }
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder,string currentFilter, string searchString,int? page)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["IDSortParm"] = sortOrder == "ID" ? "id_desc" : "ID";
-
             ViewData["PicNameSortParm"] = sortOrder == "PicName" ? "picname_desc" : "PicName";
-
             ViewData["EmailSortParm"] = sortOrder == "Email" ? "email_desc" : "Email";
-            ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
             var suppliers = from m in _context.Supplier
                 select m;
 
@@ -69,8 +77,9 @@ namespace MobileStore.Controllers
                     suppliers = suppliers.OrderBy(s => s.Name);
                     break;
             }
+            int pageSize = 1;
 
-            return View(await suppliers.ToListAsync());
+            return View(await PaginatedList<Supplier>.CreateAsync(suppliers.AsNoTracking(),page??1,pageSize));
         }
         //public async Task<IActionResult> Index()
         //{
