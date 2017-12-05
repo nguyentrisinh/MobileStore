@@ -282,8 +282,8 @@ namespace MobileStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var items = await _context.Item.Where(i => i.ModelFromSupplierID == id).ToListAsync();
-            _context.Item.RemoveRange(items);
+            //var items = await _context.Item.Where(i => i.ModelFromSupplierID == id).ToListAsync();
+            //_context.Item.RemoveRange(items);
 
             var modelFromSupplier = await _context.ModelFromSupplier.SingleOrDefaultAsync(m => m.ModelFromSupplierID == id);
             _context.ModelFromSupplier.Remove(modelFromSupplier);
