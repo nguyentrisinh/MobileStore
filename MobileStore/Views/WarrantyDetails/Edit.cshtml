@@ -1,0 +1,66 @@
+﻿@model MobileStore.Models.WarrantyDetail
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>WarrantyDetail</h4>
+<hr />
+<div class="row">
+    <div class="col-lg-4" style="margin:auto;">
+        <div class="card">
+            <form asp-action="Edit">
+                <div class="card-header">Sửa chi tiết bảo hành</div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="WarrantyDetailID" />
+                    <div class="form-group row">
+                        <label asp-for="Date" class="col-md-3 form-control-label">Ngày</label>
+                        <div class="col-md-9">
+                            <input asp-for="Date" class="form-control" />
+                            <span asp-validation-for="Date" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="DefectInfo" class="col-md-3 form-control-label">Thông tin lỗi</label>
+                        <div class="col-md-9">
+                            <input asp-for="DefectInfo" class="form-control" />
+                            <span asp-validation-for="DefectInfo" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Status" class="col-md-3 form-control-label">Trạng thái</label>
+                        <div class="col-md-9">
+                            <select asp-for="Status" class="form-control" asp-items="@Html.GetEnumSelectList<WarrantyDetail.WarrantyDetailStatus>()"></select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="WarrantyCardID" class="col-md-3 form-control-label">Mã bảo hành</label>
+                        <div class="col-md-9">
+                            <select asp-for="WarrantyCardID" class="form-control" asp-items="ViewBag.WarrantyCardID"></select>
+                            <span asp-validation-for="WarrantyCardID" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> Sửa</button>
+                    @*<input type="submit" value="Save" class="btn btn-default" />*@
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">
+        <button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button>
+    </a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
