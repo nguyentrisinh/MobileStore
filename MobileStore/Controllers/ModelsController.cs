@@ -20,22 +20,22 @@ namespace MobileStore.Controllers
         }
 
         // GET: Models
-        public async Task<IActionResult> Index(string SearchString, string sortOrder)
+        public async Task<IActionResult> Index(string SearchString, string sortOrder, string currentFilter, int? page)
         {
-            ViewData["DataSearchString"] = SearchString;
+           
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
-            //ViewData["CurrentSort"] = sortOrder;
+            ViewData["CurrentSort"] = sortOrder;
 
-            //if (SearchString != null)
-            //{
-            //    page = 1;
-            //}
-            //else
-            //{
-            //    SearchString = currentFilter;
-            //}
-            //ViewData["CurrentFilter"] = SearchString;
+            if (SearchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+               SearchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = SearchString;
 
             //var applicationDbContext =  _context.Model.Include(m => m.Brand);
             var applicationDbContext = from m in _context.Model
@@ -59,9 +59,9 @@ namespace MobileStore.Controllers
             }
 
 
-            return View( applicationDbContext);
-            //int pageSize = 2;
-            //return View(await PaginatedList<Model>.CreateAsync(applicationDbContext.AsNoTracking(), page ?? 1, pageSize));
+            //return View( applicationDbContext);
+            int pageSize = 2;
+            return View(await PaginatedList<Model>.CreateAsync(applicationDbContext.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Models/Details/5

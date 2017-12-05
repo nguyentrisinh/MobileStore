@@ -20,10 +20,51 @@ namespace MobileStore.Controllers
         }
 
         // GET: WarrantyCards
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int SearchString, string sortOrder, int currentFilter, int? page)
         {
-            var applicationDbContext = _context.WarrantyCard.Include(w => w.Item);
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["DateStartSortParm"] = sortOrder == "DateStart" ? "datestart_desc" : "DateStart";
+            ViewData["DateEndSortParm"] = sortOrder == "DateEnd" ? "dateend_desc" : "DateEnd";
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (SearchString.ToString()!="" || SearchString !=0)
+            {
+                page = 1;
+            }
+            else
+            {
+                SearchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = SearchString;
+
+            //var applicationDbContext = _context.WarrantyCard.Include(w => w.Item);
+            var applicationDbContext = from w in _context.WarrantyCard
+                                       .Include("Item")
+                                       select w;
+
+            if(SearchString.ToString() != "" || SearchString !=0)
+            {
+                applicationDbContext = applicationDbContext.Where(w => w.NumberOfWarranty == SearchString);
+            }
+            
+            switch(sortOrder)
+            {
+                case "datestart_desc":
+                    applicationDbContext = applicationDbContext.OrderByDescending(w => w.StartDate);
+                    break;
+                case "dateend_desc":
+                    applicationDbContext = applicationDbContext.OrderByDescending(w => w.EndDate);
+                    break;
+                case "DateStart":
+                    applicationDbContext = applicationDbContext.OrderBy(w => w.StartDate);
+                    break;
+                default:
+                    applicationDbContext = applicationDbContext.OrderBy(w => w.EndDate);
+                    break;
+            }
+            int pageSize = 2;
+            return View(await PaginatedList<WarrantyCard>.CreateAsync(applicationDbContext.AsNoTracking(), page ?? 1, pageSize));
+            //return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: WarrantyCards/Details/5

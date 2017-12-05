@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MobileStore.Models.WarrantyCard>
+﻿@model PaginatedList<MobileStore.Models.WarrantyCard>
 @{
     ViewData["Title"] = "Index";
 }
@@ -11,11 +11,11 @@
 
             <div class="card-body">
 
-                <form asp-controller="WarrantyCards" asp-action="Index" class="form-horizontal">
+                <form asp-controller="WarrantyCards" asp-action="Index" method="get" class="form-horizontal">
                     <div class="form-group row">
                         <div class="col-lg-6">
                             <div class="input-group">
-                                <input class="form-control" type="text" name="SearchString" value="@ViewData["DataSearchString"]" placeholder="Tìm kiếm theo Mã Bảo Hành" />
+                                <input class="form-control" type="text" name="SearchString" value="@ViewData["CurrentFilter"]" placeholder="Tìm kiếm theo Mã Bảo Hành" />
                                 <span class="input-group-btn">
                                     <input type="submit" value="Search" class="btn btn-primary" />
                                 </span>
@@ -41,11 +41,12 @@
                                 </th>
                                 <th>
                                     @*@Html.DisplayNameFor(model => model.StartDate)*@
-                                    Ngày bắt đầu bảo hành
+                                    <a asp-controller="WarrantyCard" asp-action="Index" asp-route-sortOrder="@ViewData["DateStartSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">   Ngày bắt đầu bảo hành</a>
                                 </th>
                                 <th>
                                     @*@Html.DisplayNameFor(model => model.EndDate)*@
-                                    Ngày kết thúc bảo hành
+                                    
+                                    <a asp-controller="WarrantyCard" asp-action="Index" asp-route-sortOrder="@ViewData["DateEndSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">   Ngày kết thúc bảo hành</a>
                                 </th>
                                 <th>
                                     @*@Html.DisplayNameFor(model => model.Period)*@
@@ -92,6 +93,25 @@
                             }
                         </tbody>
                     </table>
+                    @{
+                        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+                    }
+
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-page="@(Model.PageIndex - 1)"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                       class="btn btn-default @prevDisabled">
+                        Previous
+                    </a>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-page="@(Model.PageIndex + 1)"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                       class="btn btn-default @nextDisabled">
+                        Next
+                    </a>
                 </div>
             </div>
           </div>
