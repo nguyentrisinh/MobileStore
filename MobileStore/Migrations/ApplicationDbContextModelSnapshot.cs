@@ -260,7 +260,8 @@ namespace MobileStore.Migrations
 
             modelBuilder.Entity("MobileStore.Models.Model", b =>
                 {
-                    b.Property<int>("ModelID");
+                    b.Property<int>("ModelID")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("BrandID");
 
@@ -275,6 +276,8 @@ namespace MobileStore.Migrations
                     b.Property<int>("Type");
 
                     b.HasKey("ModelID");
+
+                    b.HasIndex("BrandID");
 
                     b.ToTable("Model");
                 });
@@ -493,7 +496,7 @@ namespace MobileStore.Migrations
                     b.HasOne("MobileStore.Models.ModelFromSupplier", "ModelFromSupplier")
                         .WithMany("Items")
                         .HasForeignKey("ModelFromSupplierID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MobileStore.Models.Model", "Model")
                         .WithMany("Items")
@@ -505,8 +508,8 @@ namespace MobileStore.Migrations
                 {
                     b.HasOne("MobileStore.Models.Brand", "Brand")
                         .WithMany("Models")
-                        .HasForeignKey("ModelID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("BrandID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MobileStore.Models.ModelFromSupplier", b =>
@@ -514,12 +517,12 @@ namespace MobileStore.Migrations
                     b.HasOne("MobileStore.Models.Model", "Model")
                         .WithMany("ModelFromSuppliers")
                         .HasForeignKey("ModelID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MobileStore.Models.Supplier", "Supplier")
                         .WithMany("ModelFromSuppliers")
                         .HasForeignKey("SupplierID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MobileStore.Models.Order", b =>
@@ -527,12 +530,12 @@ namespace MobileStore.Migrations
                     b.HasOne("MobileStore.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Orders")
                         .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MobileStore.Models.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MobileStore.Models.OrderDetail", b =>
@@ -540,12 +543,12 @@ namespace MobileStore.Migrations
                     b.HasOne("MobileStore.Models.Item", "Item")
                         .WithOne("OrderDetail")
                         .HasForeignKey("MobileStore.Models.OrderDetail", "ItemID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MobileStore.Models.Order", "Order")
                         .WithMany("OrderDetails")
                         .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MobileStore.Models.ReturnItem", b =>
@@ -566,7 +569,7 @@ namespace MobileStore.Migrations
                     b.HasOne("MobileStore.Models.Item", "Item")
                         .WithMany("WarrantyCards")
                         .HasForeignKey("ItemID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MobileStore.Models.WarrantyDetail", b =>
@@ -574,7 +577,7 @@ namespace MobileStore.Migrations
                     b.HasOne("MobileStore.Models.WarrantyCard", "WarrantyCard")
                         .WithMany("WarrantyDetails")
                         .HasForeignKey("WarrantyCardID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

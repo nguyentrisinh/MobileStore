@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 
-namespace MobileStore.Models
+namespace MobileStore.Models.ApplicationUserViewModels
 {
-    public enum UserRole
+    public class EditApplicationUserViewModel
     {
-        Admin = 1,
-        Sale = 2,
-        Technical = 3,
-        WarehouseManager = 4,
-        Accountant = 5,
-    }
-    // Add profile data for application users by adding properties to the ApplicationUser class
-    public class ApplicationUser : IdentityUser
-    {
+        #region ApplicationUser Identity Attribute
+        [Required]
+        public string Id { get; set; }
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+        #endregion
+
+        #region ApplicationUser info
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
         [Display(Name = "Last Name")]
@@ -28,8 +28,6 @@ namespace MobileStore.Models
         public string Address { get; set; }
 
         public UserRole Role { get; set; }
-
-        public IList<Order> Orders { get; set; }
-
+        #endregion
     }
 }

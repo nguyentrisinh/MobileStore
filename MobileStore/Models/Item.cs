@@ -5,6 +5,15 @@ using System.Threading.Tasks;
 
 namespace MobileStore.Models
 {
+    public enum ItemStatus
+    {
+        New = 1,
+        Return = 2,
+        Change = 3,
+        Warranty = 4,
+        Sold = 5,
+    }
+
     public class Item
     {
         public int ItemID { get; set; }
@@ -43,9 +52,6 @@ namespace MobileStore.Models
         public IList<WarrantyCard> WarrantyCards{ get; set; }
         #endregion
 
-        public enum ItemStatus
-        {
 
-        }
     }
 }

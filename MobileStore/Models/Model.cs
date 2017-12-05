@@ -5,6 +5,12 @@ using System.Threading.Tasks;
 
 namespace MobileStore.Models
 {
+    public enum ModelType
+    {
+        Device = 1,
+        Accessory = 2,
+    }
+
     public class Model
     {
         public int ModelID { get; set; }
@@ -31,10 +37,5 @@ namespace MobileStore.Models
         public IList<ModelFromSupplier> ModelFromSuppliers { get; set; }
         #endregion
 
-        public enum ModelType
-        {
-            Device = 1,
-            Accessory = 2,
-        }
     }
 }

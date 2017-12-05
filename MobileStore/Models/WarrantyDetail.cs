@@ -5,6 +5,13 @@ using System.Threading.Tasks;
 
 namespace MobileStore.Models
 {
+    public enum WarrantyDetailStatus
+    {
+        Fixing = 1,
+        Fixed = 2,
+        Returned = 3
+    }
+
     public class WarrantyDetail
     {
         public int WarrantyDetailID { get; set; }
@@ -18,11 +25,5 @@ namespace MobileStore.Models
         public virtual WarrantyCard WarrantyCard { get; set; }
         #endregion
 
-        public enum WarrantyDetailStatus
-        {
-            Fixing = 1,
-            Fixed = 2,
-            Returned = 3
-        }
     }
 }
