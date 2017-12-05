@@ -48,7 +48,7 @@ namespace MobileStore.Controllers
         // GET: WarrantyCards/Create
         public IActionResult Create()
         {
-            ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "ItemID");
+            ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "Name");
             return View();
         }
 
