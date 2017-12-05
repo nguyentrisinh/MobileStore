@@ -33,7 +33,7 @@
                     <div class="form-group row">
                         <label asp-for="Status" class="col-md-3 form-control-label">Trạng thái</label>
                         <div class="col-md-9">
-                            <select asp-for="Status" class="form-control" asp-items="@Html.GetEnumSelectList<WarrantyDetail.WarrantyDetailStatus>()"></select>
+                            <select asp-for="Status" class="form-control" asp-items="@Html.GetEnumSelectList<WarrantyDetailStatus>()"></select>
                             <span asp-validation-for="Status" class="text-danger"></span>
                         </div>
                     </div>
