@@ -1,0 +1,99 @@
+﻿@model IEnumerable<MobileStore.Models.WarrantyCard>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row">
+    <div class="col-lg-12" style="margin:auto">
+        <div class="card">
+
+            <div class="card-header">Danh Sách Mã Bảo Hành</div>
+
+            <div class="card-body">
+
+                <form asp-controller="WarrantyCards" asp-action="Index" class="form-horizontal">
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <div class="input-group">
+                                <input class="form-control" type="text" name="SearchString" value="@ViewData["DataSearchString"]" placeholder="Tìm kiếm theo Mã Bảo Hành" />
+                                <span class="input-group-btn">
+                                    <input type="submit" value="Search" class="btn btn-primary" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+
+                <p>
+                    <a asp-action="Create">
+                        <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm Bảo Hành</button>
+                    </a>
+                </p>
+
+                <div class="table-striped table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @*@Html.DisplayNameFor(model => model.NumberOfWarranty)*@
+                                    Mã Bảo Hành
+                                </th>
+                                <th>
+                                    @*@Html.DisplayNameFor(model => model.StartDate)*@
+                                    Ngày bắt đầu bảo hành
+                                </th>
+                                <th>
+                                    @*@Html.DisplayNameFor(model => model.EndDate)*@
+                                    Ngày kết thúc bảo hành
+                                </th>
+                                <th>
+                                    @*@Html.DisplayNameFor(model => model.Period)*@
+                                    Giai đoạn bảo hành
+                                </th>
+                                <th>
+                                    @*@Html.DisplayNameFor(model => model.Item)*@
+                                    Tên sản phẩm
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NumberOfWarranty)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StartDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Period)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Item.Name)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.WarrantyCardID">
+                                            <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
+                                        </a> |
+                                        <a asp-action="Details" asp-route-id="@item.WarrantyCardID">
+                                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i>&nbsp; Chi tiết</button>
+                                        </a> |
+                                        <a asp-action="Delete" asp-route-id="@item.WarrantyCardID">
+                                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i>&nbsp; Xóa</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+          </div>
+       </div>
+</div>
