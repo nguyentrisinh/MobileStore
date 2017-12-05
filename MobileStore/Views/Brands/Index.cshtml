@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MobileStore.Models.Brand>
+﻿@model PaginatedList<MobileStore.Models.Brand>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,12 +13,12 @@
                     <a asp-action="Create">Create New</a>
                 </p>*@
                 <div class="card-body">
-                    <form asp-controller="Brands" asp-action="Index" class="form-horizontal">
+                    <form asp-controller="Brands" asp-action="Index" method="get" class="form-horizontal">
                         <div class="form-group row">
                             <div class="col-lg-6">
                                 <div class="input-group">
-                                     <input class="form-control" style="margin-right:10px;" type="text" name="SearchString" value="@ViewData["DataSearchString"]" placeholder="Tìm kiếm theo Tên" />
-                                     <input class="form-control" style="margin-right:10px;" type="text" name="SearchCountry" value="@ViewData["DataSearchCountry"]" placeholder="Tìm kiếm theo quốc gia"/>
+                                     <input class="form-control" style="margin-right:10px;" type="text" name="SearchString" value="@ViewData["CurrentFilter"]" placeholder="Tìm kiếm theo Tên" />
+                                     @*<input class="form-control" style="margin-right:10px;" type="text" name="SearchCountry" value="@ViewData["DataSearchCountry"]" placeholder="Tìm kiếm theo quốc gia"/>*@
                                  
                                     <span class="input-group-btn">
                                         <input type="submit" value="Search" class="btn btn-primary"/>
@@ -38,13 +38,14 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Name)</a>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(model => model[0].Name)</a>
                                     </th>
                                     <th>
-                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["CountrySortParm"]">@Html.DisplayNameFor(model => model.Country)</a>
+                                        <a asp-action="index" asp-route-sortorder="@ViewData["CountrySortParm"]"asp-route-currentFilter="@ViewData["CurrentFilter"]" >@Html.DisplayNameFor(model => model[0].Country)</a>
+                                       
                                     </th>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.Description)
+                                        @Html.DisplayNameFor(model => model[0].Description)
                                     </th>
                                     <th></th>
                                 </tr>
@@ -77,6 +78,29 @@
                                 }
                             </tbody>
                         </table>
+
+                       
+
+                        @{
+                            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+                        }
+
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-page="@(Model.PageIndex - 1)"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                           class="btn btn-default @prevDisabled">
+                            Previous
+                        </a>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-page="@(Model.PageIndex + 1)"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                           class="btn btn-default @nextDisabled">
+                            Next
+                        </a>
+
                     </div>
                 </div>
 

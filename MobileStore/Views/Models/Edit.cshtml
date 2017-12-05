@@ -47,7 +47,7 @@
                     <div class="form-group row">
                         <label asp-for="Type" class="col-md-3 form-control-label">Loại</label>
                         <div class="col-md-9">
-                            <select asp-for="Type" class="form-control" asp-items="Html.GetEnumSelectList<Model.ModelType>()"></select>
+                            <select asp-for="Type" class="form-control" asp-items="Html.GetEnumSelectList<ModelType>()"></select>
                             <span asp-validation-for="Type" class="text-danger"></span>
                         </div>
                     </div>

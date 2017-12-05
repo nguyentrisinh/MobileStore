@@ -20,25 +20,31 @@ namespace MobileStore.Controllers
         }
 
         // GET: Brands
-        public async Task<IActionResult> Index(string SearchString, string SearchCountry, string sortOrder)
+        public async Task<IActionResult> Index(string SearchString, string sortOrder,string currentFilter, int?page)
         {
-            ViewData["DataSearchString"] = SearchString;
-            ViewData["DataSearchCountry"] = SearchCountry;
+           
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["CountrySortParm"] = String.IsNullOrEmpty(sortOrder) ? "country_desc" : "country_asc";
 
+            
+            ViewData["CurrentSort"] = sortOrder;
 
+            if (SearchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                SearchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = SearchString;
             var brand = from b in _context.Brand select b;
 
             if (!String.IsNullOrEmpty(SearchString))
             {
-                brand = brand.Where(s => s.Name.Contains(SearchString));
+                brand = brand.Where(s => s.Name.Contains(SearchString) || s.Country.Contains(SearchString));
             }
 
-            if (!String.IsNullOrEmpty(SearchCountry))
-            {
-                brand = brand.Where(s => s.Country.Contains(SearchCountry));
-            }
 
             switch (sortOrder)
             {
@@ -56,7 +62,9 @@ namespace MobileStore.Controllers
                     break;
 
             }
-            return View(await brand.ToListAsync());
+            //return View(await brand.ToListAsync());
+            int pageSize = 2;
+            return View(await PaginatedList<Brand>.CreateAsync(brand.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Brands/Details/5

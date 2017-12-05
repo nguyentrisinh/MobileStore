@@ -24,26 +24,44 @@ namespace MobileStore.Controllers
         {
             ViewData["DataSearchString"] = SearchString;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            var applicationDbContext = await _context.Model.Include(m => m.Brand).ToListAsync();
 
-            if(!String.IsNullOrEmpty(SearchString))
+            //ViewData["CurrentSort"] = sortOrder;
+
+            //if (SearchString != null)
+            //{
+            //    page = 1;
+            //}
+            //else
+            //{
+            //    SearchString = currentFilter;
+            //}
+            //ViewData["CurrentFilter"] = SearchString;
+
+            //var applicationDbContext =  _context.Model.Include(m => m.Brand);
+            var applicationDbContext = from m in _context.Model
+                                       .Include("Brand")
+                                       select m;
+
+            if (!String.IsNullOrEmpty(SearchString))
             {
-                applicationDbContext = applicationDbContext.Where(m => m.Name.Contains(SearchString)).ToList();
+                applicationDbContext = applicationDbContext.Where(m => m.Name.Contains(SearchString));
             }
 
             switch (sortOrder)
             {
                 case "name_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(s => s.Name).ToList();
+                    applicationDbContext = applicationDbContext.OrderByDescending(s => s.Name);
                     break;
                 default:
-                    applicationDbContext = applicationDbContext.OrderBy(s => s.Name).ToList();
+                    applicationDbContext = applicationDbContext.OrderBy(s => s.Name);
                     break;
 
             }
 
 
             return View( applicationDbContext);
+            //int pageSize = 2;
+            //return View(await PaginatedList<Model>.CreateAsync(applicationDbContext.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Models/Details/5
