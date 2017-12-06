@@ -19,181 +19,138 @@
     </environment>
     <environment exclude="Development">
         @*<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />*@
+            asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+            asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />*@
 
-        <link rel="stylesheet" href="~/css/core-ui.css" asp-append-version="true"  />
+        <link rel="stylesheet" href="~/css/core-ui.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
 
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden  pace-done" data-gr-c-s-loaded="true">
-   
+
     <header class="app-header navbar">
         <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
             <span class="navbar-toggler-icon"></span>
         </button>
-       
-        <a  asp-area="" asp-controller="Home" asp-action="Index" aria-atomicclass="navbar-brand"></a>
+
+        <a asp-area="" asp-controller="Home" asp-action="Index" aria-atomicclass="navbar-brand"></a>
         <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <ul class="nav navbar-nav d-md-down-none">
             <li class="nav-item px-3">
-               
-                <a  asp-area="" asp-controller="Home" asp-action="Index" class="nav-link" >Home</a>
-            </li>
-            <li class="nav-item px-3">
-                <a asp-area="" asp-controller="Home" asp-action="About" class="nav-link">About</a>
-            </li>
-            <li class="nav-item px-3">
-                <a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link" >Contact</a>
+
+                <a asp-area="" asp-controller="ModelFromSuppliers" asp-action="Index" class="nav-link">Nhập hàng</a>
             </li>
             @*<li class="nav-item px-3">
-                <a asp-area="" asp-controller="ApplicationUsers" asp-action="Index" class="nav-link" >Users</a>
-            </li>*@
+
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item px-3">
+                    <a asp-area="" asp-controller="Home" asp-action="About" class="nav-link">About</a>
+                </li>
+                <li class="nav-item px-3">
+                    <a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a>
+                </li>*@
+            @*<li class="nav-item px-3">
+                    <a asp-area="" asp-controller="ApplicationUsers" asp-action="Index" class="nav-link" >Users</a>
+                </li>*@
         </ul>
         @await Html.PartialAsync("_LoginPartial")
-       
+
 
 
     </header>
 
-<div class="app-body">
-    <div class="sidebar">
-        <nav class="sidebar-nav">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-speedometer"></i> Dashboard <span class="badge badge-primary">NEW</span></a>
-                </li>
+    <div class="app-body">
+        <div class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="icon-speedometer"></i> Dashboard <span class="badge badge-primary">NEW</span></a>
+                    </li>
 
-                <li class="nav-title">
-                    UI Elements
-                </li>
-                <li class="nav-item nav-dropdown open">
-                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-puzzle"></i> Components</a>
-                    <ul class="nav-dropdown-items">
-                        <li class="nav-item">
-                            <a class="nav-link" href="components-buttons.html"><i class="icon-puzzle"></i> Buttons</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="components-social-buttons.html"><i class="icon-puzzle"></i> Social Buttons</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="components-cards.html"><i class="icon-puzzle"></i> Cards</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="components-forms.html"><i class="icon-puzzle"></i> Forms</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="components-modals.html"><i class="icon-puzzle"></i> Modals</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="components-switches.html"><i class="icon-puzzle"></i> Switches</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="components-tables.html"><i class="icon-puzzle"></i> Tables</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="components-tabs.html"><i class="icon-puzzle"></i> Tabs</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item nav-dropdown open">
-                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-star"></i> Icons</a>
-                    <ul class="nav-dropdown-items">
-                        <li class="nav-item">
-                            <a class="nav-link" href="icons-font-awesome.html"><i class="icon-star"></i> Font Awesome <span class="badge badge-secondary">4.7</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="icons-simple-line-icons.html"><i class="icon-star"></i> Simple Line Icons</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="widgets.html"><i class="icon-calculator"></i> Widgets <span class="badge badge-primary">NEW</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="charts.html"><i class="icon-pie-chart"></i> Charts</a>
-                </li>
-                <li class="divider"></li>
-                <li class="nav-title">
-                    Extras
-                </li>
-                <li class="nav-item nav-dropdown">
-                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-star"></i> Pages</a>
-                    <ul class="nav-dropdown-items">
-                        <li class="nav-item">
-                            <a class="nav-link" href="pages-login.html" target="_top"><i class="icon-star"></i> Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="pages-register.html" target="_top"><i class="icon-star"></i> Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="pages-404.html" target="_top"><i class="icon-star"></i> Error 404</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="pages-500.html" target="_top"><i class="icon-star"></i> Error 500</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item mt-auto">
-                    <a class="nav-link nav-link-success" href="http://coreui.io/" target="_top"><i class="icon-cloud-download"></i> Download CoreUI</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-danger" href="http://coreui.io/pro/" target="_top"><i class="icon-layers"></i> Try CoreUI <strong>PRO</strong></a>
-                </li>
+                    <li class="nav-title">
+                        QUẢN LÝ CỬA HÀNG
+                    </li>
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-puzzle"></i> Quản lý</a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="Index" asp-controller="Suppliers"><i class="icon-plane"></i> Nhà cung cấp</a>
+                            </li>
 
-            </ul>
-        </nav>
-        <button class="sidebar-minimizer brand-minimizer" type="button"></button>
-    </div>
-    <div class="main">
-        <ol class="breadcrumb">
-           
-            <a class="breadcrumb-item" asp-area="" asp-action="Index" asp-controller="@ViewContext.RouteData.Values["controller"].ToString()">@ViewContext.RouteData.Values["controller"].ToString()</a>
-            <a asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"].ToString()" asp-action="@ViewContext.RouteData.Values["action"].ToString()" class="breadcrumb-item">@ViewContext.RouteData.Values["action"].ToString()</a>
-          
+                        </ul>
+                    </li>
 
-            <!-- Breadcrumb Menu-->
-            <li class="breadcrumb-menu d-md-down-none">
-                <div class="btn-group" role="group" aria-label="Button group">
-                    <a class="btn" href="#"><i class="icon-speech"></i></a>
-                    <a class="btn" href="./"><i class="icon-graph"></i> &nbsp;Dashboard</a>
-                    <a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>
-                </div>
-            </li>
-        </ol>
-        <div class="container-fluid">
-            <div class="animated fadeIn">
-                <div class="dynamic-content">
-                    
 
-                    @RenderBody()
-                </div>
-                <footer>
-                    <p>&copy; 2017 - MobileStore</p>
-                </footer>
-            </div>
+                    <li class="divider"></li>
+
+                    <li class="nav-item mt-auto">
+                        <a class="nav-link nav-link-success" href="http://coreui.io/" target="_top"><i class="icon-cloud-download"></i> Download CoreUI</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-danger" href="http://coreui.io/pro/" target="_top"><i class="icon-layers"></i> Try CoreUI <strong>PRO</strong></a>
+                    </li>
+
+                </ul>
+            </nav>
+            <button class="sidebar-minimizer brand-minimizer" type="button"></button>
         </div>
-        <hr/>
-    
+        <div class="main">
+            <ol class="breadcrumb">
+
+                <a class="breadcrumb-item" asp-area="" asp-action="Index" asp-controller="@ViewContext.RouteData.Values["controller"].ToString()">@ViewContext.RouteData.Values["controller"].ToString()</a>
+                <a asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"].ToString()" asp-action="@ViewContext.RouteData.Values["action"].ToString()" class="breadcrumb-item">@ViewContext.RouteData.Values["action"].ToString()</a>
+
+
+                <!-- Breadcrumb Menu-->
+                <li class="breadcrumb-menu d-md-down-none">
+                    <div class="btn-group" role="group" aria-label="Button group">
+                        <a class="btn" href="#"><i class="icon-speech"></i></a>
+                        <a class="btn" href="./"><i class="icon-graph"></i> &nbsp;Dashboard</a>
+                        <a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>
+                    </div>
+                </li>
+            </ol>
+            <div class="container-fluid">
+                <div class="animated fadeIn">
+                    <div class="dynamic-content">
+
+                        <div id="ui-view">
+                            <div class="animated fadeIn">
+
+                                @RenderBody()
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<footer>
+                            <p>&copy; 2017 - MobileStore</p>
+                        </footer>*@
+                </div>
+
+            </div>
+            @*<hr/>*@
+
+
+        </div>
     </div>
-</div>
 
 
-<environment include="Development">
-    <script src="https://use.fontawesome.com/cf3e0cca39.js"></script>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/popper.js/dist/umd/popper.js"></script>
-    <script src="~/lib/tether/dist/js/tether.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="~/lib/PACE/pace.js"></script>
-    <script src="~/js/app.js"></script>
-    <script src="~/js/main.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-</environment>
+    <environment include="Development">
+        <script src="https://use.fontawesome.com/cf3e0cca39.js"></script>
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/popper.js/dist/umd/popper.js"></script>
+        <script src="~/lib/tether/dist/js/tether.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/PACE/pace.js"></script>
+        <script src="~/js/app.js"></script>
+        <script src="~/js/main.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
     <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"

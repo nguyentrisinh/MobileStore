@@ -1,0 +1,112 @@
+﻿@model IEnumerable<MobileStore.Models.ModelFromSupplier>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="ui-view">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-header">
+                        Danh sách các đợt hàng
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <a asp-action="Create">
+                                <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm đợt hàng</button>
+                            </a>
+                        </p>
+                        <div class="table-striped table-responsive">
+
+                            <table class="table  ">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ModelFromSupplierID)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Quantity)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PriceBought)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PriceSold)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Date)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ModelID)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.SupplierID)
+                                        </th>
+                                        <th></th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ModelFromSupplierID)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Quantity)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PriceBought)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PriceSold)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Date)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Model.ModelID)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Supplier.SupplierID)
+                                            </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.ModelFromSupplierID">
+                                                       
+                                                            <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
+                                                       
+                                                    </a>
+                                           
+                                                    <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.ModelFromSupplierID">
+                                                       <i class="fa fa-info"></i>&nbsp; Chi tiết
+                                                    </a>
+                                            
+                                                    <a  class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.ModelFromSupplierID">
+                                                       <i class="fa fa-trash-o"></i>&nbsp; Xóa
+                                                    </a>
+                                                </div>
+                                               
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

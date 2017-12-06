@@ -1,0 +1,107 @@
+﻿@model MobileStore.Models.Item
+@using MobileStore.Models
+
+@{
+    ViewData["Title"] = "EditItem";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <form asp-controller="ModelFromSuppliers" asp-action="EditItem">
+
+                <div class="card-header">
+                    <strong>Sửa thông tin sản phẩm</strong>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="ItemID" />
+
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Name)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Name" rows="8" class="form-control" placeholder="Nhập tên sản phẩm..."></input>
+                            <span asp-validation-for="Name" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label asp-for="IMEI" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.IMEI)</label>
+                        <div class="col-md-8">
+                            <input asp-for="IMEI" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.IMEI)..."></input>
+                            <span asp-validation-for="IMEI" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label asp-for="SerializerNumber" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.SerializerNumber)</label>
+                        <div class="col-md-8">
+                            <input asp-for="SerializerNumber" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.SerializerNumber)..."></input>
+                            <span asp-validation-for="SerializerNumber" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label asp-for="Note" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Note)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Note" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.Note)..."></input>
+                            <span asp-validation-for="Note" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <div class="form-group row">
+
+                        <label class="col-md-4 form-control-label" asp-for="Status"> @Html.DisplayNameFor(model => model.Status)</label>
+                        <div class="col-md-8">
+                            <select class="form-control" asp-for="Status" asp-items="Html.GetEnumSelectList<ItemStatus>()">
+                                @*<option selected="selected" value="">Chọn trạng thái</option>*@
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label" asp-for="ModelFromSupplierID" class="control-label"></label>
+                        <div class="col-md-8">
+                            <select asp-for="ModelFromSupplierID" class="form-control" asp-items="ViewBag.ModelFromSupplierID"></select>
+                            <span asp-validation-for="ModelFromSupplierID" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label" asp-for="ModelID" class="control-label"></label>
+                        <div class="col-md-8">
+                            <select asp-for="ModelID" class="form-control" asp-items="ViewBag.ModelID"></select>
+                            <span asp-validation-for="ModelID" class="text-danger"></span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> Sửa</button>
+
+                </div>
+
+            </form>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-controller="ModelFromSuppliers" asp-route-id="@Model.ModelFromSupplierID"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
