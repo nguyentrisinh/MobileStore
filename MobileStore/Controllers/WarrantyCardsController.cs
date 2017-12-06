@@ -26,7 +26,7 @@ namespace MobileStore.Controllers
             ViewData["DateEndSortParm"] = sortOrder == "DateEnd" ? "dateend_desc" : "DateEnd";
             ViewData["CurrentSort"] = sortOrder;
 
-            if (SearchString.ToString()!="" || SearchString !=0)
+            if (SearchString.ToString() != "" && SearchString.ToString() != "0")
             {
                 page = 1;
             }
@@ -41,8 +41,10 @@ namespace MobileStore.Controllers
             var applicationDbContext = from w in _context.WarrantyCard
                                        .Include("Item")
                                        select w;
+            int count = applicationDbContext.Count();
 
-            if(SearchString.ToString() != "" || SearchString !=0)
+            //SearchString.ToString() != "" && SearchString.ToString() != "0"
+            if (SearchString.ToString() != "" && SearchString.ToString() != "0")
             {
                 applicationDbContext = applicationDbContext.Where(w => w.NumberOfWarranty == SearchString);
             }
@@ -63,6 +65,7 @@ namespace MobileStore.Controllers
                     break;
             }
             int pageSize = 2;
+            int count2 = applicationDbContext.Count();
             return View(await PaginatedList<WarrantyCard>.CreateAsync(applicationDbContext.AsNoTracking(), page ?? 1, pageSize));
             //return View(await applicationDbContext.ToListAsync());
         }

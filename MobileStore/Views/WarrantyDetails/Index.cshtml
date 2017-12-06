@@ -27,7 +27,7 @@
                 </form>
                 <p>
                     <a asp-action="Create">
-                        <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm nhà cung cấp</button>
+                        <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp;Thêm Chi Tiết Bảo Hành</button>
                     </a>
                 </p>
                 <div class="table-striped table-responsive">
@@ -58,7 +58,7 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Date)
+                                        @Html.DisplayFor(modelItem => item.Date.Month) / @Html.DisplayFor(modelItem => item.Date.Day)/  @Html.DisplayFor(modelItem=>item.Date.Year)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.DefectInfo)

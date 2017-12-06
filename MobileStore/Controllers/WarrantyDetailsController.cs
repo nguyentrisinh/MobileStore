@@ -48,6 +48,7 @@ namespace MobileStore.Controllers
         // GET: WarrantyDetails/Create
         public IActionResult Create()
         {
+            ViewData["CurrentDate"] = DateTime.Now.ToShortDateString();
             ViewData["WarrantyCardID"] = new SelectList(_context.WarrantyCard, "WarrantyCardID", "NumberOfWarranty");
             return View();
         }
@@ -65,6 +66,7 @@ namespace MobileStore.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+           
             ViewData["WarrantyCardID"] = new SelectList(_context.WarrantyCard, "WarrantyCardID", "NumberOfWarranty", warrantyDetail.WarrantyCardID);
             return View(warrantyDetail);
         }

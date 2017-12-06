@@ -1,5 +1,6 @@
 ﻿@model MobileStore.Models.WarrantyCard
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 @{
     ViewData["Title"] = "Create";
 }
@@ -9,7 +10,7 @@
     <div class="col-lg-6" style="margin:auto">
 
         <div class="card">
-            <form asp-action="Create">
+            <form asp-action="Create" id="formWarrantyCards">
                 <div class="card-header">Thêm Bảo Hành</div>
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -23,14 +24,14 @@
                     <div class="form-group row">
                         <label asp-for="StartDate" class="col-md-3 form-control-label">Ngày bắt đầu</label>
                         <div class="col-md-9">
-                            <input asp-for="StartDate" class="form-control" />
+                            <input asp-for="StartDate" class="form-control" id="StartDate"/>
                             <span asp-validation-for="StartDate" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label asp-for="EndDate" class="col-md-3 form-control-label ">Ngày kết thúc</label>
                         <div class="col-md-9">
-                            <input asp-for="EndDate" class="form-control" />
+                            <input asp-for="EndDate" class="form-control" id="EndDate"/>
                             <span asp-validation-for="EndDate" class="text-danger"></span>
                         </div>
                     </div>
@@ -48,11 +49,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Tạo</button>
-                    @*<input type="submit" value="Create" class="btn btn-default" />*@
-                </div>
+                
             </form>
+            <div class="card-footer">
+                @*<button  class="btn btn-primary" id="btnsubmit" onclick="clickButton()"><i class="fa fa-plus"></i> Tạo</button>*@
+                <button class="btn btn-primary" onclick="clickButton()"><i class="fa fa-plus"></i> Tạo</button>
+                @*<input type="submit" value="Create" class="btn btn-default" />*@
+            </div>
+            
         </div>
     </div>
 </div>
@@ -66,3 +70,21 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+
+<script type="text/javascript">
+
+    function clickButton()
+    {
+        if ((new Date($("#StartDate").val())).getTime() >= (new Date($("#EndDate").val()).getTime()))
+        {
+            alert("nhap ngay ket thuc lon hon ngay bat dau");
+        }
+        else
+        {
+
+            $("#formWarrantyCards").submit();
+        }
+
+    }
+</script>

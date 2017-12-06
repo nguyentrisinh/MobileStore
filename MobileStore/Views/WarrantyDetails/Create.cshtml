@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    var date = DateTime.Now.ToShortDateString();
 }
 
 <h2>Create</h2>
@@ -18,7 +19,7 @@
                 <div class="form-group row">
                     <label asp-for="Date" class="col-md-3 form-control-label">Ngày</label>
                     <div class="col-md-9">
-                        <input asp-for="Date" class="form-control" />
+                        <input asp-for="@date" class="form-control"  readonly/>
                         <span asp-validation-for="Date" class="text-danger"></span>
                     </div>
                 </div>
