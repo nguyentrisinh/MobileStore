@@ -100,24 +100,41 @@
                     </table>
 
                     @{
+                        PaginatedList<MobileStore.Models.Model> PaginatedModel = Model as PaginatedList<MobileStore.Models.Model>;
                         var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
                         var nextDisabled = !Model.HasNextPage ? "disabled" : "";
                     }
 
-                    <a asp-action="Index"
-                       asp-route-sortOrder="@ViewData["CurrentSort"]"
-                       asp-route-page="@(Model.PageIndex - 1)"
-                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                       class="btn btn-default @prevDisabled">
-                        Previous
-                    </a>
-                    <a asp-action="Index"
-                       asp-route-sortOrder="@ViewData["CurrentSort"]"
-                       asp-route-page="@(Model.PageIndex + 1)"
-                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                       class="btn btn-default @nextDisabled">
-                        Next
-                    </a>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item @prevDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex - 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Previous</a>
+                            </li>
+                            @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
+                            {
+                                <li class="page-item @( @PaginatedModel.PageIndex == i ? "active" : " " )">
+                                    <a asp-action="Index"
+                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                       asp-route-page="@i"
+                                       asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
+                                </li>
+
+                            }
+                            <li class="page-item @nextDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex + 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+
+
 
                 </div>
             </div>

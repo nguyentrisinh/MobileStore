@@ -20,10 +20,45 @@ namespace MobileStore.Controllers
         }
 
         // GET: WarrantyDetails
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int SearchString, string sortOrder, int currentFilter, int? page)
         {
-            var applicationDbContext = _context.WarrantyDetail.Include(w => w.WarrantyCard);
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["DateStartSortParm"] = sortOrder == "DateStart" ? "datestart_desc" : "DateStart";
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (SearchString.ToString() != "" && SearchString.ToString() != "0")
+            {
+                page = 1;
+            }
+            else
+            {
+                SearchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = SearchString;
+
+            //var applicationDbContext = _context.WarrantyDetail.Include(w => w.WarrantyCard);
+
+            var applicationDbContext = from wd in _context.WarrantyDetail
+                                       .Include("WarrantyCard")
+                                       select (wd);
+            if(SearchString.ToString() != "" && SearchString.ToString() != "0")
+            {
+                applicationDbContext = applicationDbContext.Where(wd => wd.WarrantyCard.NumberOfWarranty == SearchString);
+            }
+     
+                switch(sortOrder)
+                {
+                    case "datestart_desc":
+                        applicationDbContext = applicationDbContext.OrderByDescending(wd => wd.Date);
+                        break;
+                    default:
+                        applicationDbContext = applicationDbContext.OrderBy(wd => wd.Date);
+                        break;
+                }
+           
+
+            int pageSize = 2;
+            return View(await PaginatedList<WarrantyDetail>.CreateAsync(applicationDbContext.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: WarrantyDetails/Details/5

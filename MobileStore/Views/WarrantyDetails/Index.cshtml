@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MobileStore.Models.WarrantyDetail>
+﻿@model PaginatedList<MobileStore.Models.WarrantyDetail>
 @{
     ViewData["Title"] = "Index";
 }
@@ -11,11 +11,11 @@
                     <a asp-action="Create">Create New</a>
                 </p>*@
             <div class="card-body">
-                <form asp-controller="WarrantyDetails" asp-action="Index" class="form-horizontal">
+                <form asp-controller="WarrantyDetails" asp-action="Index" method="get" class="form-horizontal">
                     <div class="form-group row">
                         <div class="col-lg-6">
                             <div class="input-group">
-                                <input class="form-control" style="margin-right:10px;" type="text" name="SearchString" value="@ViewData["DataSearchString"]" placeholder="Tìm kiếm theo ID" />
+                                <input class="form-control" style="margin-right:10px;" type="text" name="SearchString" value="@ViewData["CurrentFilter"]" placeholder="Tìm kiếm theo ID" />
 
                                 <span class="input-group-btn">
                                     <input type="submit" value="Search" class="btn btn-primary" />
@@ -36,7 +36,7 @@
                             <tr>
                                 <th>
                                     @*@Html.DisplayNameFor(model => model.Date)*@
-                                    Ngày
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["DateStartSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]"> Ngày</a>
                                 </th>
                                 <th>
                                     @*@Html.DisplayNameFor(model => model.DefectInfo)*@
@@ -58,7 +58,7 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Date.Month) / @Html.DisplayFor(modelItem => item.Date.Day)/  @Html.DisplayFor(modelItem=>item.Date.Year)
+                                        @Html.DisplayFor(modelItem => item.Date.Month) / @Html.DisplayFor(modelItem => item.Date.Day)/  @Html.DisplayFor(modelItem => item.Date.Year)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.DefectInfo)
@@ -84,6 +84,39 @@
                             }
                         </tbody>
                     </table>
+
+                    @{
+                        PaginatedList<MobileStore.Models.WarrantyDetail> PaginatedModel = Model as PaginatedList<MobileStore.Models.WarrantyDetail>;
+                        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+                    }
+
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item @prevDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex - 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Previous</a>
+                            </li>
+                            @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
+                            {
+                                <li class="page-item @( @PaginatedModel.PageIndex == i ? "active" : " " )">
+                                    <a asp-action="Index"
+                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                       asp-route-page="@i"
+                                       asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
+                                </li>
+
+                            }
+                            <li class="page-item @nextDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex + 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Next</a>
+                            </li>
                 </div>
 
                 </div>
