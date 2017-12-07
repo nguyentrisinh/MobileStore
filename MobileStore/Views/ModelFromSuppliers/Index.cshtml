@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<MobileStore.Models.ModelFromSupplier>
+@using MobileStore.Authorization;
 
+@inject IAuthorizationService AuthorizationService 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -77,22 +79,33 @@
                                                 @Html.DisplayFor(modelItem => item.Supplier.SupplierID)
                                             </td>
                                             <td>
+                                                @*@if (await AuthorizationService.AuthorizeAsync(User,item, OrderOperations.Update))
+                                                {
+                                                    <a asp-action="Edit" asp-route-id="@item.ContactId">Edit</a><text> | </text>
+                                                }
+                                                <a asp-action="Details" asp-route-id="@item.ContactId">Details</a>
+                                                @if (await AuthorizationService.AuthorizeAsync(User,
+                                                    item, ContactOperations.Delete))
+                                                {
+                                                    <text> | </text>
+                                                    <a asp-action="Delete" asp-route-id="@item.ContactId">Delete</a>
+                                                }*@
                                                 <div class="btn-group">
                                                     <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.ModelFromSupplierID">
-                                                       
-                                                            <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
-                                                       
+
+                                                        <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
+
                                                     </a>
-                                           
+
                                                     <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.ModelFromSupplierID">
-                                                       <i class="fa fa-info"></i>&nbsp; Chi tiết
+                                                        <i class="fa fa-info"></i>&nbsp; Chi tiết
                                                     </a>
-                                            
-                                                    <a  class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.ModelFromSupplierID">
-                                                       <i class="fa fa-trash-o"></i>&nbsp; Xóa
+
+                                                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.ModelFromSupplierID">
+                                                        <i class="fa fa-trash-o"></i>&nbsp; Xóa
                                                     </a>
                                                 </div>
-                                               
+
                                             </td>
                                         </tr>
                                     }

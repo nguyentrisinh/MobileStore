@@ -12,8 +12,8 @@ using System;
 namespace MobileStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171205014729_InitDatabase")]
-    partial class InitDatabase
+    [Migration("20171207145616_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

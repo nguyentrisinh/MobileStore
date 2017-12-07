@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MobileStore.Migrations
 {
-    public partial class InitDatabase : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

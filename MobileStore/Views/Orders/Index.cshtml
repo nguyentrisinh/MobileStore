@@ -1,0 +1,68 @@
+﻿@model IEnumerable<MobileStore.Models.Order>
+@using MobileStore.Authorization;
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Total)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) 
+                @Html.DisplayFor(modelItem => item.ApplicationUser.LastName) 
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.CustomerID)
+            </td>
+            <td>
+                @{
+                    var updatePermission = await AuthorizationService.AuthorizeAsync(User, item, OrderOperations.Update);
+                    bool canEdit = updatePermission.Succeeded;
+                    var deletePermission = await AuthorizationService.AuthorizeAsync(User, item, OrderOperations.Update);
+                    bool canDelete = deletePermission.Succeeded;
+                }
+                @if (canEdit)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.OrderID">Edit</a>
+                }
+                <a asp-action="Details" asp-route-id="@item.OrderID">Details</a>
+                @if (canDelete)
+                {
+                    <a asp-action="Delete" asp-route-id="@item.OrderID">Delete</a>
+                }
+
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
