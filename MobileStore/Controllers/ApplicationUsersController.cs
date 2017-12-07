@@ -43,8 +43,8 @@ namespace MobileStore.Controllers
             _context = context;
         }
 
-            // GET: ApplicationUsers
-            public async Task<IActionResult> Index(string sortOrder, string currentFilter, int? page, int? pageSize)
+        // GET: ApplicationUsers
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, int? page, int? pageSize)
         {
             // ViewData["NameSortParm"] is not the param for current sort but the sortOrder for the next sort 
             // If sortOrder is null or empty => current will sort NameAscending => Next sort of FirstName is first_name_desc => ViewData["NameSortParm"] = first_name_desc
@@ -57,14 +57,14 @@ namespace MobileStore.Controllers
             ViewData["EmailSortParm"] = sortOrder == "email_asc" ? "email_desc" : "email_asc";
 
             var applicationUsers = from ent in _context.ApplicationUser
-                           select ent;
+                                   select ent;
 
             // Search method
             ViewData["CurrentFilter"] = currentFilter;
             if (!String.IsNullOrEmpty(currentFilter))
             {
                 applicationUsers = applicationUsers.Where(ent => ent.FirstName.Contains(currentFilter)
-                                                    || ent.LastName.Contains(currentFilter) || ent.Phone.Contains(currentFilter) || ent.Address.Contains(currentFilter) 
+                                                    || ent.LastName.Contains(currentFilter) || ent.Phone.Contains(currentFilter) || ent.Address.Contains(currentFilter)
                                                     || ent.Email.Contains(currentFilter));
             }
 
@@ -120,6 +120,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: ApplicationUsers/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
