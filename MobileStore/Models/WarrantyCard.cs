@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MobileStore.Models
 {
-    public class WarrantyCard
+    public class WarrantyCard : BaseModel
     {
         public int WarrantyCardID { get; set; }
 

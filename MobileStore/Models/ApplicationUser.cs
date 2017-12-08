@@ -26,10 +26,29 @@ namespace MobileStore.Models
         public DateTime Birthday { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
+        public string AvatarUrl { get; set; }
 
         public UserRole Role { get; set; }
 
+        #region Navigator Orders
         public IList<Order> Orders { get; set; }
+        #endregion
+
+        #region Navigator ModelFromSuppliers
+        public IList<ModelFromSupplier> ModelFromSuppliers { get; set; }
+        #endregion
+
+        #region Navigator ReturnItems
+        public IList<ReturnItem> ReturnItems { get; set; }
+        #endregion
+
+        #region Navigator WarrantyCard 
+        public IList<WarrantyCard> WarrantyCards { get; set; }
+        #endregion
+
+        #region Navigator WarrantyDetail
+        public IList<WarrantyDetail> WarrantyDetails { get; set; }
+        #endregion
 
     }
 }

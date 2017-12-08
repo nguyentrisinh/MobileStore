@@ -351,7 +351,7 @@ namespace MobileStore.Controllers
                         await _userManager.RemoveFromRoleAsync(user, "Admin");
                         break;
                     case UserRole.WarehouseManager:
-                        await _userManager.RemoveFromRoleAsync(user, "WarehoustManager");
+                        await _userManager.RemoveFromRoleAsync(user, "WarehouseManager");
                         break;
                     case UserRole.Technical:
                         await _userManager.RemoveFromRoleAsync(user, "Technical");
@@ -384,7 +384,7 @@ namespace MobileStore.Controllers
                         await NewUserRole(user, "Admin");
                         break;
                     case UserRole.WarehouseManager:
-                        await NewUserRole(user, "WarehoustManager");
+                        await NewUserRole(user, "WarehouseManager");
                         break;
                     case UserRole.Technical:
                         await NewUserRole(user, "Technical");

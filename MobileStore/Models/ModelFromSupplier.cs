@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace MobileStore.Models
 {
-    public class ModelFromSupplier
+    public class ModelFromSupplier : BaseModel
     {
         public int ModelFromSupplierID { get; set; }
 

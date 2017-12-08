@@ -12,7 +12,7 @@ using System;
 namespace MobileStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171205014729_InitDatabase")]
+    [Migration("20171208154935_InitDatabase")]
     partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -288,6 +288,9 @@ namespace MobileStore.Migrations
                     b.Property<int>("ModelFromSupplierID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("ApplicationUserID")
+                        .IsRequired();
+
                     b.Property<DateTime>("Date");
 
                     b.Property<int>("ModelID");
@@ -301,6 +304,8 @@ namespace MobileStore.Migrations
                     b.Property<int>("SupplierID");
 
                     b.HasKey("ModelFromSupplierID");
+
+                    b.HasIndex("ApplicationUserID");
 
                     b.HasIndex("ModelID");
 
@@ -358,6 +363,9 @@ namespace MobileStore.Migrations
                     b.Property<int>("ReturnItemID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("ApplicationUserID")
+                        .IsRequired();
+
                     b.Property<string>("DefectInfo");
 
                     b.Property<int>("NewItemID");
@@ -367,6 +375,8 @@ namespace MobileStore.Migrations
                     b.Property<DateTime>("ReturnDate");
 
                     b.HasKey("ReturnItemID");
+
+                    b.HasIndex("ApplicationUserID");
 
                     b.HasIndex("NewItemID")
                         .IsUnique();
@@ -410,6 +420,9 @@ namespace MobileStore.Migrations
                     b.Property<int>("WarrantyCardID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("ApplicationUserID")
+                        .IsRequired();
+
                     b.Property<DateTime>("EndDate");
 
                     b.Property<int>("ItemID");
@@ -422,6 +435,8 @@ namespace MobileStore.Migrations
 
                     b.HasKey("WarrantyCardID");
 
+                    b.HasIndex("ApplicationUserID");
+
                     b.HasIndex("ItemID");
 
                     b.ToTable("WarrantyCard");
@@ -432,6 +447,9 @@ namespace MobileStore.Migrations
                     b.Property<int>("WarrantyDetailID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("ApplicationUserID")
+                        .IsRequired();
+
                     b.Property<DateTime>("Date");
 
                     b.Property<string>("DefectInfo");
@@ -441,6 +459,8 @@ namespace MobileStore.Migrations
                     b.Property<int>("WarrantyCardID");
 
                     b.HasKey("WarrantyDetailID");
+
+                    b.HasIndex("ApplicationUserID");
 
                     b.HasIndex("WarrantyCardID");
 
@@ -515,6 +535,11 @@ namespace MobileStore.Migrations
 
             modelBuilder.Entity("MobileStore.Models.ModelFromSupplier", b =>
                 {
+                    b.HasOne("MobileStore.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("ModelFromSuppliers")
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MobileStore.Models.Model", "Model")
                         .WithMany("ModelFromSuppliers")
                         .HasForeignKey("ModelID")
@@ -554,6 +579,11 @@ namespace MobileStore.Migrations
 
             modelBuilder.Entity("MobileStore.Models.ReturnItem", b =>
                 {
+                    b.HasOne("MobileStore.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("ReturnItems")
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MobileStore.Models.Item", "NewItem")
                         .WithOne("NewItem")
                         .HasForeignKey("MobileStore.Models.ReturnItem", "NewItemID")
@@ -567,6 +597,11 @@ namespace MobileStore.Migrations
 
             modelBuilder.Entity("MobileStore.Models.WarrantyCard", b =>
                 {
+                    b.HasOne("MobileStore.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("WarrantyCards")
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MobileStore.Models.Item", "Item")
                         .WithMany("WarrantyCards")
                         .HasForeignKey("ItemID")
@@ -575,6 +610,11 @@ namespace MobileStore.Migrations
 
             modelBuilder.Entity("MobileStore.Models.WarrantyDetail", b =>
                 {
+                    b.HasOne("MobileStore.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("WarrantyDetails")
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MobileStore.Models.WarrantyCard", "WarrantyCard")
                         .WithMany("WarrantyDetails")
                         .HasForeignKey("WarrantyCardID")

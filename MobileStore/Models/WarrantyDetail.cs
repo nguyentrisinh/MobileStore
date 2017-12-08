@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace MobileStore.Models
 {
@@ -12,7 +13,7 @@ namespace MobileStore.Models
         Returned = 3
     }
 
-    public class WarrantyDetail
+    public class WarrantyDetail : BaseModel
     {
         public int WarrantyDetailID { get; set; }
 

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MobileStore.Models
 {
-    public class Order
+    public class Order : BaseModel
     {
         public int OrderID { get; set; }
 
@@ -15,10 +15,10 @@ namespace MobileStore.Models
         public DateTime Date { get; set; }
         #endregion
 
-        #region ApplicationUser ForeignKey (Staff in system)
-        public string ApplicationUserID { get; set; }
-        public virtual ApplicationUser ApplicationUser { get; set; }
-        #endregion
+        //#region ApplicationUser ForeignKey (Staff in system)
+        //public string ApplicationUserID { get; set; }
+        //public virtual ApplicationUser ApplicationUser { get; set; }
+        //#endregion
 
         #region Customer ForeignKey 
         public int CustomerID { get; set; }

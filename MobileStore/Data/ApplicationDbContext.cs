@@ -59,6 +59,8 @@ namespace MobileStore.Data
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<ModelFromSupplier>().HasOne(ent => ent.Model).WithMany(ent => ent.ModelFromSuppliers).HasForeignKey(ent => ent.ModelID)
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<ModelFromSupplier>().HasOne(ent => ent.ApplicationUser).WithMany(ent => ent.ModelFromSuppliers).HasForeignKey(ent => ent.ApplicationUserID)
+                .IsRequired().OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Order>().HasOne(ent => ent.ApplicationUser).WithMany(ent => ent.Orders).HasForeignKey(ent => ent.ApplicationUserID)
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
@@ -70,9 +72,16 @@ namespace MobileStore.Data
 
             builder.Entity<WarrantyCard>().HasOne(ent => ent.Item).WithMany(ent => ent.WarrantyCards).HasForeignKey(ent => ent.ItemID)
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<WarrantyCard>().HasOne(ent => ent.ApplicationUser).WithMany(ent => ent.WarrantyCards).HasForeignKey(ent => ent.ApplicationUserID)
+                .IsRequired().OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<WarrantyDetail>().HasOne(ent => ent.WarrantyCard).WithMany(ent => ent.WarrantyDetails).HasForeignKey(ent => ent.WarrantyCardID)
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<WarrantyDetail>().HasOne(ent => ent.ApplicationUser).WithMany(ent => ent.WarrantyDetails).HasForeignKey(ent => ent.ApplicationUserID)
+                .IsRequired().OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ReturnItem>().HasOne(ent => ent.ApplicationUser).WithMany(ent => ent.ReturnItems).HasForeignKey(ent => ent.ApplicationUserID)
+                .IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
         public DbSet<MobileStore.Models.ApplicationUser> ApplicationUser { get; set; }
