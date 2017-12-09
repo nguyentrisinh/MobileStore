@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MobileStore.Models
 {
-    public class ReturnItem
+    public class ReturnItem : BaseModel
     {
         public int ReturnItemID { get; set; }
 
