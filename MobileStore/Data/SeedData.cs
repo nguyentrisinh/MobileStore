@@ -28,11 +28,11 @@ namespace ContactManager.Data
                 // dotnet user-secrets set SeedUserPW <pw>
                 // The admin user can do anything
 
-                var adminID = await EnsureUser(serviceProvider, testUserPw, "admin@contoso.com");
+                var adminID = await EnsureUser(serviceProvider, testUserPw, "admin@ood.com");
                 await EnsureRole(serviceProvider, adminID, Constants.OrderAdministratorsRole);
 
                 // allowed user can create and edit contacts that they create
-                var uid = await EnsureUser(serviceProvider, testUserPw, "manager@contoso.com");
+                var uid = await EnsureUser(serviceProvider, testUserPw, "sale@ood.com");
                 await EnsureRole(serviceProvider, uid, Constants.OrderSalesRole);
 
                 //SeedDB(context, adminID);
@@ -77,74 +77,6 @@ namespace ContactManager.Data
             return IR;
         }
         #endregion
-        //#region snippet1
-        //public static void SeedDB(ApplicationDbContext context, string adminID)
-        //{
-        //    if (context.Contact.Any())
-        //    {
-        //        return;   // DB has been seeded
-        //    }
-
-        //    context.Contact.AddRange(
-        //    #region snippet_Contact
-        //        new Contact
-        //        {
-        //            Name = "Debra Garcia",
-        //            Address = "1234 Main St",
-        //            City = "Redmond",
-        //            State = "WA",
-        //            Zip = "10999",
-        //            Email = "debra@example.com",
-        //            Status = ContactStatus.Approved,
-        //            OwnerID = adminID
-        //        },
-        //    #endregion
-        //    #endregion
-        //        new Contact
-        //        {
-        //            Name = "Thorsten Weinrich",
-        //            Address = "5678 1st Ave W",
-        //            City = "Redmond",
-        //            State = "WA",
-        //            Zip = "10999",
-        //            Email = "thorsten@example.com",
-        //            Status = ContactStatus.Approved,
-        //            OwnerID = adminID
-        //        },
-        //     new Contact
-        //     {
-        //         Name = "Yuhong Li",
-        //         Address = "9012 State st",
-        //         City = "Redmond",
-        //         State = "WA",
-        //         Zip = "10999",
-        //         Email = "yuhong@example.com",
-        //         Status = ContactStatus.Approved,
-        //         OwnerID = adminID
-        //     },
-        //     new Contact
-        //     {
-        //         Name = "Jon Orton",
-        //         Address = "3456 Maple St",
-        //         City = "Redmond",
-        //         State = "WA",
-        //         Zip = "10999",
-        //         Email = "jon@example.com",
-        //         OwnerID = adminID
-        //     },
-        //     new Contact
-        //     {
-        //         Name = "Diliana Alexieva-Bosseva",
-        //         Address = "7890 2nd Ave E",
-        //         City = "Redmond",
-        //         State = "WA",
-        //         Zip = "10999",
-        //         Email = "diliana@example.com",
-        //         OwnerID = adminID
-        //     }
-        //     );
-        //    context.SaveChanges();
-        //}
     }
 }
 #endif

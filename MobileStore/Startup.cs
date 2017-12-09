@@ -120,7 +120,13 @@ namespace MobileStore
 
             app.UseIdentity();
 
-            app.UseMvcWithDefaultRoute();
+            //app.UseMvcWithDefaultRoute();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("default", "{controller}/{action}/{id?}", new { controller = "Home", action = "Index" });
+            });
+
 
             // Set password with the Secret Manager tool.
             // dotnet user-secrets set SeedUserPW <pw>
@@ -134,7 +140,7 @@ namespace MobileStore
 
             try
             {
-                //SeedData.Initialize(app.ApplicationServices, testUserPw).Wait();
+                SeedData.Initialize(app.ApplicationServices, testUserPw).Wait();
             }
             catch
             {

@@ -1,4 +1,5 @@
-﻿using MobileStore.Authorization;
+﻿using System;
+using MobileStore.Authorization;
 using MobileStore.Data;
 using MobileStore.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MobileStore.Models.SellViewModel;
 
 namespace MobileStore.Controllers
 {
@@ -26,13 +28,67 @@ namespace MobileStore.Controllers
             _authorizationService = authorizationService;
 
         }
-
+        #region Index
         // GET: Orders
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var applicationDbContext = _context.Order.Include(o => o.ApplicationUser).Include(o => o.Customer);
-            return View(await applicationDbContext.ToListAsync());
+
+            ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewData["CustomerSortParm"] = sortOrder=="customer" ? "customer_desc" : "customer";
+            ViewData["TotalSortParm"] = sortOrder == "total" ? "total_desc" : "total";
+            ViewData["StaffSortParm"] = sortOrder == "staff" ? "staff_desc" : "staff";
+
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            var orders = from m in _context.Order select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                orders = orders.Include(m=>m.Customer).Include(m=>m.ApplicationUser).Where(s => s.Customer.Name.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "customer_desc":
+                    orders = orders.OrderByDescending(s => s.Customer.Name);
+                    break;
+                case "customer":
+                    orders = orders.OrderBy(s => s.Customer);
+                    break;
+                case "date_desc":
+                    orders = orders.OrderByDescending(s => s.Date);
+                    break;
+                case "total":
+                    orders = orders.OrderBy(s => s.Total);
+                    break;
+                case "total_desc":
+                    orders = orders.OrderByDescending(s => s.Total);
+                    break;
+                case "staff":
+                    orders = orders.OrderBy(s => s.ApplicationUser.FirstName);
+                    break;
+                case "staff_desc":
+                    orders = orders.OrderByDescending(s => s.ApplicationUser.FirstName);
+                    break;
+                default:
+                    orders = orders.OrderBy(s => s.Date);
+                    break;
+            }
+            int pageSize = 1;
+
+            return View(await PaginatedList<Order>.CreateAsync(orders.AsNoTracking(), page ?? 1, pageSize));
         }
+#endregion
+        #region Detail
 
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -53,6 +109,9 @@ namespace MobileStore.Controllers
 
             return View(order);
         }
+#endregion
+
+        #region Get Create
 
         // GET: Orders/Create
         [Authorize(Roles = "Sale,Admin")]
@@ -61,6 +120,8 @@ namespace MobileStore.Controllers
             ViewData["CustomerID"] = new SelectList(_context.Customer, "CustomerID", "Name");
             return View();
         }
+#endregion
+        #region Post Create
 
         // POST: Orders/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -80,24 +141,49 @@ namespace MobileStore.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+#endregion
 
+        #region Get Edit
         // GET: Orders/Edit/5
         [Authorize(Roles = "Sale,Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
+          
             if (id == null)
             {
                 return NotFound();
             }
 
             var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == id);
+
             if (order == null)
             {
                 return NotFound();
             }
-            ViewData["CustomerID"] = new SelectList(_context.Customer, "CustomerID", "Name", order.CustomerID);
-            return View(order);
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
+                OrderOperations.Update);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+            var orderDetails = await _context.OrderDetail.Where(m => m.OrderID == id).Include(m=>m.Item).ToListAsync();
+            var sellViewModel = new SellViewModel();
+            sellViewModel.Order = order;
+            sellViewModel.OrderDetails = orderDetails;
+            sellViewModel.Customers = _context.Customer;
+            sellViewModel.NewItems = _context.Item.Where(m => m.Status == ItemStatus.New).Select(m => new
+            {
+                m.ItemID,
+                DisplayName = m.Name + m.IMEI
+            });
+            return View(sellViewModel);
         }
+        #endregion
+
+        #region Post Edit
+
+        
 
         // POST: Orders/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -105,34 +191,50 @@ namespace MobileStore.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Sale,Admin")]
-        public async Task<IActionResult> Edit(int id, Order order)
+        public async Task<IActionResult> Edit(int id, SellViewModel sellViewModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(order);
+                return View(sellViewModel);
             }
 
-            // Fetch Contact from DB to get OwnerID.
-            var contact = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == id);
-            if (contact == null)
+            // Fetch Contact from DB to get OwnerID. 
+            var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == id);
+            if (order == null || id != sellViewModel.Order.OrderID)
             {
                 return NotFound();
             }
 
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, contact,
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
                 OrderOperations.Update);
             if (!isAuthorized.Succeeded)
             {
                 return new ChallengeResult();
             }
+            try
 
-          
-            _context.Update(contact);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Index");
+                {
+                    _context.Update(sellViewModel.Order);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!OrderExists(sellViewModel.Order.OrderID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            
+            return RedirectToAction(nameof(Edit), new {id });
+           
         }
+        #endregion
 
+        #region Get Delete
         // GET: Orders/Delete/5
         [Authorize(Roles = "Sale,Admin")]
         public async Task<IActionResult> Delete(int? id)
@@ -154,6 +256,14 @@ namespace MobileStore.Controllers
             return View(order);
         }
 
+        #endregion
+
+        #region Post Delete
+
+        
+
+        
+
         // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -165,6 +275,31 @@ namespace MobileStore.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        #endregion
+
+
+        #region Post CreateOrderDetail
+        // POST: OrderDetails/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Sale,Admin")]
+        public async Task<IActionResult> CreateOrderDetail(SellViewModel sellViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(sellViewModel.OrderDetail);
+                var itemID = sellViewModel.OrderDetail.ItemID;
+                var item = await _context.Item.SingleAsync(m => m.ItemID == itemID);
+                item.Status = ItemStatus.Sold;
+                _context.Update(item);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Edit), new { id = sellViewModel.OrderDetail.OrderID });
+        }
+#endregion
+
 
         private bool OrderExists(int id)
         {

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -117,10 +119,17 @@ namespace MobileStore.Controllers
         }
 
         private readonly ApplicationDbContext _context;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ModelFromSuppliersController(ApplicationDbContext context)
+        public ModelFromSuppliersController(ApplicationDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+            _authorizationService = authorizationService;
+
         }
 
         // GET: ModelFromSuppliers
@@ -171,6 +180,7 @@ namespace MobileStore.Controllers
                 //var supplier = _context.Supplier.Single(s => s.SupplierID == modelFromSupplier.SupplierID);
                 //modelFromSupplier.Model = model;
                 //modelFromSupplier.Supplier = supplier;
+                modelFromSupplier.ApplicationUserID = _userManager.GetUserId(User);
                 _context.Add(modelFromSupplier);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

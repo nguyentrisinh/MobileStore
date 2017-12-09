@@ -1,43 +1,177 @@
-﻿@model MobileStore.Models.Order
+﻿@model MobileStore.Models.SellViewModel.SellViewModel
+@using MobileStore.Models
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Sửa hóa đơn";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
-
-<h4>Order</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="OrderID" />
-            <div class="form-group">
-                <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
-                <span asp-validation-for="Total" class="text-danger"></span>
+
+<!-- Modal -->
+    <div class="modal fade" id="createOrderDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form asp-action="CreateOrderDetail">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm chi tiết đơn hàng</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="OrderDetail.OrderID" value="@Model.Order.OrderID" />
+
+                        <div class="form-group row">
+                            <label asp-for="OrderDetail.PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
+                            <div class="col-md-8">
+                                <input asp-for="OrderDetail.PriceSold" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.OrderDetail.PriceSold)..."></input>
+                                <span asp-validation-for="OrderDetail.PriceSold" class="invalid-feedback"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+
+                            <label class="col-md-4 form-control-label" asp-for="OrderDetail.ItemID"></label>
+                            <div class="col-md-8">
+                                <select class="form-control" asp-for="OrderDetail.ItemID" asp-items="@(new SelectList(Model.NewItems,"ItemID","DisplayName"))">
+                                    <option selected="selected" value="">Chọn trạng thái</option>
+                                </select>
+                                <span asp-validation-for="OrderDetail.ItemID" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+
+                        <button type="submit" class="btn btn-primary">Tạo</button>
+
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class=" col-lg-8">
+        <div class="card">
+            <form asp-action="Edit">
+                <div class="card-header">
+                    <strong>Sửa đơn hàng</strong>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Order.OrderID" />
+                    <input type="hidden" asp-for="Order.ApplicationUserID"/>
+                    <div class="form-group row">
+                        <label asp-for="Order.Total" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Order.Total)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Order.Total" type="text" class="form-control" placeholder="Nhập số lượng...">
+                            <span asp-validation-for="Order.Total" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Order.Date" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Order.Date)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Order.Date" type="text" class="form-control" placeholder="Nhập giá mua...">
+                            <span asp-validation-for="Order.Date" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Order.CustomerID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Order.CustomerID)</label>
+                        <div class="col-md-8">
+
+                            <select asp-for="Order.CustomerID" class="form-control" asp-items="@(new SelectList(Model.Customers,"CustomerID","Name"))"></select>
+                            @*<input asp-for="ModelFromSupplier.SupplierID" type="text" class="form-control" placeholder="Chọn nhà cung cấp..">*@
+                            <span asp-validation-for="Order.CustomerID" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Sửa</button>
+                    @*<div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-default"/>
+                        </div>*@
+                </div>
+            </form>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Chi tiết đợt hàng
             </div>
-            <div class="form-group">
-                <label asp-for="CustomerID" class="control-label"></label>
-                <select asp-for="CustomerID" class="form-control" asp-items="ViewBag.CustomerID"></select>
-                <span asp-validation-for="CustomerID" class="text-danger"></span>
+            <div class="card-body">
+                <p class="mb-3">
+                    <button data-toggle="modal" data-target="#createOrderDetail" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Thêm chi tiết đơn hàng</button>
+                </p>
+
+                <div class=" table-striped table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.OrderDetails.First().Item.Name)
+                                </th>
+                                <th>
+
+                                    @Html.DisplayNameFor(model => model.OrderDetails.First().Item.IMEI)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.OrderDetails.First().PriceSold)
+                                </th>
+                                <th>
+
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderDetails)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Item.IMEI)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PriceSold)
+                                    </td>
+                                   
+
+                                    <td>
+                                        <div class="btn-group">
+                                            <a class="btn btn-warning btn-sm" asp-action="EditItem" asp-route-id="@item.ItemID">
+                                                <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
+                                            </a>
+
+
+                                            <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.ItemID">
+                                                <i class="fa fa-info"></i>&nbsp; Chi tiết
+                                            </a>
+
+
+                                            <a class="btn btn-danger btn-sm" asp-action="DeleteItem" asp-route-id="@item.ItemID">
+                                                <i class="fa fa-trash-o"></i>&nbsp; Xóa
+                                            </a>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+        </div>
+
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
 
 @section Scripts {

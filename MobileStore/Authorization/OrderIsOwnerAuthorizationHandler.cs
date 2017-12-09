@@ -9,7 +9,7 @@ using MobileStore.Data;
 namespace MobileStore.Authorization
 {
     public class OrderIsOwnerAuthorizationHandler
-        : AuthorizationHandler<OperationAuthorizationRequirement, Order>
+        : AuthorizationHandler<OperationAuthorizationRequirement, BaseModel>
     {
         UserManager<ApplicationUser> _userManager;
 
@@ -22,7 +22,7 @@ namespace MobileStore.Authorization
         protected override Task
             HandleRequirementAsync(AuthorizationHandlerContext context,
                 OperationAuthorizationRequirement requirement,
-                Order resource)
+                BaseModel resource)
         {
             if (context.User == null || resource == null)
             {

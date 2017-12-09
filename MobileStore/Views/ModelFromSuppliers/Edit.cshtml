@@ -23,6 +23,9 @@
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="ModelFromSupplier.ModelFromSupplierID" />
+
+                        <input type="hidden" asp-for="Item.Status" value="@ItemStatus.New" />
+
                         <input type="hidden" asp-for="Item.ModelFromSupplierID" value="@ViewBag.ModelFromSupplierID" />
                         <input type="hidden" asp-for="Item.ModelID" value="@ViewBag.ModelItemID" />
 
@@ -62,16 +65,7 @@
 
 
 
-                        <div class="form-group row">
-
-                            <label class="col-md-4 form-control-label" asp-for="Item.Status"></label>
-                            <div class="col-md-8">
-                                <select class="form-control" asp-for="Item.Status" asp-items="Html.GetEnumSelectList<ItemStatus>()">
-                                    @*<option selected="selected" value="">Chọn trạng thái</option>*@
-                                </select>
-                                <span asp-validation-for="Item.Status" class="text-danger"></span>
-                            </div>
-                        </div>
+                       
 
 
                     </div>
