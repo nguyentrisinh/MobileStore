@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MobileStore.Migrations
 {
-    public partial class CreateDatabase : Migration
+    public partial class InitDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -235,7 +235,7 @@ namespace MobileStore.Migrations
                         column: x => x.BrandID,
                         principalTable: "Brand",
                         principalColumn: "BrandID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -257,13 +257,13 @@ namespace MobileStore.Migrations
                         column: x => x.ApplicationUserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Order_Customer_CustomerID",
                         column: x => x.CustomerID,
                         principalTable: "Customer",
                         principalColumn: "CustomerID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -287,13 +287,13 @@ namespace MobileStore.Migrations
                         column: x => x.ModelID,
                         principalTable: "Model",
                         principalColumn: "ModelID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ModelFromSupplier_Supplier_SupplierID",
                         column: x => x.SupplierID,
                         principalTable: "Supplier",
                         principalColumn: "SupplierID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -318,7 +318,7 @@ namespace MobileStore.Migrations
                         column: x => x.ModelFromSupplierID,
                         principalTable: "ModelFromSupplier",
                         principalColumn: "ModelFromSupplierID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Item_Model_ModelID",
                         column: x => x.ModelID,
@@ -345,13 +345,13 @@ namespace MobileStore.Migrations
                         column: x => x.ItemID,
                         principalTable: "Item",
                         principalColumn: "ItemID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_OrderDetail_Order_OrderID",
                         column: x => x.OrderID,
                         principalTable: "Order",
                         principalColumn: "OrderID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -402,7 +402,7 @@ namespace MobileStore.Migrations
                         column: x => x.ItemID,
                         principalTable: "Item",
                         principalColumn: "ItemID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -424,7 +424,7 @@ namespace MobileStore.Migrations
                         column: x => x.WarrantyCardID,
                         principalTable: "WarrantyCard",
                         principalColumn: "WarrantyCardID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
