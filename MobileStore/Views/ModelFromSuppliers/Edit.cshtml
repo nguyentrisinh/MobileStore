@@ -89,6 +89,7 @@
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="ModelFromSupplier.ModelFromSupplierID" />
+                    <input type="hidden" asp-for="ModelFromSupplier.ApplicationUserID" value="@Model.ModelFromSupplier.ApplicationUserID" />
                     <div class="form-group row">
                         <label asp-for="ModelFromSupplier.Quantity" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Quantity)</label>
                         <div class="col-md-8">

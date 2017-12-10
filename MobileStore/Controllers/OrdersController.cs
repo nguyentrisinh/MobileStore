@@ -59,28 +59,28 @@ namespace MobileStore.Controllers
             switch (sortOrder)
             {
                 case "customer_desc":
-                    orders = orders.OrderByDescending(s => s.Customer.Name);
+                    orders = orders.OrderByDescending(s => s.Customer.Name).Include(m => m.Customer).Include(m => m.ApplicationUser);
                     break;
                 case "customer":
-                    orders = orders.OrderBy(s => s.Customer);
+                    orders = orders.OrderBy(s => s.Customer).Include(m => m.Customer).Include(m => m.ApplicationUser);
                     break;
                 case "date_desc":
-                    orders = orders.OrderByDescending(s => s.Date);
+                    orders = orders.OrderByDescending(s => s.Date).Include(m => m.Customer).Include(m => m.ApplicationUser);
                     break;
                 case "total":
-                    orders = orders.OrderBy(s => s.Total);
+                    orders = orders.OrderBy(s => s.Total).Include(m => m.Customer).Include(m => m.ApplicationUser);
                     break;
                 case "total_desc":
-                    orders = orders.OrderByDescending(s => s.Total);
+                    orders = orders.OrderByDescending(s => s.Total).Include(m => m.Customer).Include(m => m.ApplicationUser);
                     break;
                 case "staff":
-                    orders = orders.OrderBy(s => s.ApplicationUser.FirstName);
+                    orders = orders.OrderBy(s => s.ApplicationUser.FirstName).Include(m => m.Customer).Include(m => m.ApplicationUser);
                     break;
                 case "staff_desc":
-                    orders = orders.OrderByDescending(s => s.ApplicationUser.FirstName);
+                    orders = orders.OrderByDescending(s => s.ApplicationUser.FirstName).Include(m => m.Customer).Include(m => m.ApplicationUser);
                     break;
                 default:
-                    orders = orders.OrderBy(s => s.Date);
+                    orders = orders.OrderBy(s => s.Date).Include(m => m.Customer).Include(m => m.ApplicationUser);
                     break;
             }
             int pageSize = 1;
@@ -270,7 +270,17 @@ namespace MobileStore.Controllers
         [Authorize(Roles = "Sale,Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+
             var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == id);
+            var newOrderDetails = await _context.OrderDetail.Where(m => m.OrderID == id).Select(m=>m.Item).Select(m=>new Item
+            {
+                IMEI = m.IMEI,
+                ItemID = m.ItemID,
+                ModelFromSupplierID = m.ModelFromSupplierID,
+                ModelID = m.ModelID,
+                Name = m.Name,
+
+            }).ToListAsync();
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

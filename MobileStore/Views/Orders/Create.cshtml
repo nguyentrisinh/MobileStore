@@ -1,41 +1,75 @@
 ﻿@model MobileStore.Models.Order
+@using MobileStore.Models
+@*@using System.Collections.Generic.IEnumerable<MobileStore.Models.Supplier.SupplierStatus>*@
+@*@model IEnumerable<MobileStore.Models.Supplier.SupplierStatus>*@
 
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Create</h2>
-
-<h4>Order</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
-                <span asp-validation-for="Total" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomerID" class="control-label"></label>
-                <select asp-for="CustomerID" class ="form-control" asp-items="ViewBag.CustomerID"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+    <div class=" col-lg-8">
+        <div class="card">
+            <form asp-action="Create">
+                <div class="card-header">
+                    <strong>Thêm đơn hàng</strong>
+                </div>
+                <div class="card-body">
+
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label" for="select">@Html.DisplayNameFor(model => model.CustomerID)</label>
+                        <div class="col-md-8">
+                            <select class="form-control" asp-for="CustomerID" asp-items="ViewBag.CustomerID"></select>
+
+                        </div>
+                    </div>
+
+                 
+                    
+
+                  
+
+                    <div class="form-group row">
+                        <label asp-for="Date" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Date)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Date" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.Date)...">
+                            <span asp-validation-for="Date" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="Total" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Total)</label>
+                        <div class="col-md-8">
+                            <input asp-for="Total" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.Total)...">
+                            <span asp-validation-for="Total" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+
+
+                   
+
+
+
+
+
+
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Tạo</button>
+                    @*<div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-default"/>
+                        </div>*@
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+
+    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
 
 @section Scripts {
