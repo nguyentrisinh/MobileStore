@@ -64,7 +64,7 @@ namespace MobileStore.Controllers
                     applicationDbContext = applicationDbContext.OrderBy(w => w.EndDate);
                     break;
             }
-            int pageSize = 2;
+            int pageSize = 20;
             int count2 = applicationDbContext.Count();
             return View(await PaginatedList<WarrantyCard>.CreateAsync(applicationDbContext.AsNoTracking(), page ?? 1, pageSize));
             //return View(await applicationDbContext.ToListAsync());
@@ -99,10 +99,43 @@ namespace MobileStore.Controllers
         // POST: WarrantyCards/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("WarrantyCardID,NumberOfWarranty,StartDate,EndDate,Period,ItemID")] WarrantyCard warrantyCard)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(warrantyCard);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "Name", warrantyCard.ItemID);
+        //    return View(warrantyCard);
+        //}
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("WarrantyCardID,NumberOfWarranty,StartDate,EndDate,Period,ItemID")] WarrantyCard warrantyCard)
+        public async Task<IActionResult> Create([Bind("WarrantyCardID,NumberOfWarranty,Period,ItemID")] WarrantyCard warrantyCard)
         {
+           warrantyCard.StartDate  = DateTime.Now;
+
+            var getdate = DateTime.Now.Day;
+            var getmounth = DateTime.Now.Month;
+            var getyear = DateTime.Now.Year;
+
+            int period = Convert.ToInt32(Request.Form["Period"].ToString());
+            var getmounthend = getmounth + period;
+            var getyearend = getyear;
+            while(getmounthend>12)
+            {
+                getmounthend = getmounthend - 12;
+                getyearend = getyearend + 1;
+            }
+
+            warrantyCard.EndDate = new DateTime(getyearend, getmounthend, getdate);
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(warrantyCard);
@@ -135,12 +168,28 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("WarrantyCardID,NumberOfWarranty,StartDate,EndDate,Period,ItemID")] WarrantyCard warrantyCard)
+        public async Task<IActionResult> Edit(int id, [Bind("WarrantyCardID,NumberOfWarranty,StartDate,Period,ItemID")] WarrantyCard warrantyCard)
         {
             if (id != warrantyCard.WarrantyCardID)
             {
                 return NotFound();
             }
+
+            var stardate = warrantyCard.StartDate;
+
+            int period = Convert.ToInt32(Request.Form["Period"].ToString());
+
+            int endday = stardate.Day;
+            int endmounth = stardate.Month + period;
+            int endyear = stardate.Year;
+
+            while(endmounth >12)
+            {
+                endmounth = endmounth - 12;
+                endyear = endyear + 1;
+            }
+
+            warrantyCard.EndDate = new DateTime(endyear, endmounth, endday);
 
             if (ModelState.IsValid)
             {

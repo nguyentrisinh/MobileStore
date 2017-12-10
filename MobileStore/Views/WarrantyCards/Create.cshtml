@@ -3,6 +3,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 @{
     ViewData["Title"] = "Create";
+    var date = DateTime.Now.ToShortDateString();
 }
 
 
@@ -24,21 +25,22 @@
                     <div class="form-group row">
                         <label asp-for="StartDate" class="col-md-3 form-control-label">Ngày bắt đầu</label>
                         <div class="col-md-9">
-                            <input asp-for="StartDate" class="form-control" id="StartDate"/>
+                            <input asp-for="@date" class="form-control" name="dateStart"  readonly id="dateStart"/>
                             <span asp-validation-for="StartDate" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label asp-for="EndDate" class="col-md-3 form-control-label ">Ngày kết thúc</label>
                         <div class="col-md-9">
-                            <input asp-for="EndDate" class="form-control" id="EndDate"/>
+                            <input asp-for="@date" class="form-control" name="dateEnd" readonly id="dateEnd"/>
+                            @*<input type="text" class="form-control" readonly id="dateEnd" value="@date"/>*@
                             <span asp-validation-for="EndDate" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Period" class="col-md-3 form-control-label">Giai đoạn bảo hành</label>
+                        <label asp-for="Period" class="col-md-3 form-control-label">Thời lượng bảo hành(tháng)</label>
                         <div class="col-md-9">
-                            <input asp-for="Period" class="form-control" placeholder="Nhập giai đoạn bảo hành"/>
+                            <input asp-for="Period" class="form-control"  placeholder="Nhập thời lượng bảo hành(tháng)" id="eventChangeInput"/>
                             <span asp-validation-for="Period" class="text-danger"></span>
                         </div>
                     </div>
@@ -74,17 +76,46 @@
 
 <script type="text/javascript">
 
-    function clickButton()
-    {
-        if ((new Date($("#StartDate").val())).getTime() >= (new Date($("#EndDate").val()).getTime()))
+    $("#eventChangeInput").on("input", function () {
+  
+
+        var getmounth = 0;
+
+        if ($("#eventChangeInput").val() != "")
         {
-            alert("nhap ngay ket thuc lon hon ngay bat dau");
+
+           getmounth = (new Date($("#dateStart").val())).getMonth() + 1 + parseInt($("#eventChangeInput").val());
         }
         else
         {
+            getmounth = (new Date($("#dateStart").val())).getMonth() + 1;
 
-            $("#formWarrantyCards").submit();
         }
+
+        
+        var y = 0;
+        
+        var getyear = (new Date($("#dateStart").val())).getFullYear();
+
+        var getdate = (new Date($("#dateStart").val())).getDate();
+
+            while (getmounth > 12)
+            {
+                getyear = getyear + 1;
+
+                getmounth = getmounth - 12;
+
+            }
+        
+
+            var da = getmounth + "/" + getdate + "/" + getyear;
+            $("#dateEnd").val(da);
+        
+    });
+
+    function clickButton()
+    {
+        $("#formWarrantyCards").submit();
 
     }
 </script>
