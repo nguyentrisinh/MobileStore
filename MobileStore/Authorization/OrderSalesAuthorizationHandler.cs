@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Identity;
 namespace MobileStore.Authorization
 {
     public class OrderSalesAuthorizationHandler
-        : AuthorizationHandler<OperationAuthorizationRequirement, Order>
+        : AuthorizationHandler<OperationAuthorizationRequirement, BaseModel>
     {
      
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, Order resource)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, BaseModel resource)
         {
             if (context.User == null || resource == null)
             {

@@ -34,7 +34,7 @@ namespace MobileStore.Controllers
         {
 
             ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
-            ViewData["CustomerSortParm"] = sortOrder=="customer" ? "customer_desc" : "customer";
+            ViewData["CustomerSortParm"] = sortOrder == "customer" ? "customer_desc" : "customer";
             ViewData["TotalSortParm"] = sortOrder == "total" ? "total_desc" : "total";
             ViewData["StaffSortParm"] = sortOrder == "staff" ? "staff_desc" : "staff";
 
@@ -54,7 +54,7 @@ namespace MobileStore.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                orders = orders.Include(m=>m.Customer).Include(m=>m.ApplicationUser).Where(s => s.Customer.Name.Contains(searchString));
+                orders = orders.Include(m => m.Customer).Include(m => m.ApplicationUser).Where(s => s.Customer.Name.Contains(searchString));
             }
             switch (sortOrder)
             {
@@ -87,7 +87,7 @@ namespace MobileStore.Controllers
 
             return View(await PaginatedList<Order>.CreateAsync(orders.AsNoTracking(), page ?? 1, pageSize));
         }
-#endregion
+        #endregion
         #region Detail
 
         // GET: Orders/Details/5
@@ -109,7 +109,7 @@ namespace MobileStore.Controllers
 
             return View(order);
         }
-#endregion
+        #endregion
 
         #region Get Create
 
@@ -120,7 +120,7 @@ namespace MobileStore.Controllers
             ViewData["CustomerID"] = new SelectList(_context.Customer, "CustomerID", "Name");
             return View();
         }
-#endregion
+        #endregion
         #region Post Create
 
         // POST: Orders/Create
@@ -138,17 +138,18 @@ namespace MobileStore.Controllers
             }
             _context.Add(order);
             order.ApplicationUserID = _userManager.GetUserId(User);
+            order.Date = DateTime.Now;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-#endregion
+        #endregion
 
         #region Get Edit
         // GET: Orders/Edit/5
         [Authorize(Roles = "Sale,Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
-          
+
             if (id == null)
             {
                 return NotFound();
@@ -167,7 +168,7 @@ namespace MobileStore.Controllers
             {
                 return new ChallengeResult();
             }
-            var orderDetails = await _context.OrderDetail.Where(m => m.OrderID == id).Include(m=>m.Item).ToListAsync();
+            var orderDetails = await _context.OrderDetail.Where(m => m.OrderID == id).Include(m => m.Item).ToListAsync();
             var sellViewModel = new SellViewModel();
             sellViewModel.Order = order;
             sellViewModel.OrderDetails = orderDetails;
@@ -183,7 +184,7 @@ namespace MobileStore.Controllers
 
         #region Post Edit
 
-        
+
 
         // POST: Orders/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -198,9 +199,6 @@ namespace MobileStore.Controllers
                 return View(sellViewModel);
             }
 
-            //Fetch Contact from DB to get OwnerID.
-           
-
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, sellViewModel.Order,
                 OrderOperations.Update);
             if (!isAuthorized.Succeeded)
@@ -211,23 +209,23 @@ namespace MobileStore.Controllers
 
             {
                 var newOrder = ViewModelToModel(sellViewModel).Result;
-                    _context.Update(newOrder);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
+                _context.Update(newOrder);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OrderExists(sellViewModel.Order.OrderID))
                 {
-                    if (!OrderExists(sellViewModel.Order.OrderID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
                 }
-            
-            return RedirectToAction(nameof(Edit), new {id });
-           
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Edit), new { id });
+
         }
         #endregion
 
@@ -256,11 +254,6 @@ namespace MobileStore.Controllers
         #endregion
 
         #region Post Delete
-
-        
-
-        
-
         // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -269,7 +262,7 @@ namespace MobileStore.Controllers
         {
 
             var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == id);
-            var newOrderDetails = await _context.OrderDetail.Where(m => m.OrderID == id).Select(m=>m.Item).Select(m=>new Item
+            var newOrderDetails = await _context.OrderDetail.Where(m => m.OrderID == id).Select(m => m.Item).Select(m => new Item
             {
                 IMEI = m.IMEI,
                 ItemID = m.ItemID,
@@ -305,9 +298,9 @@ namespace MobileStore.Controllers
             }
             return RedirectToAction(nameof(Edit), new { id = sellViewModel.OrderDetail.OrderID });
         }
-#endregion
+        #endregion
 
-
+        #region helper
         private bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.OrderID == id);
@@ -319,10 +312,9 @@ namespace MobileStore.Controllers
                 m.OrderID == sellViewModel.Order.OrderID);
             item.OrderID = sellViewModel.Order.OrderID;
             item.CustomerID = sellViewModel.Order.CustomerID;
-            item.Date = sellViewModel.Order.Date;
             item.Total = sellViewModel.Order.Total;
-            item.ApplicationUserID = sellViewModel.Order.ApplicationUserID;
             return item;
         }
+#endregion
     }
 }

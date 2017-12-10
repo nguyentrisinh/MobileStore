@@ -234,6 +234,7 @@ namespace MobileStore.Controllers
                 //modelFromSupplier.Model = model;
                 //modelFromSupplier.Supplier = supplier;
                 modelFromSupplier.ApplicationUserID = _userManager.GetUserId(User);
+                modelFromSupplier.Date = DateTime.Now;
                 _context.Add(modelFromSupplier);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -368,6 +369,7 @@ namespace MobileStore.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        #region helper
 
         private bool ModelFromSupplierExists(int id)
         {
@@ -379,7 +381,6 @@ namespace MobileStore.Controllers
             var item = await _context.ModelFromSupplier.SingleOrDefaultAsync(m =>
                 m.ModelFromSupplierID == stockReceivingViewModel.ModelFromSupplier.ModelFromSupplierID);
             item.ModelFromSupplierID = stockReceivingViewModel.ModelFromSupplier.ModelFromSupplierID;
-            item.Date = stockReceivingViewModel.ModelFromSupplier.Date;
             item.ModelID = stockReceivingViewModel.ModelFromSupplier.ModelID;
             item.PriceBought = stockReceivingViewModel.ModelFromSupplier.PriceBought;
             item.PriceSold = stockReceivingViewModel.ModelFromSupplier.PriceSold;
@@ -387,6 +388,7 @@ namespace MobileStore.Controllers
             item.SupplierID = stockReceivingViewModel.ModelFromSupplier.SupplierID;
             return item;
         }
-       
+#endregion
+
     }
 }

@@ -7,12 +7,12 @@ using Microsoft.Azure.KeyVault.Models;
 namespace MobileStore.Authorization
 {
     public class OrderAdministratorsAuthorizationHandler
-        : AuthorizationHandler<OperationAuthorizationRequirement, Order>
+        : AuthorizationHandler<OperationAuthorizationRequirement, BaseModel>
     {
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
             OperationAuthorizationRequirement requirement,
-            Order resource)
+            BaseModel resource)
         {
             if (context.User == null)
             {
