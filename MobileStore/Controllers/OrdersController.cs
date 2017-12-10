@@ -198,14 +198,10 @@ namespace MobileStore.Controllers
                 return View(sellViewModel);
             }
 
-            // Fetch Contact from DB to get OwnerID. 
-            var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == id);
-            if (order == null || id != sellViewModel.Order.OrderID)
-            {
-                return NotFound();
-            }
+            //Fetch Contact from DB to get OwnerID.
+           
 
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, sellViewModel.Order,
                 OrderOperations.Update);
             if (!isAuthorized.Succeeded)
             {
@@ -213,8 +209,9 @@ namespace MobileStore.Controllers
             }
             try
 
-                {
-                    _context.Update(sellViewModel.Order);
+            {
+                var newOrder = ViewModelToModel(sellViewModel).Result;
+                    _context.Update(newOrder);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -314,6 +311,18 @@ namespace MobileStore.Controllers
         private bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.OrderID == id);
+        }
+
+        public async Task<Order> ViewModelToModel(SellViewModel sellViewModel)
+        {
+            var item = await _context.Order.SingleOrDefaultAsync(m =>
+                m.OrderID == sellViewModel.Order.OrderID);
+            item.OrderID = sellViewModel.Order.OrderID;
+            item.CustomerID = sellViewModel.Order.CustomerID;
+            item.Date = sellViewModel.Order.Date;
+            item.Total = sellViewModel.Order.Total;
+            item.ApplicationUserID = sellViewModel.Order.ApplicationUserID;
+            return item;
         }
     }
 }

@@ -265,17 +265,12 @@ namespace MobileStore.Controllers
                 return new ChallengeResult();
             }
             var listItems = await _context.Item.Where(i => i.ModelFromSupplierID == id).ToListAsync();
-            var modelFromSupplier = await _context.ModelFromSupplier.SingleOrDefaultAsync(m => m.ModelFromSupplierID == id);
-            if (modelFromSupplier == null)
-            {
-                return NotFound();
-            }
-            ViewData["ModelItemID"] = modelFromSupplier.ModelID;
-            ViewData["ModelFromSupplierID"] = modelFromSupplier.ModelFromSupplierID;
-            ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "Name", modelFromSupplier.ModelID);
-            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "Name", modelFromSupplier.SupplierID);
+            ViewData["ModelItemID"] = item.ModelID;
+            ViewData["ModelFromSupplierID"] = item.ModelFromSupplierID;
+            ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "Name", item.ModelID);
+            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "Name", item.SupplierID);
             var stockReceivingVM =new StockReceivingViewModel();
-            stockReceivingVM.ModelFromSupplier = modelFromSupplier;
+            stockReceivingVM.ModelFromSupplier = item;
             stockReceivingVM.Items = listItems;
           
             return View(stockReceivingVM);
@@ -288,14 +283,10 @@ namespace MobileStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, StockReceivingViewModel stockReceivingVM)
         {
-            var item = await _context.ModelFromSupplier.SingleOrDefaultAsync(m => m.ModelFromSupplierID == id);
 
-            if (item == null)
-            {
-                return NotFound();
-            }
+           
 
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, item,
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, stockReceivingVM.ModelFromSupplier,
                 OrderOperations.Update);
             if (!isAuthorized.Succeeded)
             {
@@ -305,7 +296,8 @@ namespace MobileStore.Controllers
 
             try
             {
-                _context.Update(stockReceivingVM.ModelFromSupplier);
+                var item = ViewModelToModel(stockReceivingVM).Result;
+                _context.Update(item);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -319,11 +311,11 @@ namespace MobileStore.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Edit),new{id=stockReceivingVM.ModelFromSupplier.ModelFromSupplierID});
-            
+            return RedirectToAction(nameof(Edit), new { id = stockReceivingVM.ModelFromSupplier.ModelFromSupplierID });
+
             //ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "ModelID", stockReceivingVM.ModelFromSupplier.ModelID);
             //ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID", stockReceivingVM.ModelFromSupplier.SupplierID);
-           
+
             //return View(stockReceivingVM);
         }
 
@@ -381,5 +373,20 @@ namespace MobileStore.Controllers
         {
             return _context.ModelFromSupplier.Any(e => e.ModelFromSupplierID == id);
         }
+
+        public async Task<ModelFromSupplier> ViewModelToModel(StockReceivingViewModel stockReceivingViewModel)
+        {
+            var item = await _context.ModelFromSupplier.SingleOrDefaultAsync(m =>
+                m.ModelFromSupplierID == stockReceivingViewModel.ModelFromSupplier.ModelFromSupplierID);
+            item.ModelFromSupplierID = stockReceivingViewModel.ModelFromSupplier.ModelFromSupplierID;
+            item.Date = stockReceivingViewModel.ModelFromSupplier.Date;
+            item.ModelID = stockReceivingViewModel.ModelFromSupplier.ModelID;
+            item.PriceBought = stockReceivingViewModel.ModelFromSupplier.PriceBought;
+            item.PriceSold = stockReceivingViewModel.ModelFromSupplier.PriceSold;
+            item.Quantity = stockReceivingViewModel.ModelFromSupplier.Quantity;
+            item.SupplierID = stockReceivingViewModel.ModelFromSupplier.SupplierID;
+            return item;
+        }
+       
     }
 }
