@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MobileStore.Data;
 using MobileStore.Models;
+using Newtonsoft.Json;
 
 namespace MobileStore.Controllers
 {
@@ -14,19 +15,33 @@ namespace MobileStore.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        [HttpPost]
+        public  async Task< IActionResult> StorageLocations()
+        {
+
+            
+            var k = _context.WarrantyCard.Include(w => w.Item).ToList();
+            List<String> kl = new List<String>();
+            for(int i=0; i < k.Count();i++)
+            {
+                kl.Add(k[i].Item.IMEI.ToString());
+            }
+            var json = JsonConvert.SerializeObject( kl );
+            return Json( json);
+        }
         public WarrantyCardsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         // GET: WarrantyCards
-        public async Task<IActionResult> Index(int SearchString, string sortOrder, int currentFilter, int? page)
+        public async Task<IActionResult> Index(string SearchString, string sortOrder, string currentFilter, int? page)
         {
             ViewData["DateStartSortParm"] = sortOrder == "DateStart" ? "datestart_desc" : "DateStart";
             ViewData["DateEndSortParm"] = sortOrder == "DateEnd" ? "dateend_desc" : "DateEnd";
             ViewData["CurrentSort"] = sortOrder;
 
-            if (SearchString.ToString() != "" && SearchString.ToString() != "0")
+            if (SearchString !=null)
             {
                 page = 1;
             }
@@ -44,15 +59,15 @@ namespace MobileStore.Controllers
             int count = applicationDbContext.Count();
 
             //SearchString.ToString() != "" && SearchString.ToString() != "0"
-            if (SearchString.ToString() != "" && SearchString.ToString() != "0")
+            if (!String.IsNullOrEmpty(SearchString))
             {
-                applicationDbContext = applicationDbContext.Where(w => w.NumberOfWarranty == SearchString);
+                applicationDbContext = applicationDbContext.Where(w => w.Item.IMEI == SearchString);
             }
             
             switch(sortOrder)
             {
-                case "datestart_desc":
-                    applicationDbContext = applicationDbContext.OrderByDescending(w => w.StartDate);
+                case "DateEnd":
+                    applicationDbContext = applicationDbContext.OrderBy(w => w.EndDate);
                     break;
                 case "dateend_desc":
                     applicationDbContext = applicationDbContext.OrderByDescending(w => w.EndDate);
@@ -61,7 +76,7 @@ namespace MobileStore.Controllers
                     applicationDbContext = applicationDbContext.OrderBy(w => w.StartDate);
                     break;
                 default:
-                    applicationDbContext = applicationDbContext.OrderBy(w => w.EndDate);
+                    applicationDbContext = applicationDbContext.OrderByDescending(w => w.StartDate);
                     break;
             }
             int pageSize = 20;
@@ -92,7 +107,7 @@ namespace MobileStore.Controllers
         // GET: WarrantyCards/Create
         public IActionResult Create()
         {
-            ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "Name");
+            ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "IMEI");
             return View();
         }
 
@@ -116,7 +131,7 @@ namespace MobileStore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("WarrantyCardID,NumberOfWarranty,Period,ItemID")] WarrantyCard warrantyCard)
+        public async Task<IActionResult> Create([Bind("WarrantyCardID,Period,ItemID")] WarrantyCard warrantyCard)
         {
            warrantyCard.StartDate  = DateTime.Now;
 
@@ -168,7 +183,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("WarrantyCardID,NumberOfWarranty,StartDate,Period,ItemID")] WarrantyCard warrantyCard)
+        public async Task<IActionResult> Edit(int id, [Bind("WarrantyCardID,StartDate,Period,ItemID")] WarrantyCard warrantyCard)
         {
             if (id != warrantyCard.WarrantyCardID)
             {

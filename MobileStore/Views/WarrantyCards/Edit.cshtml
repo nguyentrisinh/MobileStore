@@ -15,9 +15,9 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="WarrantyCardID" />
                 <div class="form-group row">
-                    <label asp-for="NumberOfWarranty" class="col-md-3 form-control-label">Mã bảo hành</label>
+                    <label asp-for="NumberOfWarranty" class="col-md-3 form-control-label">Số lần bảo hành</label>
                     <div class="col-md-9">
-                        <input asp-for="NumberOfWarranty" class="form-control" />
+                        <input asp-for="NumberOfWarranty" class="form-control" readonly/>
                         <span asp-validation-for="NumberOfWarranty" class="text-danger"></span>
                     </div>
                 </div>
