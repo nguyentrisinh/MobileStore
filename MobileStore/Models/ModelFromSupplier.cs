@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MobileStore.Models
 {
-    public class ModelFromSupplier : BaseModel
+    public class ModelFromSupplier
     {
         public int ModelFromSupplierID { get; set; }
 
@@ -17,9 +17,14 @@ namespace MobileStore.Models
         public DateTime Date { get; set; }
         #endregion
 
-        #region Supplier Foreign Key
-        public int SupplierID { get; set; }
-        public virtual Supplier Supplier { get; set; }
+        //#region Supplier Foreign Key
+        //public int SupplierID { get; set; }
+        //public virtual Supplier Supplier { get; set; }
+        //#endregion
+
+        #region StockReceiving ForeignKey
+        public Guid StockReceivingID { get; set; }
+        public virtual StockReceiving StockReceiving { get; set; }
         #endregion
 
         #region Model Foreign Key
