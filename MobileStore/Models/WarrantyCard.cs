@@ -6,10 +6,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MobileStore.Models
 {
-    public class WarrantyCard
+    public class WarrantyCard : BaseModel
     {
         public int WarrantyCardID { get; set; }
 
+        #region WarrantyCard Info
+        public Guid TransactionCode { get; set; }
         public int NumberOfWarranty { get; set; }
         [Display(Name = "Start date")]
         [DataType(DataType.Date)]
@@ -18,6 +20,7 @@ namespace MobileStore.Models
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
         public int Period { get; set; } // By month
+        #endregion
 
         #region Item ForeignKey
         public int ItemID { get; set; }
@@ -28,5 +31,11 @@ namespace MobileStore.Models
         public IList<WarrantyDetail> WarrantyDetails { get; set; }
         #endregion
 
+        #region Contructors of WarrantyCard
+        public WarrantyCard()
+        {
+            this.TransactionCode = Guid.NewGuid();
+        }
+        #endregion
     }
 }

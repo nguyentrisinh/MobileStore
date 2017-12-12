@@ -6,10 +6,11 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace MobileStore.Models
 {
-    public class ModelFromSupplier
+    public class ModelFromSupplier : BaseModel
     {
         [DisplayName("ID")]
         public int ModelFromSupplierID { get; set; }

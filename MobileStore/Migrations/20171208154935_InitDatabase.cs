@@ -272,6 +272,7 @@ namespace MobileStore.Migrations
                 {
                     ModelFromSupplierID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModelID = table.Column<int>(type: "int", nullable: false),
                     PriceBought = table.Column<double>(type: "float", nullable: false),
@@ -282,6 +283,12 @@ namespace MobileStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ModelFromSupplier", x => x.ModelFromSupplierID);
+                    table.ForeignKey(
+                        name: "FK_ModelFromSupplier_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ModelFromSupplier_Model_ModelID",
                         column: x => x.ModelID,
@@ -360,6 +367,7 @@ namespace MobileStore.Migrations
                 {
                     ReturnItemID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DefectInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NewItemID = table.Column<int>(type: "int", nullable: false),
                     OldItemID = table.Column<int>(type: "int", nullable: false),
@@ -368,6 +376,12 @@ namespace MobileStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ReturnItem", x => x.ReturnItemID);
+                    table.ForeignKey(
+                        name: "FK_ReturnItem_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ReturnItem_Item_NewItemID",
                         column: x => x.NewItemID,
@@ -388,6 +402,7 @@ namespace MobileStore.Migrations
                 {
                     WarrantyCardID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ItemID = table.Column<int>(type: "int", nullable: false),
                     NumberOfWarranty = table.Column<int>(type: "int", nullable: false),
@@ -397,6 +412,12 @@ namespace MobileStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WarrantyCard", x => x.WarrantyCardID);
+                    table.ForeignKey(
+                        name: "FK_WarrantyCard_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_WarrantyCard_Item_ItemID",
                         column: x => x.ItemID,
@@ -411,6 +432,7 @@ namespace MobileStore.Migrations
                 {
                     WarrantyDetailID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DefectInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
@@ -419,6 +441,12 @@ namespace MobileStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WarrantyDetail", x => x.WarrantyDetailID);
+                    table.ForeignKey(
+                        name: "FK_WarrantyDetail_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_WarrantyDetail_WarrantyCard_WarrantyCardID",
                         column: x => x.WarrantyCardID,
@@ -482,6 +510,11 @@ namespace MobileStore.Migrations
                 column: "BrandID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ModelFromSupplier_ApplicationUserID",
+                table: "ModelFromSupplier",
+                column: "ApplicationUserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ModelFromSupplier_ModelID",
                 table: "ModelFromSupplier",
                 column: "ModelID");
@@ -513,6 +546,11 @@ namespace MobileStore.Migrations
                 column: "OrderID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ReturnItem_ApplicationUserID",
+                table: "ReturnItem",
+                column: "ApplicationUserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ReturnItem_NewItemID",
                 table: "ReturnItem",
                 column: "NewItemID",
@@ -525,9 +563,19 @@ namespace MobileStore.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_WarrantyCard_ApplicationUserID",
+                table: "WarrantyCard",
+                column: "ApplicationUserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WarrantyCard_ItemID",
                 table: "WarrantyCard",
                 column: "ItemID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarrantyDetail_ApplicationUserID",
+                table: "WarrantyDetail",
+                column: "ApplicationUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WarrantyDetail_WarrantyCardID",
@@ -571,9 +619,6 @@ namespace MobileStore.Migrations
                 name: "WarrantyCard");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Customer");
 
             migrationBuilder.DropTable(
@@ -581,6 +626,9 @@ namespace MobileStore.Migrations
 
             migrationBuilder.DropTable(
                 name: "ModelFromSupplier");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Model");

@@ -12,9 +12,10 @@ using System;
 namespace MobileStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171208154935_InitDatabase")]
+    partial class InitDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,8 +138,6 @@ namespace MobileStore.Migrations
                     b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("Address");
-
-                    b.Property<string>("AvatarUrl");
 
                     b.Property<DateTime>("Birthday");
 
@@ -433,8 +432,6 @@ namespace MobileStore.Migrations
                     b.Property<int>("Period");
 
                     b.Property<DateTime>("StartDate");
-
-                    b.Property<Guid>("TransactionCode");
 
                     b.HasKey("WarrantyCardID");
 
