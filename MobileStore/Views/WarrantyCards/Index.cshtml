@@ -1,5 +1,7 @@
 ﻿@model PaginatedList< MobileStore.Models.WarrantyCard>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
 @{
     ViewData["Title"] = "Index";
     var k = Model;
@@ -17,7 +19,7 @@
                     <div class="form-group row">
                         <div class="col-lg-6">
                             <div class="input-group"  style="position:relative">
-                                <input id="filter" class="form-control" type="text" name="SearchString" value="@ViewData["CurrentFilter"]"  placeholder="Tìm kiếm theo IMEI" />
+                                <input id="filter"  class="form-control" type="text" name="SearchString" value="@ViewData["CurrentFilter"]"  placeholder="Tìm kiếm theo IMEI" />
                                 <table  id="filtersearch" style="position:absolute; background-color:white;margin-top:40px; z-index:1">
                                     <thead>
                                     <th></th>
@@ -32,7 +34,7 @@
                     </div>
                 </form>
 
-
+                
                 <p>
                     <a asp-action="Create">
                         <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm Bảo Hành</button>
@@ -43,6 +45,9 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>
+                                    Mã bảo hành
+                                </th>
                                 <th>
                                     @*@Html.DisplayNameFor(model => model.NumberOfWarranty)*@
                                     Số lần bảo hành
@@ -71,6 +76,9 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem=>item.TransactionCode)
+                                    </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.NumberOfWarranty)
                                     </td>
@@ -141,7 +149,7 @@
        </div>
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript" >
 
     $(document).ready(function () {
         $("#onpendtable").mouseup(function () {
@@ -149,18 +157,14 @@
          });
 
     });
-    var getvu = "";
-    function getValueForInputSearch() {
-        $("#filter").val(getvu)
-    };
-    
+
     
     
     $("#filter").on("input", function () { 
         var c = @Model.Count();
 
         $("#filtersearch").show();
-        
+        getvu = [];
         $.ajax({
             url: "WarrantyCards/StorageLocations",
             type: "POST",
@@ -209,16 +213,26 @@
 
                 for (var i = 0; i < arfind.length; i++)
                 {
-                    getvu = arfind[i];
+                    //alert(getvu[i]);
+                    console.log('value', arfind[i]);
+                    //getvu = arfind[i];
                     rows += "<tr style='padding: 10px'>"
-                    rows += "<td><a href='#' onClick='return getValueForInputSearch(" + ")'>" + arfind[i]+ " </a></td>"
+                    rows += `<td><a href='#' onClick='return getValueForInputSearch("${arfind[i]}")'>${arfind[i]} </a></td>`
                     rows +="</tr>"
 
                 }
 
+               
                 $("#filtersearch tbody").html(rows);   
             },
+            
         });
     });
+
+    function getValueForInputSearch(value) {
+        console.log("val", value)
+        $("#filter").val(value)
+    }
+    
    
 </script>

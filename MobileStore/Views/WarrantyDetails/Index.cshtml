@@ -1,11 +1,12 @@
 ﻿@model PaginatedList<MobileStore.Models.WarrantyDetail>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 @{
     ViewData["Title"] = "Index";
 }
 
 <div class="row">
     <div class="col-lg-12" style="margin:auto">
-        <div class="card">
+        <div class="card" id="onpendtable">
             <div class="card-header">Danh sách Chi tiết Bảo Hành</div>
             @*<p>
                     <a asp-action="Create">Create New</a>
@@ -14,9 +15,14 @@
                 <form asp-controller="WarrantyDetails" asp-action="Index" method="get" class="form-horizontal">
                     <div class="form-group row">
                         <div class="col-lg-6">
-                            <div class="input-group">
-                                <input class="form-control" style="margin-right:10px;" type="text" name="SearchString" value="@ViewData["CurrentFilter"]" placeholder="Tìm kiếm theo ID" />
-
+                            <div class="input-group" style="position:relative">
+                                <input id="filter"  class="form-control" style="margin-right:10px;" type="text" name="SearchString" value="@ViewData["CurrentFilter"]" placeholder="Tìm kiếm theo ID" />
+                                <table id="filtersearch" style="position:absolute; background-color:white;margin-top:40px; z-index:1">
+                                    <thead>
+                                    <th></th>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
                                 <span class="input-group-btn">
                                     <input type="submit" value="Search" class="btn btn-primary" />
                                 </span>
@@ -35,7 +41,7 @@
                         <thead>
                             <tr>
                                 <th>
-                                    IMEI
+                                   Mã bảo hành
                                 </th>
                                 <th>
                                     @*@Html.DisplayNameFor(model => model.Date)*@
@@ -49,10 +55,7 @@
                                     @*@Html.DisplayNameFor(model => model.Status)*@
                                     Trạng thái
                                 </th>
-                                <th>
-                                    @*@Html.DisplayNameFor(model => model.WarrantyCard)*@
-                                    Số lần bảo hành
-                                </th>
+                                
                                 <th></th>
                             </tr>
                         </thead>
@@ -61,7 +64,7 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem=>item.WarrantyCard.Item.IMEI)
+                                        @Html.DisplayFor(modelItem=>item.WarrantyCard.TransactionCode)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Date.Month) / @Html.DisplayFor(modelItem => item.Date.Day)/  @Html.DisplayFor(modelItem => item.Date.Year)
@@ -72,9 +75,7 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Status)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.WarrantyCard.NumberOfWarranty)
-                                    </td>
+                                    
                                     <td>
                                         <a asp-action="Edit" asp-route-id="@item.WarrantyDetailID">
                                             <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
@@ -129,3 +130,90 @@
             </div>
         </div>
     </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#onpendtable").mouseup(function () {
+            $("#filtersearch").hide();
+         });
+
+    });
+
+    function getValueForInputSearch(value) {
+        $("#filter").val(value)
+    };
+
+
+
+    $("#filter").on("input", function () {
+        var c = @Model.Count();
+
+        $("#filtersearch").show();
+
+        $.ajax({
+            url: "WarrantyDetails/StorageLocations",
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            accept: 'application/json',
+            success: function (data) {
+                var arrtemp = [];
+                var ar = data.split('","');
+
+                //day la doan code bo  [" cho ar[0] va "] cho ar cuoi cung
+
+                for (var i = 0; i < ar.length; i++)
+                {
+                    if (i == 0)
+                    {
+                        arrtemp.push(ar[0].substring(2, ar[0].length));
+
+                    }
+                    else if (i == ar.length - 1)
+                    {
+                        arrtemp.push(ar[i].substring(0, ar[i].length - 2));
+
+                    }
+                    else
+                    {
+                        arrtemp.push(ar[i]);
+
+                    }
+
+                }
+
+                //tim ra  chuoi con voi chuoi con do duoc nhap trong truong textbox seach trong danh sach IMEI
+                var arfind = [];
+                for (var i = 0; i < arrtemp.length; i++)
+                {
+                    if (arrtemp[i].includes($("#filter").val()))
+                    {
+
+                        arfind.push(arrtemp[i]);
+                    }
+
+                }
+
+                var rows = "";
+
+                for (var i = 0; i < arfind.length; i++)
+                {
+                    
+                    rows += "<tr style='padding: 10px'>"
+                    rows += `<td><a href='#' onClick='return getValueForInputSearch("${arfind[i]}")'>${arfind[i]} </a></td>`
+                    rows +="</tr>"
+
+                }
+
+                $("#filtersearch tbody").html(rows);
+            },
+        });
+    });
+   
+    
+        
+
+    
+
+</script>

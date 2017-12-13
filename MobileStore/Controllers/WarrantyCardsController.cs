@@ -8,12 +8,14 @@ using Microsoft.EntityFrameworkCore;
 using MobileStore.Data;
 using MobileStore.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;
 
 namespace MobileStore.Controllers
 {
     public class WarrantyCardsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         [HttpPost]
         public  async Task< IActionResult> StorageLocations()
@@ -29,9 +31,10 @@ namespace MobileStore.Controllers
             var json = JsonConvert.SerializeObject( kl );
             return Json( json);
         }
-        public WarrantyCardsController(ApplicationDbContext context)
+        public WarrantyCardsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: WarrantyCards
@@ -150,7 +153,7 @@ namespace MobileStore.Controllers
 
             warrantyCard.EndDate = new DateTime(getyearend, getmounthend, getdate);
 
-
+            warrantyCard.ApplicationUserID = _userManager.GetUserId(User);
             if (ModelState.IsValid)
             {
                 _context.Add(warrantyCard);
@@ -174,7 +177,7 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
-            ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "Name", warrantyCard.ItemID);
+            ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "IMEI", warrantyCard.ItemID);
             return View(warrantyCard);
         }
 
@@ -183,7 +186,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("WarrantyCardID,StartDate,Period,ItemID")] WarrantyCard warrantyCard)
+        public async Task<IActionResult> Edit(int id, [Bind("WarrantyCardID,ApplicationUserID,StartDate,Period,ItemID")] WarrantyCard warrantyCard)
         {
             if (id != warrantyCard.WarrantyCardID)
             {

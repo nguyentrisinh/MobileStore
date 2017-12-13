@@ -16,6 +16,7 @@
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="WarrantyDetailID" />
+                    <input type="hidden" asp-for="ApplicationUserID"/>
                     <div class="form-group row">
                         <label asp-for="Date" class="col-md-3 form-control-label">Ngày</label>
                         <div class="col-md-9">
@@ -40,7 +41,9 @@
                     <div class="form-group row">
                         <label asp-for="WarrantyCardID" class="col-md-3 form-control-label">Mã bảo hành</label>
                         <div class="col-md-9">
-                            <select asp-for="WarrantyCardID" class="form-control" asp-items="ViewBag.WarrantyCardID"></select>
+                            <input asp-for="WarrantyCardID" class="form-control" hidden/>
+                            <select asp-for="WarrantyCardID" class="form-control" asp-items="ViewBag.WarrantyCardID" disabled></select>
+                            
                             <span asp-validation-for="WarrantyCardID" class="text-danger"></span>
                         </div>
                     </div>
