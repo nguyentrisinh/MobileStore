@@ -38,6 +38,7 @@ namespace MobileStore.Data
             builder.Entity<OrderDetail>().HasKey(ent => ent.OrderDetailID);
             builder.Entity<ReturnItem>().HasKey(ent => ent.ReturnItemID);
             builder.Entity<Supplier>().HasKey(ent => ent.SupplierID);
+            builder.Entity<StockReceiving>().HasKey(ent => ent.StockReceivingID);
             builder.Entity<WarrantyCard>().HasKey(ent => ent.WarrantyCardID);
             builder.Entity<WarrantyDetail>().HasKey(ent => ent.WarrantyDetailID);
 
@@ -55,11 +56,16 @@ namespace MobileStore.Data
             builder.Entity<Model>().HasOne(ent => ent.Brand).WithMany(ent => ent.Models).HasForeignKey(ent => ent.BrandID)
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<ModelFromSupplier>().HasOne(ent => ent.Supplier).WithMany(ent => ent.ModelFromSuppliers).HasForeignKey(ent => ent.SupplierID)
+            builder.Entity<ModelFromSupplier>().HasOne(ent => ent.StockReceiving).WithMany(ent => ent.ModelFromSuppliers).HasForeignKey(ent => ent.StockReceivingID)
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<ModelFromSupplier>().HasOne(ent => ent.Model).WithMany(ent => ent.ModelFromSuppliers).HasForeignKey(ent => ent.ModelID)
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<ModelFromSupplier>().HasOne(ent => ent.ApplicationUser).WithMany(ent => ent.ModelFromSuppliers).HasForeignKey(ent => ent.ApplicationUserID)
+                .IsRequired().OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<StockReceiving>().HasOne(ent => ent.Supplier).WithMany(ent => ent.StockReceivings).HasForeignKey(ent => ent.SupplierID)
+                .IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<StockReceiving>().HasOne(ent => ent.ApplicationUser).WithMany(ent => ent.StoceReceivings).HasForeignKey(ent => ent.ApplicationUserID)
                 .IsRequired().OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Order>().HasOne(ent => ent.ApplicationUser).WithMany(ent => ent.Orders).HasForeignKey(ent => ent.ApplicationUserID)
