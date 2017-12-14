@@ -29,9 +29,23 @@ namespace MobileStore.Controllers
                 .Include(i => i.Model)
                 .Include(i => i.ModelFromSupplier)
                 .SingleOrDefaultAsync(m => m.ItemID == id);
+
             if (item == null)
             {
                 return NotFound();
+            }
+
+            var timeSpan = DateTime.Now - item.ModelFromSupplier.Date;
+            if (timeSpan.Hours > 2)
+            {
+                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                return View("ErrorPage");
+            }
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, item.ModelFromSupplier,
+                OrderOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
             }
 
             return View(item);
@@ -42,7 +56,19 @@ namespace MobileStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmedItem(int id)
         {
-            var item = await _context.Item.SingleOrDefaultAsync(m => m.ItemID == id);
+            var item = await _context.Item.Include(m=>m.ModelFromSupplier).SingleOrDefaultAsync(m => m.ItemID == id);
+            var timeSpan = DateTime.Now - item.ModelFromSupplier.Date;
+            if (timeSpan.Hours > 2)
+            {
+                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                return View("ErrorPage");
+            }
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, item.ModelFromSupplier,
+                OrderOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
             _context.Item.Remove(item);
             await _context.SaveChangesAsync();
             return RedirectToAction("Edit","ModelFromSuppliers",new{id=item.ModelFromSupplierID});
@@ -55,10 +81,25 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
 
-            var item = await _context.Item.SingleOrDefaultAsync(m => m.ItemID == id);
+            var item = await _context.Item.Include(m=>m.ModelFromSupplier).SingleOrDefaultAsync(m => m.ItemID == id);
+
             if (item == null)
             {
                 return NotFound();
+            }
+
+            var timeSpan = DateTime.Now - item.ModelFromSupplier.Date;
+            if (timeSpan.Hours > 2)
+            {
+                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                return View("ErrorPage");
+            }
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, item.ModelFromSupplier,
+                OrderOperations.Update);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
             }
             var listModelFromSupplier = _context.ModelFromSupplier.Select(s=>new
             {
@@ -94,7 +135,22 @@ namespace MobileStore.Controllers
             {
                 try
                 {
+                    var newItem = ViewModelToItem(item).Result;
+                    var timeSpan = DateTime.Now - newItem.ModelFromSupplier.Date;
+                    if (timeSpan.Hours > 2)
+                    {
+                        ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                        return View("ErrorPage");
+                    }
+                    var isAuthorized = await _authorizationService.AuthorizeAsync(User, item.ModelFromSupplier,
+                        OrderOperations.Update);
+                    if (!isAuthorized.Succeeded)
+                    {
+                        return new ChallengeResult();
+                    }
+
                     _context.Update(item);
+                    
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -284,20 +340,22 @@ namespace MobileStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, StockReceivingViewModel stockReceivingVM)
         {
-
-           
-
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, stockReceivingVM.ModelFromSupplier,
-                OrderOperations.Update);
-            if (!isAuthorized.Succeeded)
-            {
-                return new ChallengeResult();
-            }
-
-
             try
             {
-                var item = ViewModelToModel(stockReceivingVM).Result;
+                var item = ViewModelToModelFromSupplier(stockReceivingVM).Result;
+                var timeSpan = DateTime.Now - item.Date;
+                if (timeSpan.Hours > 2)
+                {
+                    ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                    return View("ErrorPage");
+                }
+                var isAuthorized = await _authorizationService.AuthorizeAsync(User, item,
+                    OrderOperations.Update);
+                if (!isAuthorized.Succeeded)
+                {
+                    return new ChallengeResult();
+                }
+
                 _context.Update(item);
                 await _context.SaveChangesAsync();
             }
@@ -326,6 +384,15 @@ namespace MobileStore.Controllers
         {
             if (ModelState.IsValid)
             {
+                var modelFromSupplier = await _context.ModelFromSupplier
+                    .SingleOrDefaultAsync(m => m.ModelFromSupplierID == stockReceivingVM.Item.ModelFromSupplierID);
+                    
+                var timeSpan = DateTime.Now - modelFromSupplier.Date;
+                if (timeSpan.Hours > 2)
+                {
+                    ViewData["ErrorText"] = "Không thể tạo sản phẩm sau 2 giờ";
+                    return View("ErrorPage");
+                }
                 _context.Add(stockReceivingVM.Item);
                 await _context.SaveChangesAsync();
             }
@@ -352,6 +419,20 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
 
+            var timeSpan = DateTime.Now - modelFromSupplier.Date;
+            if (timeSpan.Hours > 2)
+            {
+                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                return View("ErrorPage");
+            }
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, modelFromSupplier,
+                OrderOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
+
             return View(modelFromSupplier);
         }
 
@@ -364,6 +445,20 @@ namespace MobileStore.Controllers
             //_context.Item.RemoveRange(items);
 
             var modelFromSupplier = await _context.ModelFromSupplier.SingleOrDefaultAsync(m => m.ModelFromSupplierID == id);
+
+            var timeSpan = DateTime.Now - modelFromSupplier.Date;
+            if (timeSpan.Hours > 2)
+            {
+                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                return View("ErrorPage");
+            }
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, modelFromSupplier,
+                OrderOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
             _context.ModelFromSupplier.Remove(modelFromSupplier);
 
             await _context.SaveChangesAsync();
@@ -376,7 +471,7 @@ namespace MobileStore.Controllers
             return _context.ModelFromSupplier.Any(e => e.ModelFromSupplierID == id);
         }
 
-        public async Task<ModelFromSupplier> ViewModelToModel(StockReceivingViewModel stockReceivingViewModel)
+        public async Task<ModelFromSupplier> ViewModelToModelFromSupplier(StockReceivingViewModel stockReceivingViewModel)
         {
             var item = await _context.ModelFromSupplier.SingleOrDefaultAsync(m =>
                 m.ModelFromSupplierID == stockReceivingViewModel.ModelFromSupplier.ModelFromSupplierID);
@@ -387,6 +482,22 @@ namespace MobileStore.Controllers
             item.Quantity = stockReceivingViewModel.ModelFromSupplier.Quantity;
             item.SupplierID = stockReceivingViewModel.ModelFromSupplier.SupplierID;
             return item;
+        }
+
+        public async Task<Item> ViewModelToItem(Item item)
+        {
+            var newItem = await _context.Item.Include(m=>m.ModelFromSupplier).SingleOrDefaultAsync(m =>
+                m.ItemID == item.ItemID);
+            newItem.ItemID = item.ItemID;
+            newItem.IMEI = item.IMEI;
+            newItem.ModelFromSupplierID = item.ModelFromSupplierID;
+            newItem.ModelID = item.ModelID;
+            newItem.Name = item.Name;
+            newItem.Note = item.Note;
+            newItem.SerializerNumber = item.SerializerNumber;
+            newItem.Status = item.Status;
+            newItem.ModelFromSupplier = item.ModelFromSupplier;
+            return newItem;
         }
 #endregion
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MobileStore.Authorization;
 using MobileStore.Data;
 using MobileStore.Models;
@@ -155,12 +156,22 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
 
+            
             var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == id);
+
 
             if (order == null)
             {
                 return NotFound();
             }
+
+            //var timeSpan = DateTime.Now - order.Date;
+            //if (timeSpan.Hours > 2)
+            //{
+            //    ViewData["ErrorText"] = "Bạn không thể sửa sau 2h";
+            //    return View("ErrorPage");
+            //}
+
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
                 OrderOperations.Update);
@@ -206,9 +217,15 @@ namespace MobileStore.Controllers
                 return new ChallengeResult();
             }
             try
-
             {
-                var newOrder = ViewModelToModel(sellViewModel).Result;
+                var newOrder = ViewModelToOrder(sellViewModel).Result;
+                var timeSpan = DateTime.Now - newOrder.Date;
+                if (timeSpan.Hours > 2)
+                {
+                    ViewData["ErrorText"] = "Bạn không thể sửa sau 2h";
+                    return View("ErrorPage");
+                }
+
                 _context.Update(newOrder);
                 await _context.SaveChangesAsync();
             }
@@ -248,6 +265,28 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
 
+            var timeSpan = DateTime.Now - order.Date;
+            if (timeSpan.Hours >= 2)
+            {
+                ViewData["ErrorText"] = "Bạn không thể xóa sau 2h";
+                return View("ErrorPage");
+            }
+
+            var hasDetails = await _context.OrderDetail.Where(m => m.OrderID == id).AnyAsync();
+            if (hasDetails)
+            {
+                ViewData["ErrorText"] = "Không thể xóa do đã có sản phẩm bán ra ";
+                return View("ErrorPage");
+            }
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
+                OrderOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
+
+
             return View(order);
         }
 
@@ -262,15 +301,29 @@ namespace MobileStore.Controllers
         {
 
             var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == id);
-            var newOrderDetails = await _context.OrderDetail.Where(m => m.OrderID == id).Select(m => m.Item).Select(m => new Item
-            {
-                IMEI = m.IMEI,
-                ItemID = m.ItemID,
-                ModelFromSupplierID = m.ModelFromSupplierID,
-                ModelID = m.ModelID,
-                Name = m.Name,
 
-            }).ToListAsync();
+            var timeSpan = DateTime.Now - order.Date;
+            if (timeSpan.Hours > 2)
+            {
+                ViewData["ErrorText"] = "Bạn không thể xóa sau 2h";
+                return View("ErrorPage");
+            }
+            var hasDetails = await _context.OrderDetail.Where(m => m.OrderID == id).AnyAsync();
+            if (hasDetails)
+            {
+                ViewData["ErrorText"] = "Không thể xóa do đã có sản phẩm bán ra ";
+                return View("ErrorPage");
+            }
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
+                OrderOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
+            
+
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -289,6 +342,13 @@ namespace MobileStore.Controllers
         {
             if (ModelState.IsValid)
             {
+                var order = await _context.Order.SingleAsync(m => m.OrderID == sellViewModel.OrderDetail.OrderID);
+                var timeSpan = DateTime.Now - order.Date;
+                if (timeSpan.Hours > 2)
+                {
+                    ViewData["ErrorText"] = "Bạn không thể sửa sau 2h";
+                    return View("ErrorPage");
+                }
                 _context.Add(sellViewModel.OrderDetail);
                 var itemID = sellViewModel.OrderDetail.ItemID;
                 var item = await _context.Item.SingleAsync(m => m.ItemID == itemID);
@@ -300,13 +360,180 @@ namespace MobileStore.Controllers
         }
         #endregion
 
+        #region GET Delete OrderDetail
+
+        // GET: OrderDetails/Delete/5
+        [Authorize(Roles = "Sale,Admin")]
+        public async Task<IActionResult> DeleteOrderDetail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+           
+            var orderDetail = await _context.OrderDetail
+                .Include(o => o.Item)
+                .Include(o => o.Order)
+                .SingleOrDefaultAsync(m => m.OrderDetailID == id);
+            if (orderDetail == null)
+            {
+                return NotFound();
+            }
+
+            
+            var timeSpan = DateTime.Now - orderDetail.Order.Date;
+            if (timeSpan.Hours > 2)
+            {
+                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                return View("ErrorPage");
+            }
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, orderDetail.Order,
+                OrderOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+            return View(orderDetail);
+        }
+        #endregion
+
+        #region POST Delete OrderDetail
+
+        // POST: OrderDetails/Delete/5
+        [HttpPost, ActionName("DeleteOrderDetail")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Sale,Admin")]
+        public async Task<IActionResult> DeleteOrderDetailConfirmed(int id)
+        {
+            var orderDetail = await _context.OrderDetail.Include(m=>m.Order).Include(m=>m.Item).SingleOrDefaultAsync(m => m.OrderDetailID == id);
+            
+            var timeSpan = DateTime.Now - orderDetail.Order.Date;
+            if (timeSpan.Hours > 2)
+            {
+                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                return View("ErrorPage");
+            }
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, orderDetail.Order,
+                OrderOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+            orderDetail.Item.Status = ItemStatus.New;
+            _context.Update(orderDetail.Item);
+            _context.OrderDetail.Remove(orderDetail);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Edit),new {id=orderDetail.OrderID});
+        }
+
+        #endregion
+
+
+        #region GET Edit OrderDetail 
+        [Authorize(Roles = "Sale,Admin")]
+        public async Task<IActionResult> EditOrderDetail(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var orderDetail = await _context.OrderDetail.Include(m=>m.Order).SingleOrDefaultAsync(m => m.OrderDetailID == id);
+
+            if (orderDetail == null)
+            {
+                return NotFound();
+            }
+
+            var timeSpan = DateTime.Now - orderDetail.Order.Date;
+            if (timeSpan.Hours > 2)
+            {
+                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                return View("ErrorPage");
+            }
+
+
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, orderDetail.Order,
+                OrderOperations.Update);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
+
+            ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "ItemID", orderDetail.ItemID);
+            ViewData["OrderID"] = new SelectList(_context.Order, "OrderID", "OrderID", orderDetail.OrderID);
+            return View(orderDetail);
+        }
+
+
+        #endregion
+
+        #region POST Edit OrderDetail
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Sale,Admin")]
+        public async Task<IActionResult> EditOrderDetail(int id, [Bind("OrderDetailID,PriceSold,ItemID,OrderID")] OrderDetail orderDetail)
+        {
+            if (id != orderDetail.OrderDetailID)
+            {
+                return NotFound();
+            }
+            var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == orderDetail.OrderID);
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
+                OrderOperations.Update);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var newOrderDetail = ViewModelToModelOrderDetail(orderDetail).Result;
+                    var timeSpan = DateTime.Now - newOrderDetail.Order.Date;
+                    if (timeSpan.Hours > 2)
+                    {
+                        ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                        return View("ErrorPage");
+                    }
+                    _context.Update(newOrderDetail);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!OrderDetailExists(orderDetail.OrderDetailID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "ItemID", orderDetail.ItemID);
+            ViewData["OrderID"] = new SelectList(_context.Order, "OrderID", "OrderID", orderDetail.OrderID);
+            return RedirectToAction(nameof(Edit), new { id = orderDetail.OrderID });
+        }
+
+        #endregion
+
         #region helper
+        private bool OrderDetailExists(int id)
+        {
+            return _context.OrderDetail.Any(e => e.OrderDetailID == id);
+        }
         private bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.OrderID == id);
         }
 
-        public async Task<Order> ViewModelToModel(SellViewModel sellViewModel)
+        public async Task<Order> ViewModelToOrder(SellViewModel sellViewModel)
         {
             var item = await _context.Order.SingleOrDefaultAsync(m =>
                 m.OrderID == sellViewModel.Order.OrderID);
@@ -315,6 +542,17 @@ namespace MobileStore.Controllers
             item.Total = sellViewModel.Order.Total;
             return item;
         }
-#endregion
+
+        public async Task<OrderDetail> ViewModelToModelOrderDetail(OrderDetail orderDetail)
+        {
+            var item = await _context.OrderDetail.Include(m=>m.Order).SingleOrDefaultAsync(m =>
+                m.OrderDetailID == orderDetail.OrderDetailID);
+            item.OrderID = orderDetail.OrderID;
+            item.OrderDetailID = orderDetail.OrderDetailID;
+            item.ItemID = orderDetail.ItemID;
+            item.PriceSold = orderDetail.PriceSold;
+            return item;
+        }
+        #endregion
     }
 }

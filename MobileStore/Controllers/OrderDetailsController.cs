@@ -127,7 +127,7 @@ namespace MobileStore.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "ItemID", orderDetail.ItemID);
-            ViewData["OrderID"] = new SelectList(_context.Order, "OrderID", "ApplicationUserID", orderDetail.OrderID);
+            ViewData["OrderID"] = new SelectList(_context.Order, "OrderID", "OrderID", orderDetail.OrderID);
             return View(orderDetail);
         }
 

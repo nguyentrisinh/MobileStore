@@ -44,7 +44,7 @@ namespace MobileStore.Controllers
 
             if (!String.IsNullOrEmpty(SearchString))
             {
-                applicationDbContext = applicationDbContext.Where(m => m.Name.Contains(SearchString));
+                applicationDbContext =applicationDbContext.Where(m => m.Name.Contains(SearchString));
             }
 
             switch (sortOrder)

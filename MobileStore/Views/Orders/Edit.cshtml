@@ -27,7 +27,7 @@
                         <div class="form-group row">
                             <label asp-for="OrderDetail.PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
                             <div class="col-md-8">
-                                <input asp-for="OrderDetail.PriceSold" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.OrderDetail.PriceSold)..."></input>
+                                <input asp-for="OrderDetail.PriceSold" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.OrderDetail.PriceSold)..."/>
                                 <span asp-validation-for="OrderDetail.PriceSold" class="invalid-feedback"></span>
                             </div>
                         </div>
@@ -136,7 +136,7 @@
 
                                     <td>
                                         <div class="btn-group">
-                                            <a class="btn btn-warning btn-sm" asp-action="EditItem" asp-route-id="@item.ItemID">
+                                            <a class="btn btn-warning btn-sm" asp-action="EditOrderDetail" asp-route-id="@item.OrderDetailID">
                                                 <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
                                             </a>
 
@@ -146,7 +146,7 @@
                                             </a>
 
 
-                                            <a class="btn btn-danger btn-sm" asp-action="DeleteItem" asp-route-id="@item.ItemID">
+                                            <a class="btn btn-danger btn-sm" asp-action="DeleteOrderDetail" asp-route-id="@item.OrderDetailID">
                                                 <i class="fa fa-trash-o"></i>&nbsp; Xóa
                                             </a>
                                         </div>
