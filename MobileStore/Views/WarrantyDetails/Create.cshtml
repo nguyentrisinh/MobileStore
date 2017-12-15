@@ -1,18 +1,18 @@
 ﻿@model MobileStore.Models.WarrantyDetail
-
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 @{
     ViewData["Title"] = "Create";
     var date = DateTime.Now.ToShortDateString();
 }
 
 <h2>Create</h2>
-
+<h3 style="color:red">@ViewData["erro"]</h3>
 <h4>WarrantyDetail</h4>
 <hr />
 <div class="row">
     <div class="col-lg-6" style="margin:auto;">
-        <div class="card">
-        <form asp-action="Create">
+        <div class="card" id="onpendtable">
+        <form asp-action="Create" id="formCreate">
             <div class="card-header">Thêm chi tiết bảo hành</div>
             <div class="card-body">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -37,18 +37,38 @@
                         <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="form-group row">
+                @*<div class="form-group row">
                     <label asp-for="WarrantyCardID" class="col-md-3 form-control-label">Mã bảo hành</label>
                     <div class="col-md-9">
                         <select asp-for="WarrantyCardID" class="form-control" asp-items="ViewBag.WarrantyCardID" ></select>
                     </div>
+                </div>*@
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Mã bảo hành</label>
+                    <div class="col-md-9" >
+                        <input style="position:relative" name="waCardID" id="waCardID" class="form-control" placeholder="Nhập mã bảo hành" />
+                        <table id="filtersearch" style="position:absolute; background-color:white; z-index:1">
+                            <thead>
+                            <th></th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
+               
+                
+
+
+
             </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Tạo</button>
-                @*<input type="submit" value="Create" class="btn btn-default" />*@
-            </div>
+            
         </form>
+           
+            <div class="card-footer">
+                @*<button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Tạo</button>*@
+                @*<input type="submit" value="Create" class="btn btn-default" />*@
+                <button class="btn btn-primary" id="buttonClick"><i class="fa fa-plus"></i> Tạo</button>
+            </div>
             </div>
     </div>
 </div>
@@ -62,3 +82,99 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script type="text/javascript">
+    $("#buttonClick").click(function () {
+        if ($("#waCardID").val() == "")
+        {
+            alert("vui lòng nhập mã bảo hành");
+
+        }
+        else
+        {
+
+            $("#formCreate").submit();
+        }
+    });
+
+
+
+     $(document).ready(function () {
+        $("#onpendtable").mouseup(function () {
+            $("#filtersearch").hide();
+         });
+
+    });
+
+    function getValueForInputSearch(value) {
+        $("#waCardID").val(value)
+    };
+
+
+
+    $("#waCardID").on("input", function () {
+
+        $("#filtersearch").show();
+
+        $.ajax({
+            url: "StorageLocations",
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            accept: 'application/json',
+            success: function (data) {
+                var arrtemp = [];
+                var ar = data.split('","');
+
+                //day la doan code bo  [" cho ar[0] va "] cho ar cuoi cung
+
+                for (var i = 0; i < ar.length; i++)
+                {
+                    if (i == 0)
+                    {
+                        arrtemp.push(ar[0].substring(2, ar[0].length));
+
+                    }
+                    else if (i == ar.length - 1)
+                    {
+                        arrtemp.push(ar[i].substring(0, ar[i].length - 2));
+
+                    }
+                    else
+                    {
+                        arrtemp.push(ar[i]);
+
+                    }
+
+                }
+
+                //tim ra  chuoi con voi chuoi con do duoc nhap trong truong textbox seach trong danh sach IMEI
+                var arfind = [];
+                for (var i = 0; i < arrtemp.length; i++)
+                {
+                    if (arrtemp[i].includes($("#waCardID").val()))
+                    {
+
+                        arfind.push(arrtemp[i]);
+                    }
+
+                }
+
+                var rows = "";
+
+                for (var i = 0; i < arfind.length; i++)
+                {
+
+                    rows += "<tr style='padding: 10px'>"
+                    rows += `<td><a href='#' onClick='return getValueForInputSearch("${arfind[i]}")'>${arfind[i]} </a></td>`
+                    rows +="</tr>"
+
+                }
+
+                $("#filtersearch tbody").html(rows);
+            },
+        });
+    });
+
+
+</script>

@@ -21,12 +21,12 @@ namespace MobileStore.Controllers
         public  async Task< IActionResult> StorageLocations()
         {
 
-            
-            var k = _context.WarrantyCard.Include(w => w.Item).ToList();
+
+            var k = _context.Item.ToList();
             List<String> kl = new List<String>();
             for(int i=0; i < k.Count();i++)
             {
-                kl.Add(k[i].Item.IMEI.ToString());
+                kl.Add(k[i].IMEI.ToString());
             }
             var json = JsonConvert.SerializeObject( kl );
             return Json( json);
@@ -134,9 +134,39 @@ namespace MobileStore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("WarrantyCardID,Period,ItemID")] WarrantyCard warrantyCard)
+        public async Task<IActionResult> Create([Bind("WarrantyCardID,Period")] WarrantyCard warrantyCard)
         {
-           warrantyCard.StartDate  = DateTime.Now;
+            //kiem tra item nhap vao co ton tai trong co so du lieu item
+            string imei = Request.Form["ItemID"].ToString();
+            int count = 0;
+            List<Item> item = _context.Item.ToList();
+            for(int i=0;i<item.Count();i++)
+            {
+                if(item[i].IMEI != imei)
+                {
+                    count = count + 1;
+                }
+            }
+
+            if(count == item.Count())
+            {
+                ViewData["erro"] = "Item không tồn tại";
+                return View(warrantyCard);
+            }
+
+            //tim Item voi Imei tuong ung
+
+            for (int i = 0; i < item.Count(); i++)
+            {
+                if (item[i].IMEI == imei)
+                {
+                    warrantyCard.ItemID = item[i].ItemID;
+                }
+            }
+
+
+            //tao ngay ket thuc 
+            warrantyCard.StartDate  = DateTime.Now;
 
             var getdate = DateTime.Now.Day;
             var getmounth = DateTime.Now.Month;
@@ -172,27 +202,63 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
 
-            var warrantyCard = await _context.WarrantyCard.SingleOrDefaultAsync(m => m.WarrantyCardID == id);
+            var warrantyCard = await _context.WarrantyCard.Include(w=>w.Item).SingleOrDefaultAsync(m => m.WarrantyCardID == id);
             if (warrantyCard == null)
             {
                 return NotFound();
             }
-            ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "IMEI", warrantyCard.ItemID);
+            ViewData["ItemIDOld"] = new SelectList(_context.Item, "ItemID", "IMEI", warrantyCard.ItemID);
+            ViewData["ItemIDNew"] = warrantyCard.Item.IMEI;
             return View(warrantyCard);
         }
 
+        
         // POST: WarrantyCards/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("WarrantyCardID,ApplicationUserID,StartDate,Period,ItemID")] WarrantyCard warrantyCard)
+        public async Task<IActionResult> Edit(int id, [Bind("WarrantyCardID,ApplicationUserID,StartDate,Period")] WarrantyCard warrantyCard)
         {
+
+
             if (id != warrantyCard.WarrantyCardID)
             {
                 return NotFound();
             }
 
+
+            string imei = Request.Form["ItemID"].ToString();
+
+            int count = 0;
+            List<Item> item = _context.Item.ToList();
+            for (int i = 0; i < item.Count(); i++)
+            {
+                if (item[i].IMEI != imei)
+                {
+                    count = count + 1;
+                }
+            }
+
+            if (count == item.Count())
+            {
+                ViewData["erro"] = "Item không tồn tại";
+                return View(warrantyCard);
+            }
+
+            //tim Item voi Imei tuong ung
+           
+            for(int i=0;i<item.Count();i++)
+            {
+                if(item[i].IMEI==imei)
+                {
+                    warrantyCard.ItemID = item[i].ItemID;
+                }
+            }
+
+
+
+            //sua ngay ket thuc
             var stardate = warrantyCard.StartDate;
 
             int period = Convert.ToInt32(Request.Form["Period"].ToString());

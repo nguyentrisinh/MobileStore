@@ -32,6 +32,8 @@ namespace MobileStore.Controllers
             var json = JsonConvert.SerializeObject(kl);
             return Json(json);
         }
+
+       
         public WarrantyDetailsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -112,12 +114,40 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("WarrantyDetailID,Date,DefectInfo,Status,WarrantyCardID")] WarrantyDetail warrantyDetail)
+        public async Task<IActionResult> Create([Bind("WarrantyDetailID,Date,DefectInfo,Status")] WarrantyDetail warrantyDetail)
         {
-            var warrantyCard = _context.WarrantyCard.Where(w => w.WarrantyCardID == warrantyDetail.WarrantyCardID).SingleOrDefault();
-            warrantyCard.NumberOfWarranty = warrantyCard.NumberOfWarranty + 1;
+            //kiem tra transaction thuoc warrantyCard nao
+            string transaction = Request.Form["waCardID"].ToString().Trim();
 
+            var warrantyCard = _context.WarrantyCard.Where(w=>w.TransactionCode.ToString()==transaction).SingleOrDefault();
+
+            //kiem tra waranty card nhap vo co ton tai khon
+            List<WarrantyCard> warCart = _context.WarrantyCard.ToList();
+            int count = 0;
+            for(int i=0;i< warCart.Count();i++)
+            {
+                if(warCart[i].TransactionCode.ToString()!=transaction)
+                {
+                    //ViewData["erro"] = "mã bảo hành không tồn tại";
+                    //return View(warrantyDetail);
+                    count = count+1;
+                }
+            }
+            if(count == warCart.Count())
+            {
+                ViewData["erro"] = "mã bảo hành không tồn tại";
+                return View(warrantyDetail);
+            }
+
+
+            //tang tu dong them 1 khi nguoi dung tao mot chi tiet bao hanh
+            //var warrantyCard = _context.WarrantyCard.Where(w => w.WarrantyCardID == warrantyDetail.WarrantyCardID).SingleOrDefault();
+            warrantyCard.NumberOfWarranty = warrantyCard.NumberOfWarranty + 1;
             warrantyDetail.ApplicationUserID = _userManager.GetUserId(User);
+            warrantyDetail.WarrantyCardID = warrantyCard.WarrantyCardID;
+           
+
+
             if (ModelState.IsValid)
             {
                 _context.Update(warrantyCard);
@@ -126,7 +156,7 @@ namespace MobileStore.Controllers
                 return RedirectToAction(nameof(Index));
             }
            
-            ViewData["WarrantyCardID"] = new SelectList(_context.WarrantyCard, "WarrantyCardID", "TransactionCode", warrantyDetail.WarrantyCardID);
+            //ViewData["WarrantyCardID"] = new SelectList(_context.WarrantyCard, "WarrantyCardID", "TransactionCode", warrantyDetail.WarrantyCardID);
             return View(warrantyDetail);
         }
 
