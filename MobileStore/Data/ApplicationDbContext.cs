@@ -100,5 +100,6 @@ namespace MobileStore.Data
         public DbSet<MobileStore.Models.Supplier> Supplier { get; set; }
         public DbSet<MobileStore.Models.WarrantyCard> WarrantyCard { get; set; }
         public DbSet<MobileStore.Models.WarrantyDetail> WarrantyDetail { get; set; }
+        public DbSet<MobileStore.Models.StockReceiving> StockReceiving { get; set; }
     }
 }
