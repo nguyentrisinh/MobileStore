@@ -18,6 +18,7 @@ namespace MobileStore.Models
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
+        #region ApplicationUser Info
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
         [Display(Name = "Last Name")]
@@ -26,9 +27,12 @@ namespace MobileStore.Models
         public DateTime Birthday { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
-        //public string AvatarUrl { get; set; }
+        public string AvatarUrl { get; set; }
+        //public byte[] AvatarImage { get; set; }
+
 
         public UserRole Role { get; set; }
+        #endregion
 
         #region Navigator Orders
         public IList<Order> Orders { get; set; }

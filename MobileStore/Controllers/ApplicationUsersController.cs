@@ -11,8 +11,11 @@ using MobileStore.Models.ApplicationUserViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
 using MobileStore.Services;
 using Microsoft.Extensions.Logging;
+using System.IO;
+using System.Net.Http.Headers;
 
 
 namespace MobileStore.Controllers
@@ -25,6 +28,7 @@ namespace MobileStore.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         public ApplicationUsersController(
             UserManager<ApplicationUser> userManager,
@@ -32,7 +36,8 @@ namespace MobileStore.Controllers
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ILogger<AccountController> logger,
-            ApplicationDbContext context
+            ApplicationDbContext context,
+            IHostingEnvironment hostingEnvironment
             )
         {
             _userManager = userManager;
@@ -41,6 +46,7 @@ namespace MobileStore.Controllers
             _emailSender = emailSender;
             _logger = logger;
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         // GET: ApplicationUsers
@@ -149,12 +155,44 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Email,Password,ConfirmPassword,FirstName,LastName,Birthday,Phone,Address,Role")] CreateApplicationUserViewModel model)
+        public async Task<IActionResult> Create([Bind("Email,Password,ConfirmPassword,FirstName,LastName,Birthday,Phone,Address,Role,AvatarImage")] CreateApplicationUserViewModel model)
         {
 
             if (ModelState.IsValid)
             {
+
                 var user = ConvertCreateApplicationUserViewModelToApplicationUserModel(model);
+
+                // Test Save image to Model: Idea is save your file's name and extentsion to the AvatarUrl after that will search in wwwroot
+
+                var Request = HttpContext.Request;
+                var files = HttpContext.Request.Form.Files;
+                foreach (var Image in files)
+                {
+                    if (Image != null && Image.Length > 0)
+                    {
+
+                        var file = Image;
+                        var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "uploads\\img\\user\\avatar");
+
+                        if (file.Length > 0)
+                        {
+                            var fileName = ContentDispositionHeaderValue.Parse
+                                (file.ContentDisposition).FileName.Trim('"');
+
+                            System.Console.WriteLine(fileName);
+                            using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
+                            {
+                                await file.CopyToAsync(fileStream);
+                                user.AvatarUrl = file.FileName;
+                            }
+
+
+                        }
+                    }
+                }
+
+                // End test
                 //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
 

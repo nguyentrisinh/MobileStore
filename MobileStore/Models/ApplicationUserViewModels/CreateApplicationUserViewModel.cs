@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace MobileStore.Models.ApplicationUserViewModels
 {
@@ -40,6 +41,8 @@ namespace MobileStore.Models.ApplicationUserViewModels
         public DateTime Birthday { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
+        //public IFormFile AvatarImage { get; set; }
+
 
         public UserRole Role { get; set; }
     }

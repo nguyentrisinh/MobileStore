@@ -12,9 +12,10 @@ using System;
 namespace MobileStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171214164631_Add_AvatarImage_ApplicationUser")]
+    partial class Add_AvatarImage_ApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,7 +139,7 @@ namespace MobileStore.Migrations
 
                     b.Property<string>("Address");
 
-                    b.Property<string>("AvatarUrl");
+                    b.Property<byte[]>("AvatarImage");
 
                     b.Property<DateTime>("Birthday");
 
