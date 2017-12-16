@@ -1,4 +1,4 @@
-﻿@model MobileStore.Models.StockReceivingViewModels.StockReceivingViewModel
+﻿@model MobileStore.Models.StockReceivingViewModels.StockReceivingDetailViewModel
 @using MobileStore.Models
 
 @{
@@ -111,12 +111,12 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="ModelFromSupplier.SupplierID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.SupplierID)</label>
+                        <label asp-for="ModelFromSupplier.StockReceivingID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.StockReceivingID)</label>
                         <div class="col-md-8">
 
-                            <select asp-for="ModelFromSupplier.SupplierID" class="form-control" asp-items="ViewBag.SupplierID"></select>
+                            <select asp-for="ModelFromSupplier.StockReceivingID" class="form-control" asp-items="ViewBag.StockReceivingID"></select>
                             @*<input asp-for="ModelFromSupplier.SupplierID" type="text" class="form-control" placeholder="Chọn nhà cung cấp..">*@
-                            <span asp-validation-for="ModelFromSupplier.SupplierID" class="invalid-feedback"></span>
+                            <span asp-validation-for="ModelFromSupplier.StockReceivingID" class="invalid-feedback"></span>
                         </div>
                     </div>
 

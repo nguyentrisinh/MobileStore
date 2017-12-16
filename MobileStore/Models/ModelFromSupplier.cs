@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MobileStore.Models
 {
-    public class ModelFromSupplier : BaseModel
+    public class ModelFromSupplier
     {
         [DisplayName("ID")]
         public int ModelFromSupplierID { get; set; }

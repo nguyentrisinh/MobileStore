@@ -60,8 +60,6 @@ namespace MobileStore.Data
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<ModelFromSupplier>().HasOne(ent => ent.Model).WithMany(ent => ent.ModelFromSuppliers).HasForeignKey(ent => ent.ModelID)
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<ModelFromSupplier>().HasOne(ent => ent.ApplicationUser).WithMany(ent => ent.ModelFromSuppliers).HasForeignKey(ent => ent.ApplicationUserID)
-                .IsRequired().OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<StockReceiving>().HasOne(ent => ent.Supplier).WithMany(ent => ent.StockReceivings).HasForeignKey(ent => ent.SupplierID)
                 .IsRequired().OnDelete(DeleteBehavior.Cascade);
@@ -102,5 +100,9 @@ namespace MobileStore.Data
         public DbSet<MobileStore.Models.Supplier> Supplier { get; set; }
         public DbSet<MobileStore.Models.WarrantyCard> WarrantyCard { get; set; }
         public DbSet<MobileStore.Models.WarrantyDetail> WarrantyDetail { get; set; }
+
+        public DbSet<MobileStore.Models.StockReceiving> StockReceiving { get; set; }
+
+
     }
 }

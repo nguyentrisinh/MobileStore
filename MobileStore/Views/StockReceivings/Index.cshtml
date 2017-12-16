@@ -1,0 +1,178 @@
+﻿@model IEnumerable<MobileStore.Models.StockReceiving>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="ui-view">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-header">
+                        Danh sách các đơn nhập hàng
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Index" method="get" class="form-horizontal">
+                            <div class="form-group row">
+                                <div class="col-lg-6">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                                        </span>
+                                        <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
+                                        <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo ID...">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                        <p>
+                            <a asp-action="Create">
+                                <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm đơn nhập hàng</button>
+                            </a>
+                        </p>
+                        <div class="table-striped table-responsive">
+
+                            <table class="table  ">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.StockReceivingID)
+                                    </th>
+                                   
+                                   
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                            @Html.DisplayNameFor(model => model.Date)
+                                        </a>
+                                    </th>
+                                   
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["SupplierSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                            @Html.DisplayNameFor(model => model.Supplier.Name)
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["StaffSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                            @Html.DisplayNameFor(model => model.ApplicationUser.FirstName)
+                                        </a>
+                                    </th>
+                                    <th></th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.StockReceivingID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Date)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Supplier.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
+                                        </td>
+                                      
+
+                                        <td>
+                                            @*@if (await AuthorizationService.AuthorizeAsync(User,item, OrderOperations.Update))
+                                                    {
+                                                        <a asp-action="Edit" asp-route-id="@item.ContactId">Edit</a><text> | </text>
+                                                    }
+                                                    <a asp-action="Details" asp-route-id="@item.ContactId">Details</a>
+                                                    @if (await AuthorizationService.AuthorizeAsync(User,
+                                                        item, ContactOperations.Delete))
+                                                    {
+                                                        <text> | </text>
+                                                        <a asp-action="Delete" asp-route-id="@item.ContactId">Delete</a>
+                                                    }*@
+                                            <div class="btn-group">
+                                                @{
+                                                    var isCreateAuthorize = await AuthorizationService.AuthorizeAsync(User, item, OrderOperations.Update);
+                                                    if (isCreateAuthorize.Succeeded)
+                                                    {
+                                                        <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.StockReceivingID">
+                                                            <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
+                                                        </a>
+                                                    }
+                                                }
+
+
+                                                <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.StockReceivingID">
+                                                    <i class="fa fa-info"></i>&nbsp; Chi tiết
+                                                </a>
+
+
+                                                @{
+                                                    var isDeleteAuthorize = await AuthorizationService.AuthorizeAsync(User, item, OrderOperations.Delete);
+                                                    if (isDeleteAuthorize.Succeeded)
+                                                    {
+                                                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.StockReceivingID">
+                                                            <i class="fa fa-trash-o"></i>&nbsp; Xóa
+                                                        </a>
+                                                    }
+                                                }
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                            @{
+
+                                PaginatedList<MobileStore.Models.StockReceiving> PaginatedModel = Model as PaginatedList<MobileStore.Models.StockReceiving>;
+
+                                string prevDisabled = !PaginatedModel.HasPreviousPage ? "disabled" : "";
+
+                                string nextDisabled = !PaginatedModel.HasNextPage ? "disabled" : "";
+
+
+                            }
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    <li class="page-item @prevDisabled">
+                                        <a asp-action="Index"
+                                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                           asp-route-page="@(PaginatedModel.PageIndex - 1)"
+                                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                           class="page-link">Previous</a>
+                                    </li>
+                                    @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
+                                    {
+                                        <li class="page-item @( @PaginatedModel.PageIndex == i ? "active" : " " )">
+                                            <a asp-action="Index"
+                                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                               asp-route-page="@i"
+                                               asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
+                                        </li>
+
+                                    }
+                                    <li class="page-item @nextDisabled">
+                                        <a asp-action="Index"
+                                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                           asp-route-page="@(PaginatedModel.PageIndex + 1)"
+                                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                           class="page-link">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
