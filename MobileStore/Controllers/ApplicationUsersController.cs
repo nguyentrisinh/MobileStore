@@ -16,7 +16,7 @@ using MobileStore.Services;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Net.Http.Headers;
-
+using Microsoft.AspNetCore.NodeServices;
 
 namespace MobileStore.Controllers
 {
@@ -184,7 +184,8 @@ namespace MobileStore.Controllers
                             using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
                             {
                                 await file.CopyToAsync(fileStream);
-                                user.AvatarUrl = file.FileName;
+                                //user.AvatarUrl = file.FileName;
+                                user.AvatarUrl = Path.Combine("uploads\\img\\user\\avatar", file.FileName);
                             }
 
 
@@ -323,6 +324,25 @@ namespace MobileStore.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        #endregion
+
+        #region Test Export PDF File
+        [HttpGet]
+        [Route("/exportpdf")]
+        public async Task<IActionResult> ExportPdf([FromServices] INodeServices nodeServices)
+        {
+            var result = await nodeServices.InvokeAsync<byte[]>("./pdf", "<h1 style='color: red;'>the data from a controller</h1>");
+
+            HttpContext.Response.ContentType = "application/pdf";
+
+            string filename = @"report.pdf";
+            HttpContext.Response.Headers.Add("x-filename", filename);
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "x-filename");
+            HttpContext.Response.Body.Write(result, 0, result.Length);
+
+            return new ContentResult();
+        }
+
         #endregion
 
 

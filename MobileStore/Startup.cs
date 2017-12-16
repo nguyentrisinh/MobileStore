@@ -36,6 +36,9 @@ namespace MobileStore
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
+            // Add Node services
+            services.AddNodeServices();
+
             services.AddMvc();
         }
 
