@@ -15,6 +15,7 @@ namespace MobileStore.Models
         public double PriceBought { get; set; }
         public double PriceSold { get; set; }
         public DateTime Date { get; set; }
+        public int period { get; set; } // Count by month
         #endregion
 
         //#region Supplier Foreign Key

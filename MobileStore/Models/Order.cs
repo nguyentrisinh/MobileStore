@@ -13,6 +13,7 @@ namespace MobileStore.Models
         #region Order Specifications
         public double Total { get; set; }
         public DateTime Date { get; set; }
+        public bool IsPrinted { get; set; }
         #endregion
 
         //#region ApplicationUser ForeignKey (Staff in system)

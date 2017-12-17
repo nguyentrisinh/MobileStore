@@ -30,6 +30,7 @@ namespace MobileStore.Data
 
             builder.Entity<ApplicationUser>().HasKey(ent => ent.Id);
             builder.Entity<Brand>().HasKey(ent => ent.BrandID);
+            builder.Entity<Constant>().HasKey(ent => ent.ConstantID);
             builder.Entity<Customer>().HasKey(ent => ent.CustomerID);
             builder.Entity<Item>().HasKey(ent => ent.ItemID);
             builder.Entity<Model>().HasKey(ent => ent.ModelID);
@@ -101,5 +102,6 @@ namespace MobileStore.Data
         public DbSet<MobileStore.Models.WarrantyCard> WarrantyCard { get; set; }
         public DbSet<MobileStore.Models.WarrantyDetail> WarrantyDetail { get; set; }
         public DbSet<MobileStore.Models.StockReceiving> StockReceiving { get; set; }
+        public DbSet<MobileStore.Models.Constant> Constant { get; set; }
     }
 }
