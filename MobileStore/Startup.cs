@@ -33,6 +33,9 @@ namespace MobileStore
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            // Enable Node Services
+            services.AddNodeServices();
+
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 

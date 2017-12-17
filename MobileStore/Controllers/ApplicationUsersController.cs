@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using MobileStore.Services;
 using Microsoft.Extensions.Logging;
-
+using Microsoft.AspNetCore.NodeServices;
 
 namespace MobileStore.Controllers
 {
@@ -286,6 +286,22 @@ namespace MobileStore.Controllers
             return RedirectToAction(nameof(Index));
         }
         #endregion
+
+
+        [HttpGet]
+        public async Task<IActionResult> ExportPdf([FromServices] INodeServices nodeServices)
+        {
+            var result = await nodeServices.InvokeAsync<byte[]>("./pdf", "the data from a controller");
+
+            HttpContext.Response.ContentType = "application/pdf";
+
+            string filename = @"report.pdf";
+            HttpContext.Response.Headers.Add("x-filename", filename);
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "x-filename");
+            HttpContext.Response.Body.Write(result, 0, result.Length);
+
+            return new ContentResult();
+        }
 
 
         #region Support Function for ApplicationUserController
