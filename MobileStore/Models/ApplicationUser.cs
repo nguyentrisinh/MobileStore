@@ -26,7 +26,7 @@ namespace MobileStore.Models
         public DateTime Birthday { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
-        //public string AvatarUrl { get; set; }
+        public string AvatarUrl { get; set; }
 
         public UserRole Role { get; set; }
 

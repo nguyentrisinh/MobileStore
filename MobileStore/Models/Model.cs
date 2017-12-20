@@ -21,6 +21,9 @@ namespace MobileStore.Models
         public string Color { get; set; }
         public string Description { get; set; }
         public string Specification { get; set; }
+        public string PictureOneUrl { get; set; }
+        public string PictureTwoUrl { get; set; }
+        public string PictureThreeUrl { get; set; }
 
         public ModelType Type { get; set; }
         #endregion

@@ -19,7 +19,8 @@ namespace MobileStore.Models
         [Display(Name = "End date")]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
-        public int Period { get; set; } // By month
+        public bool IsPrinted { get; set; }
+        public bool IsDisabled { get; set; } // Trường này để check nếu sản phẩm này đã được đổi trả thì thẻ bào hành này không còn giá trị nữa
         #endregion
 
         #region Item ForeignKey

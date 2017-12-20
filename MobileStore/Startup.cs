@@ -57,6 +57,9 @@ namespace MobileStore
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            // Enable Node Services
+            services.AddNodeServices();
+
             services.AddMvc();
 
             // Add application services.

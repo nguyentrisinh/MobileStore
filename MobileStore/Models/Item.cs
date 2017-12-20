@@ -9,11 +9,9 @@ namespace MobileStore.Models
 {
     public enum ItemStatus
     {
-        New = 1,
-        Return = 2,
-        Change = 3,
-        Warranty = 4,
-        Sold = 5,
+        InStock = 1,
+        Sold = 2,
+        Returned = 3,
     }
 
     public class Item

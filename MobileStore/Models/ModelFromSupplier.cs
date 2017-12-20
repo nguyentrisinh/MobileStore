@@ -27,6 +27,7 @@ namespace MobileStore.Models
         [DisplayName("Ngày nhập")]
         //[DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
+        public int period { get; set; } // Count by month
         #endregion
 
         //#region Supplier Foreign Key
