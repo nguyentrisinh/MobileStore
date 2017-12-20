@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MobileStore.Models.OrderDetailViewModels;
 using MobileStore.Models.SellViewModel;
 
 namespace MobileStore.Controllers
@@ -184,7 +186,7 @@ namespace MobileStore.Controllers
             sellViewModel.Order = order;
             sellViewModel.OrderDetails = orderDetails;
             sellViewModel.Customers = _context.Customer;
-            sellViewModel.NewItems = _context.Item.Where(m => m.Status == ItemStatus.New).Select(m => new
+            sellViewModel.NewItems = _context.Item.Where(m => m.Status == ItemStatus.InStock).Select(m => new
             {
                 m.ItemID,
                 DisplayName = m.Name + m.IMEI
@@ -349,6 +351,16 @@ namespace MobileStore.Controllers
                     ViewData["ErrorText"] = "Bạn không thể sửa sau 2h";
                     return View("ErrorPage");
                 }
+                var warrantyCard = new WarrantyCard();
+                warrantyCard.NumberOfWarranty = 0;
+                warrantyCard.StartDate = DateTime.Now;
+                var itemInfo = await _context.Item.Where(m=>m.ItemID==sellViewModel.OrderDetail.ItemID).Include(m=>m.ModelFromSupplier).SingleOrDefaultAsync();
+                warrantyCard.EndDate= DateTime.Now.AddMonths(itemInfo.ModelFromSupplier.period);
+                warrantyCard.IsPrinted = false;
+                warrantyCard.IsDisabled = false;
+                warrantyCard.ItemID = sellViewModel.OrderDetail.ItemID;
+                warrantyCard.ApplicationUserID = _userManager.GetUserId(User);
+                _context.Add(warrantyCard);
                 _context.Add(sellViewModel.OrderDetail);
                 var itemID = sellViewModel.OrderDetail.ItemID;
                 var item = await _context.Item.SingleAsync(m => m.ItemID == itemID);
@@ -419,10 +431,21 @@ namespace MobileStore.Controllers
             {
                 return new ChallengeResult();
             }
-            orderDetail.Item.Status = ItemStatus.New;
-            _context.Update(orderDetail.Item);
-            _context.OrderDetail.Remove(orderDetail);
-            await _context.SaveChangesAsync();
+            try
+            {
+                orderDetail.Item.Status = ItemStatus.InStock;
+                _context.Update(orderDetail.Item);
+                var warrantyCard = await _context.WarrantyCard.SingleAsync(m => m.ItemID == orderDetail.ItemID);
+                _context.WarrantyCard.Remove(warrantyCard);
+                _context.OrderDetail.Remove(orderDetail);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+
+                throw;
+            }
+           
             return RedirectToAction(nameof(Edit),new {id=orderDetail.OrderID});
         }
 
@@ -445,16 +468,7 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
-
-            var timeSpan = DateTime.Now - orderDetail.Order.Date;
-            if (timeSpan.Hours > 2)
-            {
-                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
-                return View("ErrorPage");
-            }
-
-
-
+            // Code Khóa sửa tại đây check đã in
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, orderDetail.Order,
                 OrderOperations.Update);
             if (!isAuthorized.Succeeded)
@@ -463,9 +477,26 @@ namespace MobileStore.Controllers
             }
 
 
-            ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "ItemID", orderDetail.ItemID);
-            ViewData["OrderID"] = new SelectList(_context.Order, "OrderID", "OrderID", orderDetail.OrderID);
-            return View(orderDetail);
+            var editOrderDetailVM = new EditOrderDetailViewModel();
+            editOrderDetailVM.OrderDetail = orderDetail;
+
+            var warrantyCard = await _context.WarrantyCard.Include(m => m.Item).ThenInclude(m => m.Model).SingleOrDefaultAsync(m => m.ItemID == orderDetail.ItemID);
+            editOrderDetailVM.WarrantyCard = warrantyCard;
+            var items = await _context.Item.Where(m => (m.Status == ItemStatus.InStock) || (m.ItemID==orderDetail.ItemID)).ToListAsync();
+            editOrderDetailVM.Items = items;
+            var orders = await _context.Order.Where(m => (m.IsPrinted == false)||(m.OrderID==orderDetail.OrderID)).ToListAsync();
+            editOrderDetailVM.Orders = orders;
+
+            var returnDeadline = await _context.Constant.Where(m => m.ConstantID == 1).SingleAsync();
+            if (DateTime.Now < warrantyCard.StartDate.AddDays(returnDeadline.Parameter))
+            {
+                editOrderDetailVM.CanReturn = true;
+            }
+            else
+            {
+                editOrderDetailVM.CanReturn = false;
+            }
+            return View(editOrderDetailVM);
         }
 
 
@@ -476,13 +507,13 @@ namespace MobileStore.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Sale,Admin")]
-        public async Task<IActionResult> EditOrderDetail(int id, [Bind("OrderDetailID,PriceSold,ItemID,OrderID")] OrderDetail orderDetail)
+        public async Task<IActionResult> EditOrderDetail(int id, EditOrderDetailViewModel editOrderDetailVm)
         {
-            if (id != orderDetail.OrderDetailID)
+            if (id != editOrderDetailVm.OrderDetail.OrderDetailID)
             {
                 return NotFound();
             }
-            var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == orderDetail.OrderID);
+            var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == editOrderDetailVm.OrderDetail.OrderID);
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
                 OrderOperations.Update);
             if (!isAuthorized.Succeeded)
@@ -494,19 +525,31 @@ namespace MobileStore.Controllers
             {
                 try
                 {
-                    var newOrderDetail = ViewModelToModelOrderDetail(orderDetail).Result;
-                    var timeSpan = DateTime.Now - newOrderDetail.Order.Date;
-                    if (timeSpan.Hours > 2)
-                    {
-                        ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
-                        return View("ErrorPage");
-                    }
+
+                    var oldOrderDetail = await _context.OrderDetail.SingleAsync(m => m.OrderDetailID == id);
+                    var newWarrantyCard = await _context.WarrantyCard.SingleAsync(m => m.ItemID == oldOrderDetail.ItemID);
+                    newWarrantyCard.ItemID = editOrderDetailVm.OrderDetail.ItemID;
+                    var oldItem = await _context.Item.SingleAsync(m => m.ItemID == oldOrderDetail.ItemID);
+                    oldItem.Status = ItemStatus.InStock;
+
+                    var newOrderDetail = ViewModelToModelOrderDetail(editOrderDetailVm.OrderDetail).Result;
+
+                    var newItem = await _context.Item.SingleAsync(m => m.ItemID == newOrderDetail.ItemID);
+                    newItem.Status = ItemStatus.Sold;
+
+
+
+
+                    _context.Item.UpdateRange(oldItem,newItem);
+
+                    _context.Update(newWarrantyCard);
+                    // Code check khóa tại đây kiểm tra print
                     _context.Update(newOrderDetail);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderDetailExists(orderDetail.OrderDetailID))
+                    if (!OrderDetailExists(editOrderDetailVm.OrderDetail.OrderDetailID))
                     {
                         return NotFound();
                     }
@@ -516,9 +559,7 @@ namespace MobileStore.Controllers
                     }
                 }
             }
-            ViewData["ItemID"] = new SelectList(_context.Item, "ItemID", "ItemID", orderDetail.ItemID);
-            ViewData["OrderID"] = new SelectList(_context.Order, "OrderID", "OrderID", orderDetail.OrderID);
-            return RedirectToAction(nameof(Edit), new { id = orderDetail.OrderID });
+            return RedirectToAction(nameof(Edit), new { id = editOrderDetailVm.OrderDetail.OrderID });
         }
 
         #endregion

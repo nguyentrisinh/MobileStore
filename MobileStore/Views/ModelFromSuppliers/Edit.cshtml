@@ -24,7 +24,7 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="ModelFromSupplier.ModelFromSupplierID" />
 
-                        <input type="hidden" asp-for="Item.Status" value="@ItemStatus.New" />
+                        <input type="hidden" asp-for="Item.Status" value="@ItemStatus.InStock" />
 
                         <input type="hidden" asp-for="Item.ModelFromSupplierID" value="@ViewBag.ModelFromSupplierID" />
                         <input type="hidden" asp-for="Item.ModelID" value="@ViewBag.ModelItemID" />
@@ -60,6 +60,8 @@
                                 <span asp-validation-for="Item.Note" class="invalid-feedback"></span>
                             </div>
                         </div>
+                        
+                    
 
 
 
@@ -126,6 +128,13 @@
                             <select asp-for="ModelFromSupplier.ModelID" class="form-control" asp-items="ViewBag.ModelID"></select>
                             @*<input asp-for="ModelFromSupplier.ModelID" type="text" class="form-control" placeholder="Nhập lọai sản phẩm...">*@
                             <span asp-validation-for="ModelFromSupplier.ModelID" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="ModelFromSupplier.period" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.period)</label>
+                        <div class="col-md-8">
+                            <input asp-for="ModelFromSupplier.period" type="text" class="form-control" placeholder="Nhập giá bán...">
+                            <span asp-validation-for="ModelFromSupplier.period" class="invalid-feedback"></span>
                         </div>
                     </div>
                 </div>
@@ -201,17 +210,13 @@
                                     <td>
                                         @switch (item.Status)
                                         {
-                                            case ItemStatus.New:
+                                            case ItemStatus.InStock:
                                                 <span class="badge badge-info">
                                                     @Html.DisplayFor(modelItem => item.Status)
                                                 </span>
                                                 break;
-                                            case ItemStatus.Change:
-                                                <span class="badge badge-dark">
-                                                    @Html.DisplayFor(modelItem => item.Status)
-                                                </span>
-                                                break;
-                                            case ItemStatus.Return:
+                                           
+                                            case ItemStatus.Returned:
                                                 <span class="badge badge-danger">
                                                     @Html.DisplayFor(modelItem => item.Status)
                                                 </span>
@@ -221,11 +226,7 @@
                                                     @Html.DisplayFor(modelItem => item.Status)
                                                 </span>
                                                 break;
-                                            case ItemStatus.Warranty:
-                                                <span class="badge badge-warning">
-                                                    @Html.DisplayFor(modelItem => item.Status)
-                                                </span>
-                                                break;
+                                           
                                         }
 
                                     </td>

@@ -18,15 +18,17 @@ namespace MobileStore.Models
         #region Info of each form
         [DisplayName("Số lượng")]
         public int Quantity { get; set; }
-
+        [Required]
         [DisplayName("Giá mua")]
         public double PriceBought { get; set; }
+        [Required]
         [DisplayName("Giá bán")]
         public double PriceSold { get; set; }
         [DataType(DataType.Date)]
         [DisplayName("Ngày nhập")]
         //[DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
+        [Required]
         public int period { get; set; } // Count by month
         #endregion
 

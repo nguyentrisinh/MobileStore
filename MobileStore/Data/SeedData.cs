@@ -35,10 +35,73 @@ namespace ContactManager.Data
                 var uid = await EnsureUser(serviceProvider, testUserPw, "sale@ood.com");
                 await EnsureRole(serviceProvider, uid, Constants.OrderSalesRole);
 
-                //SeedDB(context, adminID);
+                //SeedDB(context);
+                //SeedDBBrand(context);
+                //SeedDBModel(context);
             }
         }
+    
         #endregion
+
+        //private static void SeedDB(ApplicationDbContext context)
+        //{
+        //    if (context.Constant.Any())
+        //    {
+        //        return;   // DB has been seeded
+        //    }
+        //    context.Constant.AddRange(
+        //        new Constant
+        //        {
+        //           ConstantID = 1,
+        //           Name = "Thời hạn đổi trả",
+        //           Parameter = 10,
+        //           Description = "Đơn vị ngày"
+        //        }
+        //    );
+
+        //    context.SaveChanges();
+        //}
+
+        //private static void SeedDBBrand(ApplicationDbContext context)
+        //{
+        //    if (context.Brand.Any())
+        //    {
+        //        return;   // DB has been seeded
+        //    }
+        //    context.Brand.AddRange(
+        //        new Brand
+        //        {
+        //             BrandID= 1,
+        //            Country = "Hàn Quốc",
+        //            Description = "",
+        //            Name = "Samsung",
+        //        }
+        //    );
+
+        //    context.SaveChanges();
+        //}
+
+        //private static void SeedDBModel(ApplicationDbContext context)
+        //{
+        //    if (context.Model.Any())
+        //    {
+        //        return;   // DB has been seeded
+        //    }
+        //    context.Model.AddRange(
+        //        new Model
+        //        {
+        //             ModelID = 1,
+        //            BrandID = 1,
+        //            Description = "",
+        //            Name = "Samsung Galaxy S8 Gold",
+        //            Color = "Gold",
+        //            Specification = "",
+        //            Type = ModelType.Device,
+        //        }
+        //    );
+
+        //    context.SaveChanges();
+        //}
 
         #region snippet_CreateRoles        
 
