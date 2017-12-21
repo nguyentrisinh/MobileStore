@@ -31,8 +31,8 @@ namespace MobileStore.Models
         public string PicEmail { get; set; }
         #endregion
 
-        #region Navigator ModelFromSuppliers
-        public IList<ModelFromSupplier> ModelFromSuppliers { get; set; }
+        #region Navigator StockReceiving
+        public IList<StockReceiving> StockReceivings { get; set; }
         #endregion
 
     }

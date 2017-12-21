@@ -12,9 +12,10 @@ using System;
 namespace MobileStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171212150319_InitDatabase")]
+    partial class InitDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,8 +139,6 @@ namespace MobileStore.Migrations
 
                     b.Property<string>("Address");
 
-                    b.Property<string>("AvatarUrl");
-
                     b.Property<DateTime>("Birthday");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -210,22 +209,6 @@ namespace MobileStore.Migrations
                     b.ToTable("Brand");
                 });
 
-            modelBuilder.Entity("MobileStore.Models.Constant", b =>
-                {
-                    b.Property<int>("ConstantID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("Parameter");
-
-                    b.HasKey("ConstantID");
-
-                    b.ToTable("Constant");
-                });
-
             modelBuilder.Entity("MobileStore.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerID")
@@ -289,12 +272,6 @@ namespace MobileStore.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("PictureOneUrl");
-
-                    b.Property<string>("PictureThreeUrl");
-
-                    b.Property<string>("PictureTwoUrl");
-
                     b.Property<string>("Specification");
 
                     b.Property<int>("Type");
@@ -314,8 +291,6 @@ namespace MobileStore.Migrations
                     b.Property<DateTime>("Date");
 
                     b.Property<int>("ModelID");
-
-                    b.Property<int>("Period");
 
                     b.Property<double>("PriceBought");
 
@@ -345,8 +320,6 @@ namespace MobileStore.Migrations
                     b.Property<int>("CustomerID");
 
                     b.Property<DateTime>("Date");
-
-                    b.Property<bool>("IsPrinted");
 
                     b.Property<double>("Total");
 
@@ -468,13 +441,11 @@ namespace MobileStore.Migrations
 
                     b.Property<DateTime>("EndDate");
 
-                    b.Property<bool>("IsDisabled");
-
-                    b.Property<bool>("IsPrinted");
-
                     b.Property<int>("ItemID");
 
                     b.Property<int>("NumberOfWarranty");
+
+                    b.Property<int>("Period");
 
                     b.Property<DateTime>("StartDate");
 
@@ -501,17 +472,9 @@ namespace MobileStore.Migrations
 
                     b.Property<string>("DefectInfo");
 
-                    b.Property<DateTime>("ExpectedDate");
-
-                    b.Property<bool>("IsPrinted");
-
-                    b.Property<DateTime>("ReturnedDate");
-
                     b.Property<int>("Status");
 
                     b.Property<int>("WarrantyCardID");
-
-                    b.Property<DateTime>("WarrantyDate");
 
                     b.HasKey("WarrantyDetailID");
 

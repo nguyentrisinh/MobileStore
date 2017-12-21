@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using MobileStore.Services;
 using Microsoft.Extensions.Logging;
-
+using Microsoft.AspNetCore.NodeServices;
 
 namespace MobileStore.Controllers
 {
@@ -43,8 +43,8 @@ namespace MobileStore.Controllers
             _context = context;
         }
 
-            // GET: ApplicationUsers
-            public async Task<IActionResult> Index(string sortOrder, string currentFilter, int? page, int? pageSize)
+        // GET: ApplicationUsers
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, int? page, int? pageSize)
         {
             // ViewData["NameSortParm"] is not the param for current sort but the sortOrder for the next sort 
             // If sortOrder is null or empty => current will sort NameAscending => Next sort of FirstName is first_name_desc => ViewData["NameSortParm"] = first_name_desc
@@ -57,14 +57,14 @@ namespace MobileStore.Controllers
             ViewData["EmailSortParm"] = sortOrder == "email_asc" ? "email_desc" : "email_asc";
 
             var applicationUsers = from ent in _context.ApplicationUser
-                           select ent;
+                                   select ent;
 
             // Search method
             ViewData["CurrentFilter"] = currentFilter;
             if (!String.IsNullOrEmpty(currentFilter))
             {
                 applicationUsers = applicationUsers.Where(ent => ent.FirstName.Contains(currentFilter)
-                                                    || ent.LastName.Contains(currentFilter) || ent.Phone.Contains(currentFilter) || ent.Address.Contains(currentFilter) 
+                                                    || ent.LastName.Contains(currentFilter) || ent.Phone.Contains(currentFilter) || ent.Address.Contains(currentFilter)
                                                     || ent.Email.Contains(currentFilter));
             }
 
@@ -120,6 +120,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: ApplicationUsers/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -287,6 +288,22 @@ namespace MobileStore.Controllers
         #endregion
 
 
+        [HttpGet]
+        public async Task<IActionResult> ExportPdf([FromServices] INodeServices nodeServices)
+        {
+            var result = await nodeServices.InvokeAsync<byte[]>("./pdf", "the data from a controller");
+
+            HttpContext.Response.ContentType = "application/pdf";
+
+            string filename = @"report.pdf";
+            HttpContext.Response.Headers.Add("x-filename", filename);
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "x-filename");
+            HttpContext.Response.Body.Write(result, 0, result.Length);
+
+            return new ContentResult();
+        }
+
+
         #region Support Function for ApplicationUserController
         private bool ApplicationUserExists(string id)
         {
@@ -350,7 +367,7 @@ namespace MobileStore.Controllers
                         await _userManager.RemoveFromRoleAsync(user, "Admin");
                         break;
                     case UserRole.WarehouseManager:
-                        await _userManager.RemoveFromRoleAsync(user, "WarehoustManager");
+                        await _userManager.RemoveFromRoleAsync(user, "WarehouseManager");
                         break;
                     case UserRole.Technical:
                         await _userManager.RemoveFromRoleAsync(user, "Technical");
@@ -383,7 +400,7 @@ namespace MobileStore.Controllers
                         await NewUserRole(user, "Admin");
                         break;
                     case UserRole.WarehouseManager:
-                        await NewUserRole(user, "WarehoustManager");
+                        await NewUserRole(user, "WarehouseManager");
                         break;
                     case UserRole.Technical:
                         await NewUserRole(user, "Technical");
