@@ -32,17 +32,6 @@
                             <span asp-validation-for="OrderDetail.ItemID" class="invalid-feedback"></span>
                         </div>
                     </div>
-
-                    <div class="form-group row">
-                        <label asp-for="OrderDetail.OrderID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.OrderID)</label>
-                        <div class="col-md-8">
-
-                            <select asp-for="OrderDetail.OrderID" class="form-control" asp-items="@(new SelectList(Model.Orders,"OrderID","OrderID",Model.OrderDetail.OrderID))"></select>
-                            @*<input asp-for="ModelFromSupplier.SupplierID" type="text" class="form-control" placeholder="Chọn nhà cung cấp..">*@
-                            <span asp-validation-for="OrderDetail.OrderID" class="invalid-feedback"></span>
-                        </div>
-                    </div>
-
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Sửa</button>
@@ -118,32 +107,10 @@
 
                                 <td>
                                     <div class="btn-group">
-                                        @{
-                                            if (Model.WarrantyCard.CanWarrant())
-                                            {
-                                                if (Model.CanReturn)
-                                                {
-                                                    <a class="btn btn-success btn-sm">
-                                                        <i class="fa fa-pencil-square-o"></i>&nbsp; Đổi trả
-                                                    </a>
-                                                }
-                                                else
-                                                {
-                                                    <a class="btn btn-success btn-sm" asp-controller="WarrantyCards" asp-action="Edit" asp-route-id="@Model.WarrantyCard.WarrantyCardID">
-                                                        <i class="fa fa-pencil-square-o"></i>&nbsp; Bảo hành
-                                                    </a>
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <button type="button" class="btn btn-lg btn-primary btn-sm" disabled>Hết hạn bảo hành</button>
-                                            }
-                                        }
-
-
-
-                                       
-                                    </div>
+                                        <a class="btn btn-success btn-sm" asp-controller="WarrantyCards" asp-action="Detail" asp-route-id="@Model.WarrantyCard.WarrantyCardID">
+                                            <i class="fa fa-pencil-square-o"></i>&nbsp; Bảo hành
+                                        </a>
+                                      </div>
 
                                 </td>
                             </tr>
