@@ -38,6 +38,73 @@ namespace MobileStore.Controllers
             var applicationDbContext = _context.WarrantyCard.Include(w => w.Item);
             return View(await applicationDbContext.ToListAsync());
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateReturnItem(WarrantyCardViewModel warrantyCardVm)
+        {
+            var warrantyCard = await _context.WarrantyCard.Include(m => m.Item).ThenInclude(m => m.Model).SingleOrDefaultAsync(m => m.ItemID == warrantyCardVm.ReturnItem.OldItemID);
+            if (ModelState.IsValid)
+            {
+               
+                var returnDeadline = await _context.Constant.SingleAsync(m => m.ConstantID == 1);
+                var anyReturnItem = await _context.ReturnItem.Where(m => m.OldItemID == warrantyCard.ItemID).AnyAsync();
+                if (DateTime.Now <= warrantyCard.StartDate.AddDays(returnDeadline.Parameter) && !anyReturnItem)
+                {
+                    var returnItem = new ReturnItem();
+                    returnItem.OldItemID = warrantyCardVm.ReturnItem.OldItemID;
+                    returnItem.DefectInfo = warrantyCardVm.ReturnItem.DefectInfo;
+                    returnItem.NewItemID = warrantyCardVm.ReturnItem.NewItemID;
+                    returnItem.ReturnDate = DateTime.Now;
+                    returnItem.ApplicationUserID = _userManager.GetUserId(User);
+
+                    warrantyCard.IsDisabled = true;
+                    _context.Update(warrantyCard);
+                    _context.Add(returnItem);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction(nameof(Detail),"WarrantyCards",new {id=warrantyCard.WarrantyCardID});
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateWarrantyDetail(WarrantyCardViewModel warrantyCardVm)
+        {
+            var warrantyCard = await _context.WarrantyCard.Include(m => m.Item).ThenInclude(m => m.Model).SingleOrDefaultAsync(m => m.WarrantyCardID==warrantyCardVm.WarrantyDetail.WarrantyCardID);
+            if (warrantyCard == null)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+
+                var returnDeadline = await _context.Constant.SingleAsync(m => m.ConstantID == 1);
+                var anyReturnItem = await _context.ReturnItem.Where(m => m.OldItemID == warrantyCard.ItemID).AnyAsync();
+                var anyWatingWarrant = await _context.WarrantyDetail.Where(m => (
+                    (m.WarrantyCardID == warrantyCard.WarrantyCardID) && (
+                        m.Status == WarrantyDetailStatus.Fixing || m.Status == WarrantyDetailStatus.Fixed))).AnyAsync();
+                if (warrantyCard.CanWarrant() && !anyReturnItem && !anyWatingWarrant)
+                {
+                    var warrantyDetail  = new WarrantyDetail();
+                    warrantyDetail.Date = DateTime.Now;
+                    warrantyDetail.DefectInfo = warrantyCardVm.WarrantyDetail.DefectInfo;
+                    warrantyDetail.ExpectedDate = warrantyCardVm.WarrantyDetail.ExpectedDate;
+                    warrantyDetail.ReturnedDate = null;
+                    warrantyDetail.Status = WarrantyDetailStatus.Fixing;
+                    warrantyDetail.WarrantyCardID = warrantyCardVm.WarrantyDetail.WarrantyCardID;
+                    warrantyDetail.WarrantyDate = null;
+                    warrantyDetail.IsPrinted = false;
+                    warrantyDetail.ApplicationUserID = _userManager.GetUserId(User);
+                    warrantyCard.NumberOfWarranty += 1;
+                    _context.Update(warrantyCard);
+                    _context.Update(warrantyDetail);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction(nameof(Detail), "WarrantyCards", new { id = warrantyCardVm.WarrantyDetail.WarrantyCardID });
+        }
+
 
         // GET: WarrantyCards/Details/5
         #region Get Edit
@@ -93,11 +160,32 @@ namespace MobileStore.Controllers
             var items = await _context.Item
                 .Where(m => m.ModelID == warrantyCard.Item.ModelID && m.Status == ItemStatus.InStock).ToListAsync();
             warrantyCardVm.Items = items;
+            if (returnItem)
+            {
+                warrantyCardVm.WarrantyCardStatus = WarrantyCardStatus.Returned;
+            }
+            else
+            {
+                
+                if (await _context.WarrantyDetail.Where(m =>(
+                    (m.WarrantyCardID == warrantyCard.WarrantyCardID) && (
+                        m.Status == WarrantyDetailStatus.Fixing || m.Status == WarrantyDetailStatus.Fixed))).AnyAsync())
+                {
+                    warrantyCardVm.WarrantyCardStatus = WarrantyCardStatus.Waiting;
+                }
+                else
+                {
+                    if (warrantyCard.CanWarrant())
+                    {
+                        warrantyCardVm.WarrantyCardStatus = WarrantyCardStatus.CanWarrant;
+                    }
+                    else
+                    {
+                        warrantyCardVm.WarrantyCardStatus = WarrantyCardStatus.Expired;
+                    }
 
-            warrantyCardVm.CanWarrant = warrantyCard.CanWarrant() && !await _context.WarrantyDetail.Where(m =>
-                                            m.WarrantyCardID == warrantyCard.WarrantyCardID &&(
-                                            m.Status == WarrantyDetailStatus.Fixing || m.Status == WarrantyDetailStatus.Fixed)).AnyAsync();
-
+                }
+            }
             return View(warrantyCardVm);
         }
         #endregion

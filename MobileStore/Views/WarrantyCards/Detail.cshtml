@@ -1,5 +1,6 @@
 ﻿@model MobileStore.Models.WarrantyCardViewModels.WarrantyCardViewModel
 @using MobileStore.Models
+@using MobileStore.Models.WarrantyCardViewModels
 
 @{
     ViewData["Title"] = "Detail";
@@ -7,342 +8,340 @@
 }
 
 <div class="row">
- <div class=" col-lg-8">
- <div class="card">
-     <div class="card-header">
-         <strong>Thông tin phiếu bảo hành</strong>
-     </div>
-     <div class="card-body">
-         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-         <div class="form-group row">
-             <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.WarrantyCardID)</label>
-             <div class="col-md-8">
-                 <div class="form-control">
-                     @Model.WarrantyCard.WarrantyCardID
-                 </div>
-                 <span asp-validation-for="WarrantyCard.WarrantyCardID" class="invalid-feedback"></span>
-             </div>
-         </div>
-
-         <div class="form-group row">
-             <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.StartDate)</label>
-             <div class="col-md-8">
-                 <div class="form-control">
-                     @Model.WarrantyCard.StartDate
-                 </div>
-                 <span asp-validation-for="WarrantyCard.StartDate" class="invalid-feedback"></span>
-             </div>
-         </div>
-                    
-         <div class="form-group row">
-             <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.EndDate)</label>
-             <div class="col-md-8">
-                 <div class="form-control">
-                     @Model.WarrantyCard.EndDate
-                 </div>
-                 <span asp-validation-for="WarrantyCard.EndDate" class="invalid-feedback"></span>
-             </div>
-         </div>
-                    
-         <div class="form-group row">
-             <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.Item.IMEI)</label>
-             <div class="col-md-8">
-                 <div class="form-control">
-                     @Model.WarrantyCard.Item.IMEI
-                 </div>
-                 <span asp-validation-for="WarrantyCard.Item.IMEI" class="invalid-feedback"></span>
-             </div>
-         </div>
-                    
-         <div class="form-group row">
-             <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.Item.Name)</label>
-             <div class="col-md-8">
-                 <div class="form-control">
-                     @Model.WarrantyCard.Item.Name
-                 </div>
-                 <span asp-validation-for="WarrantyCard.Item.Name" class="invalid-feedback"></span>
-             </div>
-         </div>
-                    
-         <div class="form-group row">
-             <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.Item.Model.Name)</label>
-             <div class="col-md-8">
-                 <div class="form-control">
-                     @Model.WarrantyCard.Item.Model.Name
-                 </div>
-                 <span asp-validation-for="WarrantyCard.Item.Model.Name" class="invalid-feedback"></span>
-             </div>
-         </div>
-                    
-         <div class="form-group row">
-             <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.NumberOfWarranty)</label>
-             <div class="col-md-8">
-                 <div class="form-control">
-                     @Model.WarrantyCard.NumberOfWarranty
-                 </div>
-                 <span asp-validation-for="WarrantyCard.NumberOfWarranty" class="invalid-feedback"></span>
-             </div>
-         </div>
-                    
-                  
-                    
-
-     </div>
-     <div class="card-footer">
-         <div class="btn-group">
-             @{
-                 if (Model.CanReturn)
-                 {
-                     <button data-toggle="modal" data-target="#return" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Đổi trả</button>
-                     <div class="modal fade" id="return" tabindex="-1" role="dialog" aria-labelledby="return" aria-hidden="true">
-                         <div class="modal-dialog" role="document">
-                             <div class="modal-content">
-                                 <form 
-                                      
-                                       >
-                                     <div class="modal-header">
-                                         <h5 class="modal-title" id="exampleModalLabel">Thêm thông tin đổi trả</h5>
-                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                             <span aria-hidden="true">&times;</span>
-                                         </button>
-                                     </div>
-                                     <div class="modal-body">
-
-                                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                         <div class="form-group row">
-                                             <label asp-for="ReturnItem.DefectInfo" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)</label>
-                                             <div class="col-md-8">
-                                                 <input asp-for="ReturnItem.DefectInfo" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)..."/>
-                                                 <span asp-validation-for="ReturnItem.DefectInfo" class="invalid-feedback"></span>
-                                             </div>
-                                         </div>
-                                         <div class="form-group row">
-                                             <label class="col-md-4 form-control-label" asp-for="ReturnItem.NewItemID"></label>
-                                             <div class="col-md-8">
-                                                 <select class="form-control" asp-for="ReturnItem.NewItemID" asp-items="@(new SelectList(Model.Items, "ItemID", "IMEI"))">
-                                                     <option selected="selected" value="">Chọn sản phẩm đổi</option>
-                                                 </select>
-                                                 <span asp-validation-for="ReturnItem.NewItemID" class="text-danger"></span>
-                                             </div>
-                                         </div>
-                                     </div>
-                                     <div class="modal-footer">
-                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-
-                                         <button type="submit" class="btn btn-primary">Tạo</button>
-
-                                     </div>
-                                 </form>
-                             </div>
-                         </div>
-                     </div>
-
-                 }
-                 else
-                 {
-                     if (Model.CanWarrant)
-                     {
-                         <button data-toggle="modal" data-target="#warrant" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Bảo hành</button>
-                         <div class="modal fade" id="warrant" tabindex="-1" role="dialog" aria-labelledby="warrant" aria-hidden="true">
-                             <div class="modal-dialog" role="document">
-                                 <div class="modal-content">
-                                     <form >
-                                         <div class="modal-header">
-                                             <h5 class="modal-title" id="exampleModalLabel">Thêm thông tin bảo hành</h5>
-                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                 <span aria-hidden="true">&times;</span>
-                                             </button>
-                                         </div>
-                                         <div class="modal-body">
-                                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                             <div class="form-group row">
-                                                 <label asp-for="WarrantyDetail.DefectInfo" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyDetail.Status)</label>
-                                                 <div class="col-md-8">
-                                                     <input asp-for="WarrantyDetail.DefectInfo" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.WarrantyDetail.DefectInfo)..."/>
-                                                     <span asp-validation-for="WarrantyDetail.DefectInfo" class="invalid-feedback"></span>
-                                                 </div>
-                                             </div>
-                                                    
-                                             <div class="form-group row">
-                                                 <label asp-for="WarrantyDetail.ExpectedDate" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyDetail.ExpectedDate)</label>
-                                                 <div class="col-md-8">
-                                                     <input asp-for="WarrantyDetail.ExpectedDate" rows="8" class="form-control" />
-                                                     <span asp-validation-for="WarrantyDetail.ExpectedDate" class="invalid-feedback"></span>
-                                                 </div>
-                                             </div>
-                                         </div>
-                                         <div class="modal-footer">
-                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-
-                                             <button type="submit" class="btn btn-primary">Tạo</button>
-
-                                         </div>
-                                     </form>
-                                 </div>
-                             </div>
-                         </div>
-                     }
-                     else
-                     {
-                         if (Model.WarrantyCard.CanWarrant())
-                         {
-                             <button type="submit" class="btn btn-primary" disabled>Đang chờ bảo hành</button>
-                         }
-                         else
-                         {
-                            <button type="submit" class="btn btn-primary" disabled>Hết hạn bảo hành</button>
-                         }
-
-                     }
-                 }
-            }
-                    
-         </div>
-                
-     </div>
- </div>
-     @{
-         if (Model.WarrantyDetails.Count() >0)
-         {
-            <div class="card">
-                <div class="card-header">
-                    Chi tiết bảo hành
-                </div>
-                <div class="card-body">
-                    <div class=" table-striped table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.WarrantyDetails.First().Date)
-                                    </th>
-                                    <th>
-
-                                        @Html.DisplayNameFor(model => model.WarrantyDetails.First().DefectInfo)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.WarrantyDetails.First().ExpectedDate)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.WarrantyDetails.First().WarrantyDate)
-                                    </th>
-                                    
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.WarrantyDetails.First().ReturnedDate)
-                                    </th>
-                                    
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.WarrantyDetails.First().Status)
-                                    </th>
-
-                                    <th>
-
-                                    </th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.WarrantyDetails)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Date)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.DefectInfo)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ExpectedDate)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.WarrantyDate)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ReturnedDate)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Status)
-                                        </td>
-
-
-                                        <td>
-                                            <div class="btn-group">
-                                                <a class="btn btn-warning btn-sm"  asp-route-id="@item.WarrantyDetailID">
-                                                    <i class="fa fa-pencil-square-o"></i>&nbsp; Đã sửa xong
-                                                </a>
-
-
-                                                <a class="btn btn-primary btn-sm"  asp-route-id="@item.WarrantyDetailID">
-                                                    <i class="fa fa-info"></i>&nbsp; Đã trả khách
-                                                </a>
-                                            </div>
-
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+    <div class=" col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <strong>Thông tin phiếu bảo hành</strong>
+            </div>
+            <div class="card-body">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.WarrantyCardID)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.WarrantyCard.WarrantyCardID
+                        </div>
+                        <span asp-validation-for="WarrantyCard.WarrantyCardID" class="invalid-feedback"></span>
                     </div>
                 </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.StartDate)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.WarrantyCard.StartDate
+                        </div>
+                        <span asp-validation-for="WarrantyCard.StartDate" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.EndDate)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.WarrantyCard.EndDate
+                        </div>
+                        <span asp-validation-for="WarrantyCard.EndDate" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.Item.IMEI)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.WarrantyCard.Item.IMEI
+                        </div>
+                        <span asp-validation-for="WarrantyCard.Item.IMEI" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.Item.Name)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.WarrantyCard.Item.Name
+                        </div>
+                        <span asp-validation-for="WarrantyCard.Item.Name" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.Item.Model.Name)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.WarrantyCard.Item.Model.Name
+                        </div>
+                        <span asp-validation-for="WarrantyCard.Item.Model.Name" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.NumberOfWarranty)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.WarrantyCard.NumberOfWarranty
+                        </div>
+                        <span asp-validation-for="WarrantyCard.NumberOfWarranty" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+
+
+
             </div>
-         }
-     }
-     
-     @{
-         if (Model.ReturnItem != null)
-         {
-             <div class="card">
-                 <div class="card-header">
-                     Chi tiết đổi trả
-                 </div>
-                 <div class="card-body">
-                     <div class=" table-striped table-responsive">
-                         <table class="table">
-                             <thead>
-                                 <tr>
-                                     <th>
-                                         @Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)
-                                     </th>
-                                     <th>
+            <div class="card-footer">
+                <div class="btn-group">
+                    @{
+                        if (Model.CanReturn)
+                        {
+                            <button data-toggle="modal" data-target="#return" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Đổi trả</button>
+                            <div class="modal fade" id="return" tabindex="-1" role="dialog" aria-labelledby="return" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <form asp-action="CreateReturnItem">
 
-                                         @Html.DisplayNameFor(model => model.ReturnItem.NewItem.IMEI)
-                                     </th>
-                                     <th>
-                                         @Html.DisplayNameFor(model => model.ReturnItem.ReturnDate)
-                                     </th>
-                                    
+                                            <input asp-for="ReturnItem.OldItemID" value="@Model.WarrantyCard.ItemID" hidden />
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Thêm thông tin đổi trả</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
 
-                                 </tr>
-                             </thead>
-                             <tbody>
-                                 
-                                     <tr>
-                                         <td>
-                                             @Model.ReturnItem.DefectInfo
-                                         </td>
-                                         
-                                         <td>
-                                             @Model.ReturnItem.NewItem.IMEI
-                                         </td> 
-                                         <td>
-                                             @Model.ReturnItem.ReturnDate
-                                         </td>
-                                         
+                                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                <div class="form-group row">
+                                                    <label asp-for="ReturnItem.DefectInfo" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)</label>
+                                                    <div class="col-md-8">
+                                                        <input asp-for="ReturnItem.DefectInfo" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)..." />
+                                                        <span asp-validation-for="ReturnItem.DefectInfo" class="invalid-feedback"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-md-4 form-control-label" asp-for="ReturnItem.NewItemID"></label>
+                                                    <div class="col-md-8">
+                                                        <select class="form-control" asp-for="ReturnItem.NewItemID" asp-items="@(new SelectList(Model.Items, "ItemID", "IMEI"))">
+                                                            <option selected="selected" value="">Chọn sản phẩm đổi</option>
+                                                        </select>
+                                                        <span asp-validation-for="ReturnItem.NewItemID" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+
+                                                <button type="submit" class="btn btn-primary">Tạo</button>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                        else
+                        {
+                            switch (Model.WarrantyCardStatus)
+                            {
+                                case WarrantyCardStatus.Expired:
+                                    <button type="submit" class="btn btn-primary" disabled>Hết hạn bảo hành</button>
+                                    break;
+                                case WarrantyCardStatus.Returned:
+                                    <button type="submit" class="btn btn-primary" disabled>Đã đổi trả</button>
+                                    break;
+                                case WarrantyCardStatus.Waiting:
+                                    <button type="submit" class="btn btn-primary" disabled>Đang chờ bảo hành</button>
+                                    break;
+                                case WarrantyCardStatus.CanWarrant:
+                                    <button data-toggle="modal" data-target="#warrant" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Bảo hành</button>
+                                    <div class="modal fade" id="warrant" tabindex="-1" role="dialog" aria-labelledby="warrant" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <form
+                                                    asp-action="CreateWarrantyDetail">
+                                                    <input asp-for="WarrantyDetail.WarrantyCardID" value="@Model.WarrantyCard.WarrantyCardID" />
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Thêm thông tin bảo hành</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                        <div class="form-group row">
+                                                            <label asp-for="WarrantyDetail.DefectInfo" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyDetail.Status)</label>
+                                                            <div class="col-md-8">
+                                                                <input asp-for="WarrantyDetail.DefectInfo" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.WarrantyDetail.DefectInfo)..."/>
+                                                                <span asp-validation-for="WarrantyDetail.DefectInfo" class="invalid-feedback"></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label asp-for="WarrantyDetail.ExpectedDate" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyDetail.ExpectedDate)</label>
+                                                            <div class="col-md-8">
+                                                                <input asp-for="WarrantyDetail.ExpectedDate" rows="8" class="form-control"/>
+                                                                <span asp-validation-for="WarrantyDetail.ExpectedDate" class="invalid-feedback"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+
+                                                        <button type="submit" class="btn btn-primary">Tạo</button>
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    break;
+
+                            }
+
+                        }
+                    }
+
+                </div>
+
+            </div>
+        </div>
+        @{
+            if (Model.WarrantyDetails.Count() > 0)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        Chi tiết bảo hành
+                    </div>
+                    <div class="card-body">
+                        <div class=" table-striped table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.WarrantyDetails.First().Date)
+                                        </th>
+                                        <th>
+
+                                            @Html.DisplayNameFor(model => model.WarrantyDetails.First().DefectInfo)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.WarrantyDetails.First().ExpectedDate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.WarrantyDetails.First().WarrantyDate)
+                                        </th>
+
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.WarrantyDetails.First().ReturnedDate)
+                                        </th>
+
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.WarrantyDetails.First().Status)
+                                        </th>
+
+                                        <th>
+
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.WarrantyDetails)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Date)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DefectInfo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ExpectedDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.WarrantyDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ReturnedDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Status)
+                                            </td>
 
 
-                                         
-                                     </tr>
-                                 
-                             </tbody>
-                         </table>
-                     </div>
-                 </div>
-             </div>
-         }
-     }
-       
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a class="btn btn-warning btn-sm" asp-route-id="@item.WarrantyDetailID">
+                                                        <i class="fa fa-pencil-square-o"></i>&nbsp; Đã sửa xong
+                                                    </a>
 
- </div>
+
+                                                    <a class="btn btn-primary btn-sm" asp-route-id="@item.WarrantyDetailID">
+                                                        <i class="fa fa-info"></i>&nbsp; Đã trả khách
+                                                    </a>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+        @{
+            if (Model.ReturnItem != null)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        Chi tiết đổi trả
+                    </div>
+                    <div class="card-body">
+                        <div class=" table-striped table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)
+                                        </th>
+                                        <th>
+
+                                            @Html.DisplayNameFor(model => model.ReturnItem.NewItem.IMEI)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ReturnItem.ReturnDate)
+                                        </th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr>
+                                        <td>
+                                            @Model.ReturnItem.DefectInfo
+                                        </td>
+
+                                        <td>
+                                            @Model.ReturnItem.NewItem.IMEI
+                                        </td>
+                                        <td>
+                                            @Model.ReturnItem.ReturnDate
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+
+    </div>
 </div>
 
 <div>
