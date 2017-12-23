@@ -159,7 +159,7 @@
                                             <div class="modal-content">
                                                 <form
                                                     asp-action="CreateWarrantyDetail">
-                                                    <input asp-for="WarrantyDetail.WarrantyCardID" value="@Model.WarrantyCard.WarrantyCardID" />
+                                                    <input asp-for="WarrantyDetail.WarrantyCardID" value="@Model.WarrantyCard.WarrantyCardID" hidden/>
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="exampleModalLabel">Thêm thông tin bảo hành</h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -271,14 +271,31 @@
 
                                             <td>
                                                 <div class="btn-group">
-                                                    <a class="btn btn-warning btn-sm" asp-route-id="@item.WarrantyDetailID">
-                                                        <i class="fa fa-pencil-square-o"></i>&nbsp; Đã sửa xong
-                                                    </a>
-
-
-                                                    <a class="btn btn-primary btn-sm" asp-route-id="@item.WarrantyDetailID">
-                                                        <i class="fa fa-info"></i>&nbsp; Đã trả khách
-                                                    </a>
+                                                    @{
+                                                        if (item.Status == WarrantyDetailStatus.Fixing)
+                                                        {
+                                                            <a class="btn btn-warning btn-sm" asp-action="Fixed" asp-route-id="@item.WarrantyDetailID">
+                                                                <i class="fa fa-pencil-square-o"></i>&nbsp; Đã sửa xong
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            if (item.Status == WarrantyDetailStatus.Fixed)
+                                                            {
+                                                                <a class="btn btn-primary btn-sm" asp-action="Returned" asp-route-id="@item.WarrantyDetailID">
+                                                                    <i class="fa fa-info"></i>&nbsp; Đã trả khách
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <button disabled class="btn btn-primary btn-sm" >
+                                                                    <i class="fa fa-info"></i>&nbsp; Hoàn thành bảo hành
+                                                                </button>
+                                                            }
+                                                        }
+                                                    }
+                                                    
+                                                   
                                                 </div>
 
                                             </td>

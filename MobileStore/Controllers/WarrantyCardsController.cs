@@ -33,11 +33,105 @@ namespace MobileStore.Controllers
         }
 
         // GET: WarrantyCards
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var applicationDbContext = _context.WarrantyCard.Include(w => w.Item);
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["WCIDParm"] = String.IsNullOrEmpty(sortOrder) ? "WCI_desc" : "";
+            ViewData["StartDateParm"] = sortOrder == "startdate" ? "startdate_desc" : "startdate";
+            ViewData["EndDateParm"] = sortOrder == "enddate" ? "enddate_desc" : "enddate";
+            ViewData["StaffSortParm"] = sortOrder == "staff" ? "staff_desc" : "staff";
+
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            var warrantyCards = from m in _context.WarrantyCard select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                warrantyCards = warrantyCards.Include(m => m.Item).ThenInclude(m=>m.Model).Include(m => m.ApplicationUser).Where(s => s.WarrantyCardID.ToString().Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "WCIDParm":
+                    warrantyCards = warrantyCards.OrderByDescending(s => s.WarrantyCardID).Include(m => m.Item).ThenInclude(m => m.Model).Include(m => m.ApplicationUser);
+                    break;
+
+                case "startdate":
+                    warrantyCards = warrantyCards.OrderBy(s => s.StartDate).Include(m => m.Item).ThenInclude(m => m.Model).Include(m => m.ApplicationUser);
+                    break;
+                case "startdate_desc":
+                    warrantyCards = warrantyCards.OrderByDescending(s => s.StartDate).Include(m => m.Item).ThenInclude(m => m.Model).Include(m => m.ApplicationUser);
+                    break;
+                case "enddate":
+                    warrantyCards = warrantyCards.OrderBy(s => s.EndDate).Include(m => m.Item).ThenInclude(m => m.Model).Include(m => m.ApplicationUser);
+                    break;
+
+                case "enddate_desc":
+                    warrantyCards = warrantyCards.OrderByDescending(s => s.EndDate).Include(m => m.Item).ThenInclude(m => m.Model).Include(m => m.ApplicationUser);
+                    break;
+                case "staff":
+                    warrantyCards = warrantyCards.OrderBy(s => s.ApplicationUser.FirstName).Include(m => m.Item).ThenInclude(m => m.Model).Include(m => m.ApplicationUser);
+                    break;
+                case "staff_desc":
+                    warrantyCards = warrantyCards.OrderByDescending(s => s.ApplicationUser.FirstName).Include(m => m.Item).ThenInclude(m => m.Model).Include(m => m.ApplicationUser);
+                    break;
+                default:
+                    warrantyCards = warrantyCards.OrderBy(s => s.WarrantyCardID).Include(m => m.Item).ThenInclude(m => m.Model).Include(m => m.ApplicationUser);
+                    break;
+            }
+            int pageSize = 1;
+
+            return View(await PaginatedList<WarrantyCard>.CreateAsync(warrantyCards.AsNoTracking(), page ?? 1, pageSize));
         }
+
+
+        
+        public async Task<IActionResult> Fixed(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var warrantyDetail =await _context.WarrantyDetail.SingleAsync(m => m.WarrantyDetailID == id);
+            if (warrantyDetail == null)
+            {
+                return NotFound();
+            }
+            warrantyDetail.WarrantyDate = DateTime.Now;
+            warrantyDetail.Status = WarrantyDetailStatus.Fixed;
+            _context.Update(warrantyDetail);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Detail), "WarrantyCards", new { id = warrantyDetail.WarrantyCardID });
+        }
+
+        public async Task<IActionResult> Returned(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var warrantyDetail = await _context.WarrantyDetail.SingleAsync(m => m.WarrantyDetailID == id);
+            if (warrantyDetail == null)
+            {
+                return NotFound();
+            }
+            warrantyDetail.ReturnedDate = DateTime.Now;
+            warrantyDetail.Status = WarrantyDetailStatus.Returned;
+            _context.Update(warrantyDetail);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Detail), "WarrantyCards", new { id = warrantyDetail.WarrantyCardID });
+        }
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateReturnItem(WarrantyCardViewModel warrantyCardVm)
@@ -50,14 +144,40 @@ namespace MobileStore.Controllers
                 var anyReturnItem = await _context.ReturnItem.Where(m => m.OldItemID == warrantyCard.ItemID).AnyAsync();
                 if (DateTime.Now <= warrantyCard.StartDate.AddDays(returnDeadline.Parameter) && !anyReturnItem)
                 {
+                    // Tạo thông tin return item
                     var returnItem = new ReturnItem();
                     returnItem.OldItemID = warrantyCardVm.ReturnItem.OldItemID;
                     returnItem.DefectInfo = warrantyCardVm.ReturnItem.DefectInfo;
                     returnItem.NewItemID = warrantyCardVm.ReturnItem.NewItemID;
                     returnItem.ReturnDate = DateTime.Now;
                     returnItem.ApplicationUserID = _userManager.GetUserId(User);
+                   
+                   // Tạo warrantycard cho sản phẩm đổi
 
+                    var newWarrantyCard = new WarrantyCard();
+                    newWarrantyCard.NumberOfWarranty = 0;
+                    newWarrantyCard.StartDate = DateTime.Now;
+                    var itemInfo = await _context.Item.Where(m => m.ItemID == warrantyCardVm.ReturnItem.NewItemID).Include(m => m.ModelFromSupplier).SingleOrDefaultAsync();
+                    newWarrantyCard.EndDate = DateTime.Now.AddMonths(itemInfo.ModelFromSupplier.period);
+                    newWarrantyCard.IsPrinted = false;
+                    newWarrantyCard.IsDisabled = false;
+                    newWarrantyCard.ItemID = warrantyCardVm.ReturnItem.NewItemID;
+                    newWarrantyCard.ApplicationUserID = _userManager.GetUserId(User);
+
+                    // Disable warrantyCard cũ
                     warrantyCard.IsDisabled = true;
+
+                    // Cap nhat tinh trang san pham cu
+                    var oldItem =await _context.Item.SingleAsync(m => m.ItemID == warrantyCardVm.ReturnItem.OldItemID);
+                    oldItem.Status = ItemStatus.Returned;
+
+                    // Cap nhat tinh trang san pham moi
+
+                    var newItem = await _context.Item.SingleAsync(m => m.ItemID == warrantyCardVm.ReturnItem.NewItemID);
+                    oldItem.Status = ItemStatus.Sold;
+
+                    _context.UpdateRange(oldItem,newItem);
+                    _context.Add(newWarrantyCard);
                     _context.Update(warrantyCard);
                     _context.Add(returnItem);
                     await _context.SaveChangesAsync();
@@ -65,6 +185,8 @@ namespace MobileStore.Controllers
             }
             return RedirectToAction(nameof(Detail),"WarrantyCards",new {id=warrantyCard.WarrantyCardID});
         }
+
+
 
 
         [HttpPost]

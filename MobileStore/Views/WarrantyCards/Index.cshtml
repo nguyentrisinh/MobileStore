@@ -3,59 +3,70 @@
     ViewData["Title"] = "Index";
 }
 
+
+
 <div class="row">
-    <div class="col-lg-12" style="margin:auto">
+    <div class="col-lg-12">
+
         <div class="card">
-
-            <div class="card-header">Danh Sách Mã Bảo Hành</div>
-
+            <div class="card-header">
+                Danh sách hóa đơn
+            </div>
             <div class="card-body">
-
-                <form asp-controller="WarrantyCards" asp-action="Index" class="form-horizontal">
+                <form asp-action="Index" method="get" class="form-horizontal">
                     <div class="form-group row">
                         <div class="col-lg-6">
                             <div class="input-group">
-                                <input class="form-control" type="text" name="SearchString" value="@ViewData["DataSearchString"]" placeholder="Tìm kiếm theo Mã Bảo Hành" />
                                 <span class="input-group-btn">
-                                    <input type="submit" value="Search" class="btn btn-primary" />
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
                                 </span>
+                                <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
+                                <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo mã bảo hành...">
                             </div>
                         </div>
                     </div>
+
                 </form>
-
-
-                <p>
-                    <a asp-action="Create">
-                        <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm Bảo Hành</button>
-                    </a>
-                </p>
-
                 <div class="table-striped table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>
-                                    @*@Html.DisplayNameFor(model => model.NumberOfWarranty)*@
-                                    Mã Bảo Hành
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["WCIParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                        @Html.DisplayNameFor(model => model.WarrantyCardID)
+                                    </a>
                                 </th>
                                 <th>
-                                    @*@Html.DisplayNameFor(model => model.StartDate)*@
-                                    Ngày bắt đầu bảo hành
+                                    @Html.DisplayNameFor(model => model.Item.Model.Name)
                                 </th>
                                 <th>
-                                    @*@Html.DisplayNameFor(model => model.EndDate)*@
-                                    Ngày kết thúc bảo hành
+                                        @Html.DisplayNameFor(model => model.Item.IMEI)
                                 </th>
                                 <th>
-                                    @*@Html.DisplayNameFor(model => model.Period)*@
-                                    Giai đoạn bảo hành
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["StartDateParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                        @Html.DisplayNameFor(model => model.StartDate)
+                                    </a>
+                                </th>
+
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["EnddateParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                        @Html.DisplayNameFor(model => model.EndDate)
+                                    </a>
                                 </th>
                                 <th>
-                                    @*@Html.DisplayNameFor(model => model.Item)*@
-                                    Tên sản phẩm
+                                        @Html.DisplayNameFor(model => model.NumberOfWarranty)
                                 </th>
-                                <th></th>
+
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["StaffSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                        @Html.DisplayNameFor(model => model.ApplicationUser.FirstName)
+                                    </a>
+                                </th>
+
+                                <th>
+
+                                </th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -63,37 +74,91 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.NumberOfWarranty)
+                                        @Html.DisplayFor(modelItem => item.WarrantyCardID)
                                     </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Item.Model.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Item.IMEI)
+                                    </td>
+                                    
                                     <td>
                                         @Html.DisplayFor(modelItem => item.StartDate)
                                     </td>
+
                                     <td>
                                         @Html.DisplayFor(modelItem => item.EndDate)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Period)
+                                        @Html.DisplayFor(modelItem => item.NumberOfWarranty)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Item.Name)
+                                        @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
                                     </td>
+
+
                                     <td>
-                                        <a asp-action="Edit" asp-route-id="@item.WarrantyCardID">
-                                            <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
-                                        </a> |
-                                        <a asp-action="Details" asp-route-id="@item.WarrantyCardID">
-                                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i>&nbsp; Chi tiết</button>
-                                        </a> |
-                                        <a asp-action="Delete" asp-route-id="@item.WarrantyCardID">
-                                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i>&nbsp; Xóa</button>
-                                        </a>
+                                        <div class="btn-group">
+                                            <a class="btn btn-primary btn-sm" asp-action="Detail" asp-route-id="@item.WarrantyCardID">
+                                                <i class="fa fa-info"></i>&nbsp; Chi tiết
+                                            </a>
+                                        </div>
+
+
                                     </td>
                                 </tr>
-                            }
+                                                }
                         </tbody>
                     </table>
+                    @{
+
+                        PaginatedList<MobileStore.Models.WarrantyCard> PaginatedModel = Model as PaginatedList<MobileStore.Models.WarrantyCard>;
+
+                        string prevDisabled = !PaginatedModel.HasPreviousPage ? "disabled" : "";
+
+                        string nextDisabled = !PaginatedModel.HasNextPage ? "disabled" : "";
+
+
+
+
+                    }
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item @prevDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex - 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Previous</a>
+                            </li>
+                            @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
+                            {
+                                <li class="page-item @( @PaginatedModel.PageIndex == i ? "active" : " " )">
+                                    <a asp-action="Index"
+                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                       asp-route-page="@i"
+                                       asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
+                                </li>
+
+                            }
+                            <li class="page-item @nextDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex + 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
-          </div>
-       </div>
+        </div>
+    </div>
+    <!--/.col-->
 </div>
+<!--/.row-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
