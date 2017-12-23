@@ -25,7 +25,7 @@ namespace MobileStore.Authorization
                 return Task.FromResult(0);
             }
 
-            if (context.User.IsInRole(Constants.OrderSalesRole))
+            if (context.User.IsInRole(Constants.SaleRole))
             {
                 context.Succeed(requirement);
             }

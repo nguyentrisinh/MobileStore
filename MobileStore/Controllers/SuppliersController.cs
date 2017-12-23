@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -88,6 +89,7 @@ namespace MobileStore.Controllers
         //}
 
         // GET: Suppliers/Details/5
+    
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -106,6 +108,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: Suppliers/Create
+        [Authorize(Roles="Admin")]
         public IActionResult Create()
         {
             return View();
@@ -116,6 +119,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("SupplierID,Name,Address,Phone,Email,Code,Status,PicName,PicPhone,PicEmail")] Supplier supplier)
         {
             if (ModelState.IsValid)
@@ -128,6 +132,8 @@ namespace MobileStore.Controllers
         }
 
         // GET: Suppliers/Edit/5
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -148,6 +154,8 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("SupplierID,Name,Address,Phone,Email,Code,Status,PicName,PicPhone,PicEmail")] Supplier supplier)
         {
             if (id != supplier.SupplierID)
@@ -179,6 +187,8 @@ namespace MobileStore.Controllers
         }
 
         // GET: Suppliers/Delete/5
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -199,6 +209,7 @@ namespace MobileStore.Controllers
         // POST: Suppliers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var supplier = await _context.Supplier.SingleOrDefaultAsync(m => m.SupplierID == id);

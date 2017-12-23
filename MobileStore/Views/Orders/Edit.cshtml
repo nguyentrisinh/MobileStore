@@ -65,9 +65,9 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="Order.OrderID" />
                     <div class="form-group row">
-                        <label asp-for="Order.Total" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Order.Total)</label>
+                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Order.Total)</label>
                         <div class="col-md-8">
-                            <input asp-for="Order.Total" type="text" class="form-control" placeholder="Nhập số lượng...">
+                            <div class="form-control">@Model.Order.Total</div>
                             <span asp-validation-for="Order.Total" class="invalid-feedback"></span>
                         </div>
                     </div>
@@ -84,9 +84,8 @@
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Sửa</button>
-                    @*<div class="form-group">
-                            <input type="submit" value="Create" class="btn btn-default"/>
-                        </div>*@
+
+                    <a asp-action="Print" type="submit" class="btn btn-warning" asp-route-id="@Model.Order.OrderID"><i class="fa fa-pencil-square-o"></i> In</a>
                 </div>
             </form>
         </div>

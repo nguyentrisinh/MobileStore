@@ -14,7 +14,6 @@ using MobileStore.Models.StockReceivingViewModels;
 
 namespace MobileStore.Controllers
 {
-    [Authorize(Roles = "WarehouseManager, Admin")]
     public class StockReceivingsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -104,7 +103,7 @@ namespace MobileStore.Controllers
 
         // GET: StockReceivings/Create
 
-       
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public IActionResult Create()
         {
             ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "Name");
@@ -133,7 +132,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: StockReceivings/Edit/5
-    
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -168,6 +167,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Edit(Guid id, StockReceivingViewModel stockReceivingVM)
         {
             if (id != stockReceivingVM.StockReceiving.StockReceivingID)
@@ -213,6 +213,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: StockReceivings/Delete/5
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -254,6 +255,7 @@ namespace MobileStore.Controllers
         // POST: StockReceivings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var stockReceiving = await _context.StockReceiving.SingleOrDefaultAsync(m => m.StockReceivingID == id);
@@ -288,6 +290,7 @@ namespace MobileStore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> CreateModelFromSupplier(StockReceivingViewModel stockReceivingVM)
         {
             if (ModelState.IsValid)

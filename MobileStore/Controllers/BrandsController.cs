@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -86,6 +87,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: Brands/Create
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public IActionResult Create()
         {
             return View();
@@ -96,6 +98,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Create([Bind("BrandID,Name,Country,Description")] Brand brand)
         {
             if (ModelState.IsValid)
@@ -108,6 +111,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: Brands/Edit/5
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -128,6 +132,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("BrandID,Name,Country,Description")] Brand brand)
         {
             if (id != brand.BrandID)
@@ -159,6 +164,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: Brands/Delete/5
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -178,6 +184,7 @@ namespace MobileStore.Controllers
 
         // POST: Brands/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

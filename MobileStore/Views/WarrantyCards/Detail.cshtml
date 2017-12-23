@@ -91,6 +91,7 @@
             </div>
             <div class="card-footer">
                 <div class="btn-group">
+                    <a asp-action="PrintWarrantyCard" asp-route-id="@Model.WarrantyCard.WarrantyCardID" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> In</a>
                     @{
                         if (Model.CanReturn)
                         {
@@ -100,7 +101,7 @@
                                     <div class="modal-content">
                                         <form asp-action="CreateReturnItem">
 
-                                            <input asp-for="ReturnItem.OldItemID" value="@Model.WarrantyCard.ItemID" hidden />
+                                            <input asp-for="ReturnItem.OldItemID" value="@Model.WarrantyCard.ItemID" hidden/>
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">Thêm thông tin đổi trả</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -113,7 +114,7 @@
                                                 <div class="form-group row">
                                                     <label asp-for="ReturnItem.DefectInfo" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)</label>
                                                     <div class="col-md-8">
-                                                        <input asp-for="ReturnItem.DefectInfo" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)..." />
+                                                        <input asp-for="ReturnItem.DefectInfo" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)..."/>
                                                         <span asp-validation-for="ReturnItem.DefectInfo" class="invalid-feedback"></span>
                                                     </div>
                                                 </div>
@@ -294,6 +295,8 @@
                                                             }
                                                         }
                                                     }
+                                                    <a asp-action="PrintWarrantyDetail" asp-route-id="@item.WarrantyDetailID" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> In</a>
+                                                    
                                                     
                                                    
                                                 </div>

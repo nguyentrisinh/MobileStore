@@ -15,6 +15,8 @@
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="OrderDetail.OrderDetailID" />
+                    <input type="hidden" asp-for="OrderDetail.OrderID" value="@Model.OrderDetail.OrderID" />
+
                     <div class="form-group row">
                         <label asp-for="OrderDetail.PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
                         <div class="col-md-8">

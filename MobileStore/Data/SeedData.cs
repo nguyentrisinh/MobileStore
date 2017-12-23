@@ -29,11 +29,20 @@ namespace ContactManager.Data
                 // The admin user can do anything
 
                 var adminID = await EnsureUser(serviceProvider, testUserPw, "admin@ood.com");
-                await EnsureRole(serviceProvider, adminID, Constants.OrderAdministratorsRole);
+                await EnsureRole(serviceProvider, adminID, Constants.AdminRole);
 
                 // allowed user can create and edit contacts that they create
-                var uid = await EnsureUser(serviceProvider, testUserPw, "sale@ood.com");
-                await EnsureRole(serviceProvider, uid, Constants.OrderSalesRole);
+                var saleID = await EnsureUser(serviceProvider, testUserPw, "sale@ood.com");
+                await EnsureRole(serviceProvider, saleID, Constants.SaleRole);
+
+                var warehousemanagerID = await EnsureUser(serviceProvider, testUserPw, "warehousemanager@ood.com");
+                await EnsureRole(serviceProvider, warehousemanagerID, Constants.WarehouseManagerRole);
+
+                var technicalID = await EnsureUser(serviceProvider, testUserPw, "technical@ood.com");
+                await EnsureRole(serviceProvider, technicalID, Constants.TechnicalRole);
+
+
+
 
                 //SeedDB(context);
                 //SeedDBBrand(context);

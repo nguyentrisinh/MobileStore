@@ -17,6 +17,7 @@ namespace MobileStore.Controllers
 {
     public class ModelFromSuppliersController : Controller
     {
+        [Authorize(Roles = "WarehouseManager, Admin")]
         // GET: Items/Delete/5
         public async Task<IActionResult> DeleteItem(int? id)
         {
@@ -55,6 +56,7 @@ namespace MobileStore.Controllers
         // POST: Items/Delete/5
         [HttpPost, ActionName("DeleteItem")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> DeleteConfirmedItem(int id)
         {
             var item = await _context.Item
@@ -78,6 +80,7 @@ namespace MobileStore.Controllers
             return RedirectToAction("Edit","ModelFromSuppliers",new{id=item.ModelFromSupplierID});
         }
         // GET: Items/Edit/5
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> EditItem(int? id)
         {
             if (id == null)
@@ -130,6 +133,7 @@ namespace MobileStore.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditItem(int id, [Bind("ItemID,Name,IMEI,SerializerNumber,Note,Status,ModelFromSupplierID,ModelID")] Item item)
         {
@@ -262,6 +266,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: ModelFromSuppliers/Edit/5
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -299,6 +304,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Edit(int id, StockReceivingViewModel stockReceivingVM)
         {
             try
@@ -341,6 +347,7 @@ namespace MobileStore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> CreateItem(StockReceivingDetailViewModel stockReceivingDetailVM)
         {
             if (ModelState.IsValid)
@@ -364,6 +371,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: ModelFromSuppliers/Delete/5
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -399,6 +407,7 @@ namespace MobileStore.Controllers
         // POST: ModelFromSuppliers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             //var items = await _context.Item.Where(i => i.ModelFromSupplierID == id).ToListAsync();

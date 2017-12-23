@@ -20,7 +20,7 @@ namespace MobileStore.Authorization
             }
 
             // Administrators can do anything.
-            if (context.User.IsInRole(Constants.OrderAdministratorsRole))
+            if (context.User.IsInRole(Constants.AdminRole))
             {
                 context.Succeed(requirement);
             }

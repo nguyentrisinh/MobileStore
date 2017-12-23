@@ -32,7 +32,24 @@ namespace MobileStore.Controllers
 
         }
         #region Index
+        [Authorize(Roles = "Sales,Admin")]
         // GET: Orders
+        public async Task<IActionResult> Print(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var order =await _context.Order.SingleAsync(m => m.OrderID == id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            order.IsPrinted = true;
+            _context.Update(order);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", new {id});
+        }
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
 
@@ -139,11 +156,12 @@ namespace MobileStore.Controllers
                 return View(order);
                 //var userID = User.Identity.
             }
-            _context.Add(order);
+            order.Total = 0;
             order.ApplicationUserID = _userManager.GetUserId(User);
             order.Date = DateTime.Now;
+            _context.Add(order);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Edit),new {id=order.OrderID});
         }
         #endregion
 
@@ -167,20 +185,21 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
 
-            //var timeSpan = DateTime.Now - order.Date;
-            //if (timeSpan.Hours > 2)
+            // Kiem tra da in hay chua
+
+            //if (order.IsPrinted)
             //{
-            //    ViewData["ErrorText"] = "Bạn không thể sửa sau 2h";
+            //    ViewData["ErrorText"] = "Bạn không thể sửa sau khi in";
             //    return View("ErrorPage");
             //}
-
-
+            // Kiem tra quyen
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
                 OrderOperations.Update);
             if (!isAuthorized.Succeeded)
             {
                 return new ChallengeResult();
             }
+            // Tien hanh thuc hien
             var orderDetails = await _context.OrderDetail.Where(m => m.OrderID == id).Include(m => m.Item).ToListAsync();
             var sellViewModel = new SellViewModel();
             sellViewModel.Order = order;
@@ -222,9 +241,9 @@ namespace MobileStore.Controllers
             {
                 var newOrder = ViewModelToOrder(sellViewModel).Result;
                 var timeSpan = DateTime.Now - newOrder.Date;
-                if (timeSpan.Hours > 2)
+                if (newOrder.IsPrinted)
                 {
-                    ViewData["ErrorText"] = "Bạn không thể sửa sau 2h";
+                    ViewData["ErrorText"] = "Bạn không thể sửa sau khi in";
                     return View("ErrorPage");
                 }
 
@@ -268,11 +287,14 @@ namespace MobileStore.Controllers
             }
 
             var timeSpan = DateTime.Now - order.Date;
-            if (timeSpan.Hours >= 2)
+            if (order.IsPrinted)
             {
-                ViewData["ErrorText"] = "Bạn không thể xóa sau 2h";
+                ViewData["ErrorText"] = "Bạn không thể xóa sau khi in";
                 return View("ErrorPage");
+
             }
+
+
 
             var hasDetails = await _context.OrderDetail.Where(m => m.OrderID == id).AnyAsync();
             if (hasDetails)
@@ -305,11 +327,12 @@ namespace MobileStore.Controllers
             var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == id);
 
             var timeSpan = DateTime.Now - order.Date;
-            if (timeSpan.Hours > 2)
+            if (order.IsPrinted)
             {
-                ViewData["ErrorText"] = "Bạn không thể xóa sau 2h";
+                ViewData["ErrorText"] = "Bạn không thể xóa sau khi in";
                 return View("ErrorPage");
             }
+            
             var hasDetails = await _context.OrderDetail.Where(m => m.OrderID == id).AnyAsync();
             if (hasDetails)
             {
@@ -345,10 +368,9 @@ namespace MobileStore.Controllers
             if (ModelState.IsValid)
             {
                 var order = await _context.Order.SingleAsync(m => m.OrderID == sellViewModel.OrderDetail.OrderID);
-                var timeSpan = DateTime.Now - order.Date;
-                if (timeSpan.Hours > 2)
+                if (order.IsPrinted == true)
                 {
-                    ViewData["ErrorText"] = "Bạn không thể sửa sau 2h";
+                    ViewData["ErrorText"] = "Bạn không thể sửa sau khi in";
                     return View("ErrorPage");
                 }
                 var warrantyCard = new WarrantyCard();
@@ -361,11 +383,19 @@ namespace MobileStore.Controllers
                 warrantyCard.ItemID = sellViewModel.OrderDetail.ItemID;
                 warrantyCard.ApplicationUserID = _userManager.GetUserId(User);
                 _context.Add(warrantyCard);
+
+
                 _context.Add(sellViewModel.OrderDetail);
+
+
                 var itemID = sellViewModel.OrderDetail.ItemID;
                 var item = await _context.Item.SingleAsync(m => m.ItemID == itemID);
                 item.Status = ItemStatus.Sold;
                 _context.Update(item);
+
+                order.Total += sellViewModel.OrderDetail.PriceSold;
+                _context.Update(order);
+
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Edit), new { id = sellViewModel.OrderDetail.OrderID });
@@ -392,11 +422,11 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
 
-            
-            var timeSpan = DateTime.Now - orderDetail.Order.Date;
-            if (timeSpan.Hours > 2)
+
+
+            if (orderDetail.Order.IsPrinted == true)
             {
-                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau khi in";
                 return View("ErrorPage");
             }
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, orderDetail.Order,
@@ -418,13 +448,14 @@ namespace MobileStore.Controllers
         public async Task<IActionResult> DeleteOrderDetailConfirmed(int id)
         {
             var orderDetail = await _context.OrderDetail.Include(m=>m.Order).Include(m=>m.Item).SingleOrDefaultAsync(m => m.OrderDetailID == id);
-            
-            var timeSpan = DateTime.Now - orderDetail.Order.Date;
-            if (timeSpan.Hours > 2)
+           // Kiem tra in thi ko duoc xoa
+            if (orderDetail.Order.IsPrinted==true)
             {
-                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau khi in";
                 return View("ErrorPage");
             }
+
+            // Kiem tra quyen co phai owner ko, neu la owner thi moi dc xoa
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, orderDetail.Order,
                 OrderOperations.Delete);
             if (!isAuthorized.Succeeded)
@@ -433,11 +464,19 @@ namespace MobileStore.Controllers
             }
             try
             {
+                // Cap nhan tinh trang san pham la da chua ban
                 orderDetail.Item.Status = ItemStatus.InStock;
                 _context.Update(orderDetail.Item);
+
+                // Xoa WarrantyCard
                 var warrantyCard = await _context.WarrantyCard.SingleAsync(m => m.ItemID == orderDetail.ItemID);
                 _context.WarrantyCard.Remove(warrantyCard);
                 _context.OrderDetail.Remove(orderDetail);
+                // Cap nhat total cua Order
+
+                orderDetail.Order.Total -= orderDetail.PriceSold;
+                _context.Update(orderDetail.Order);
+
                 await _context.SaveChangesAsync();
             }
             catch
@@ -527,6 +566,8 @@ namespace MobileStore.Controllers
                 {
 
                     var oldOrderDetail = await _context.OrderDetail.SingleAsync(m => m.OrderDetailID == id);
+                    order.Total += editOrderDetailVm.OrderDetail.PriceSold - oldOrderDetail.PriceSold;
+
                     var newWarrantyCard = await _context.WarrantyCard.SingleAsync(m => m.ItemID == oldOrderDetail.ItemID);
                     newWarrantyCard.ItemID = editOrderDetailVm.OrderDetail.ItemID;
                     var oldItem = await _context.Item.SingleAsync(m => m.ItemID == oldOrderDetail.ItemID);
@@ -537,6 +578,8 @@ namespace MobileStore.Controllers
                     var newItem = await _context.Item.SingleAsync(m => m.ItemID == newOrderDetail.ItemID);
                     newItem.Status = ItemStatus.Sold;
 
+                   
+                    _context.Update(order);
 
 
 
@@ -578,9 +621,7 @@ namespace MobileStore.Controllers
         {
             var item = await _context.Order.SingleOrDefaultAsync(m =>
                 m.OrderID == sellViewModel.Order.OrderID);
-            item.OrderID = sellViewModel.Order.OrderID;
             item.CustomerID = sellViewModel.Order.CustomerID;
-            item.Total = sellViewModel.Order.Total;
             return item;
         }
 

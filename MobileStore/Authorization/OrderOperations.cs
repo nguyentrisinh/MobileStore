@@ -21,7 +21,10 @@ namespace MobileStore.Authorization
         public static readonly string UpdateOperationName = "Update";
         public static readonly string DeleteOperationName = "Delete";
 
-        public static readonly string OrderAdministratorsRole = "Admin";
-        public static readonly string OrderSalesRole = "Sale";
+        public static readonly string AdminRole = "Admin";
+        public static readonly string SaleRole = "Sale";
+        public static readonly string WarehouseManagerRole = "WarehouseManager";
+        public static readonly string TechnicalRole = "Technical";
+
     }
 }

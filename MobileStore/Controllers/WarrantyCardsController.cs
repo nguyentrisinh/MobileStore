@@ -31,6 +31,40 @@ namespace MobileStore.Controllers
             _authorizationService = authorizationService;
 
         }
+        [Authorize(Roles = "Technical,Sale,Admin")]
+        public async Task<IActionResult> PrintWarrantyCard(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var warrantyCard = await _context.WarrantyCard.SingleAsync(m => m.WarrantyCardID == id);
+            if (warrantyCard == null)
+            {
+                return NotFound();
+            }
+            warrantyCard.IsPrinted = true;
+            _context.Update(warrantyCard);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Detail", new { id });
+        }
+        [Authorize(Roles = "Technical,Sale,Admin")]
+        public async Task<IActionResult> PrintWarrantyDetail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var warrantyDetail = await _context.WarrantyDetail.SingleAsync(m => m.WarrantyDetailID == id);
+            if (warrantyDetail == null)
+            {
+                return NotFound();
+            }
+            warrantyDetail.IsPrinted = true;
+            _context.Update(warrantyDetail);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Detail", new { id });
+        }
 
         // GET: WarrantyCards
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
@@ -93,7 +127,7 @@ namespace MobileStore.Controllers
         }
 
 
-        
+        [Authorize(Roles = "Technical, Admin")]
         public async Task<IActionResult> Fixed(int? id)
         {
             if (id == null)
@@ -111,6 +145,9 @@ namespace MobileStore.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Detail), "WarrantyCards", new { id = warrantyDetail.WarrantyCardID });
         }
+
+
+        [Authorize(Roles = "Technical, Admin")]
 
         public async Task<IActionResult> Returned(int? id)
         {
@@ -134,6 +171,7 @@ namespace MobileStore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles= "Technical, Admin")]
         public async Task<IActionResult> CreateReturnItem(WarrantyCardViewModel warrantyCardVm)
         {
             var warrantyCard = await _context.WarrantyCard.Include(m => m.Item).ThenInclude(m => m.Model).SingleOrDefaultAsync(m => m.ItemID == warrantyCardVm.ReturnItem.OldItemID);
@@ -142,7 +180,8 @@ namespace MobileStore.Controllers
                
                 var returnDeadline = await _context.Constant.SingleAsync(m => m.ConstantID == 1);
                 var anyReturnItem = await _context.ReturnItem.Where(m => m.OldItemID == warrantyCard.ItemID).AnyAsync();
-                if (DateTime.Now <= warrantyCard.StartDate.AddDays(returnDeadline.Parameter) && !anyReturnItem)
+                if (DateTime.Now <= warrantyCard.StartDate.AddDays(returnDeadline.Parameter) && !anyReturnItem &&
+                    warrantyCard.IsPrinted)
                 {
                     // Tạo thông tin return item
                     var returnItem = new ReturnItem();
@@ -151,13 +190,14 @@ namespace MobileStore.Controllers
                     returnItem.NewItemID = warrantyCardVm.ReturnItem.NewItemID;
                     returnItem.ReturnDate = DateTime.Now;
                     returnItem.ApplicationUserID = _userManager.GetUserId(User);
-                   
-                   // Tạo warrantycard cho sản phẩm đổi
+
+                    // Tạo warrantycard cho sản phẩm đổi
 
                     var newWarrantyCard = new WarrantyCard();
                     newWarrantyCard.NumberOfWarranty = 0;
                     newWarrantyCard.StartDate = DateTime.Now;
-                    var itemInfo = await _context.Item.Where(m => m.ItemID == warrantyCardVm.ReturnItem.NewItemID).Include(m => m.ModelFromSupplier).SingleOrDefaultAsync();
+                    var itemInfo = await _context.Item.Where(m => m.ItemID == warrantyCardVm.ReturnItem.NewItemID)
+                        .Include(m => m.ModelFromSupplier).SingleOrDefaultAsync();
                     newWarrantyCard.EndDate = DateTime.Now.AddMonths(itemInfo.ModelFromSupplier.period);
                     newWarrantyCard.IsPrinted = false;
                     newWarrantyCard.IsDisabled = false;
@@ -168,19 +208,24 @@ namespace MobileStore.Controllers
                     warrantyCard.IsDisabled = true;
 
                     // Cap nhat tinh trang san pham cu
-                    var oldItem =await _context.Item.SingleAsync(m => m.ItemID == warrantyCardVm.ReturnItem.OldItemID);
+                    var oldItem = await _context.Item.SingleAsync(m => m.ItemID == warrantyCardVm.ReturnItem.OldItemID);
                     oldItem.Status = ItemStatus.Returned;
 
                     // Cap nhat tinh trang san pham moi
 
                     var newItem = await _context.Item.SingleAsync(m => m.ItemID == warrantyCardVm.ReturnItem.NewItemID);
-                    oldItem.Status = ItemStatus.Sold;
+                    newItem.Status = ItemStatus.Sold;
 
-                    _context.UpdateRange(oldItem,newItem);
+                    _context.UpdateRange(oldItem, newItem);
                     _context.Add(newWarrantyCard);
                     _context.Update(warrantyCard);
                     _context.Add(returnItem);
                     await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    ViewData["ErrorText"] = "Khong the Doi tra";
+                    return View("ErrorPage");
                 }
             }
             return RedirectToAction(nameof(Detail),"WarrantyCards",new {id=warrantyCard.WarrantyCardID});
@@ -190,6 +235,8 @@ namespace MobileStore.Controllers
 
 
         [HttpPost]
+
+        [Authorize(Roles = "Technical, Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateWarrantyDetail(WarrantyCardViewModel warrantyCardVm)
         {
@@ -206,7 +253,7 @@ namespace MobileStore.Controllers
                 var anyWatingWarrant = await _context.WarrantyDetail.Where(m => (
                     (m.WarrantyCardID == warrantyCard.WarrantyCardID) && (
                         m.Status == WarrantyDetailStatus.Fixing || m.Status == WarrantyDetailStatus.Fixed))).AnyAsync();
-                if (warrantyCard.CanWarrant() && !anyReturnItem && !anyWatingWarrant)
+                if (warrantyCard.CanWarrant() && !anyReturnItem && !anyWatingWarrant && warrantyCard.IsPrinted)
                 {
                     var warrantyDetail  = new WarrantyDetail();
                     warrantyDetail.Date = DateTime.Now;
@@ -231,7 +278,6 @@ namespace MobileStore.Controllers
         // GET: WarrantyCards/Details/5
         #region Get Edit
         // GET: Orders/Edit/5
-        [Authorize(Roles = "Sale,Admin")]
         public async Task<IActionResult> Detail(int? id)
         {
 
@@ -269,7 +315,7 @@ namespace MobileStore.Controllers
             {
                
                 warrantyCardVm.ReturnItem =
-                    await _context.ReturnItem.SingleAsync(m => m.OldItemID == warrantyCard.ItemID);
+                    await _context.ReturnItem.Include(m=>m.OldItem).Include(m=>m.NewItem).SingleAsync(m => m.OldItemID == warrantyCard.ItemID);
             }
             // Xem warrantyCarrd này còn có thể đổi trả ko?
             warrantyCardVm.CanReturn = DateTime.Now <= warrantyCard.StartDate.AddDays(returnDeadline.Parameter) && !returnItem ;
@@ -311,59 +357,6 @@ namespace MobileStore.Controllers
             return View(warrantyCardVm);
         }
         #endregion
-
-        //        #region Post Edit
-
-
-
-        //        // POST: Orders/Edit/5
-        //        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //        [HttpPost]
-        //        [ValidateAntiForgeryToken]
-        //        [Authorize(Roles = "Sale,Admin")]
-        //        public async Task<IActionResult> Detail(int id, SellViewModel sellViewModel)
-        //        {
-        //            if (!ModelState.IsValid)
-        //            {
-        //                return View(sellViewModel);
-        //            }
-
-        //            var isAuthorized = await _authorizationService.AuthorizeAsync(User, sellViewModel.Order,
-        //                OrderOperations.Update);
-        //            if (!isAuthorized.Succeeded)
-        //            {
-        //                return new ChallengeResult();
-        //            }
-        //            try
-        //            {
-        //                var newOrder = ViewModelToOrder(sellViewModel).Result;
-        //                var timeSpan = DateTime.Now - newOrder.Date;
-        //                if (timeSpan.Hours > 2)
-        //                {
-        //                    ViewData["ErrorText"] = "Bạn không thể sửa sau 2h";
-        //                    return View("ErrorPage");
-        //                }
-
-        //                _context.Update(newOrder);
-        //                await _context.SaveChangesAsync();
-        //            }
-        //            catch (DbUpdateConcurrencyException)
-        //            {
-        //                if (!OrderExists(sellViewModel.Order.OrderID))
-        //                {
-        //                    return NotFound();
-        //                }
-        //                else
-        //                {
-        //                    throw;
-        //                }
-        //            }
-
-        //            return RedirectToAction(nameof(Edit<>), new { id });
-
-        //        }
-        //#endregion
 
         private bool WarrantyCardExists(int id)
         {
