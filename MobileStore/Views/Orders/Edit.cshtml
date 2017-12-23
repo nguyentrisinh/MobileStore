@@ -85,7 +85,7 @@
                 <div class="card-footer">
                     <button type="submit" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Sửa</button>
 
-                    <a asp-action="Print" type="submit" class="btn btn-warning" asp-route-id="@Model.Order.OrderID"><i class="fa fa-pencil-square-o"></i> In</a>
+                    <a asp-action="Print" type="submit" class="btn @(Model.Order.IsPrinted ? "btn-secondary" : "btn-success")" asp-route-id="@Model.Order.OrderID"><i class="fa fa-print"></i>@(Model.Order.IsPrinted ? " Đã In" : " In")</a>
                 </div>
             </form>
         </div>

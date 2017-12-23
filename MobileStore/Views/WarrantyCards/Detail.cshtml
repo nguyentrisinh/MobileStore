@@ -91,11 +91,11 @@
             </div>
             <div class="card-footer">
                 <div class="btn-group">
-                    <a asp-action="PrintWarrantyCard" asp-route-id="@Model.WarrantyCard.WarrantyCardID" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> In</a>
+                    <a asp-action="PrintWarrantyCard" asp-route-id="@Model.WarrantyCard.WarrantyCardID" class="btn @(Model.WarrantyCard.IsPrinted ? "btn-secondary" : "btn-success")"><i class="fa fa-print"></i> @(Model.WarrantyCard.IsPrinted ? " Đã In" : " In")</a>
                     @{
                         if (Model.CanReturn)
                         {
-                            <button data-toggle="modal" data-target="#return" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Đổi trả</button>
+                            <button data-toggle="modal" data-target="#return" class="btn btn-danger"><i class="fa fa-exchange"></i> Đổi trả</button>
                             <div class="modal fade" id="return" tabindex="-1" role="dialog" aria-labelledby="return" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -129,9 +129,9 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"> Đóng</button>
 
-                                                <button type="submit" class="btn btn-primary">Tạo</button>
+                                                <button type="submit" class="btn btn-primary"> Tạo</button>
 
                                             </div>
                                         </form>
@@ -145,13 +145,13 @@
                             switch (Model.WarrantyCardStatus)
                             {
                                 case WarrantyCardStatus.Expired:
-                                    <button type="submit" class="btn btn-primary" disabled>Hết hạn bảo hành</button>
+                                    <button type="submit" class="btn btn-danger" disabled>Hết hạn bảo hành</button>
                                     break;
                                 case WarrantyCardStatus.Returned:
-                                    <button type="submit" class="btn btn-primary" disabled>Đã đổi trả</button>
+                                    <button type="submit" class="btn btn-danger" disabled>Đã đổi trả</button>
                                     break;
                                 case WarrantyCardStatus.Waiting:
-                                    <button type="submit" class="btn btn-primary" disabled>Đang chờ bảo hành</button>
+                                    <button type="submit" class="btn btn-success" disabled>Đang chờ bảo hành</button>
                                     break;
                                 case WarrantyCardStatus.CanWarrant:
                                     <button data-toggle="modal" data-target="#warrant" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Bảo hành</button>
@@ -186,9 +186,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
 
-                                                        <button type="submit" class="btn btn-primary">Tạo</button>
+                                                        <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Tạo</button>
 
                                                     </div>
                                                 </form>
@@ -275,7 +275,7 @@
                                                     @{
                                                         if (item.Status == WarrantyDetailStatus.Fixing)
                                                         {
-                                                            <a class="btn btn-warning btn-sm" asp-action="Fixed" asp-route-id="@item.WarrantyDetailID">
+                                                            <a class="btn btn-info" asp-action="Fixed" asp-route-id="@item.WarrantyDetailID">
                                                                 <i class="fa fa-pencil-square-o"></i>&nbsp; Đã sửa xong
                                                             </a>
                                                         }
@@ -283,19 +283,19 @@
                                                         {
                                                             if (item.Status == WarrantyDetailStatus.Fixed)
                                                             {
-                                                                <a class="btn btn-primary btn-sm" asp-action="Returned" asp-route-id="@item.WarrantyDetailID">
+                                                                <a class="btn btn-success" asp-action="Returned" asp-route-id="@item.WarrantyDetailID">
                                                                     <i class="fa fa-info"></i>&nbsp; Đã trả khách
                                                                 </a>
                                                             }
                                                             else
                                                             {
-                                                                <button disabled class="btn btn-primary btn-sm" >
+                                                                <button disabled class="btn btn-secondary" >
                                                                     <i class="fa fa-info"></i>&nbsp; Hoàn thành bảo hành
                                                                 </button>
                                                             }
                                                         }
                                                     }
-                                                    <a asp-action="PrintWarrantyDetail" asp-route-id="@item.WarrantyDetailID" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> In</a>
+                                                    <a asp-action="PrintWarrantyDetail" asp-route-id="@item.WarrantyDetailID" class="btn @(item.IsPrinted ? "btn-secondary" : "btn-success")" ><i class="fa fa-print"></i>@(item.IsPrinted ? " Đã In" : " In")</a>
                                                     
                                                     
                                                    

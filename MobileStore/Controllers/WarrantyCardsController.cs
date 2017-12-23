@@ -63,7 +63,7 @@ namespace MobileStore.Controllers
             warrantyDetail.IsPrinted = true;
             _context.Update(warrantyDetail);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Detail", new { id });
+            return RedirectToAction("Detail", new { id = warrantyDetail.WarrantyCardID });
         }
 
         // GET: WarrantyCards
@@ -139,6 +139,11 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
+            if (warrantyDetail.IsPrinted == false)
+            {
+                ViewData["ErrorText"] = "Chua in phieu hen";
+                return View("ErrorPage");
+            }
             warrantyDetail.WarrantyDate = DateTime.Now;
             warrantyDetail.Status = WarrantyDetailStatus.Fixed;
             _context.Update(warrantyDetail);
@@ -159,6 +164,11 @@ namespace MobileStore.Controllers
             if (warrantyDetail == null)
             {
                 return NotFound();
+            }
+            if (warrantyDetail.IsPrinted == false)
+            {
+                ViewData["ErrorText"] = "Chua in phieu hen";
+                return View("ErrorPage");
             }
             warrantyDetail.ReturnedDate = DateTime.Now;
             warrantyDetail.Status = WarrantyDetailStatus.Returned;
@@ -269,6 +279,11 @@ namespace MobileStore.Controllers
                     _context.Update(warrantyCard);
                     _context.Update(warrantyDetail);
                     await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    ViewData["ErrorText"] = "Khong the them chi tiet bao hanh";
+                    return View("ErrorPage");
                 }
             }
             return RedirectToAction(nameof(Detail), "WarrantyCards", new { id = warrantyCardVm.WarrantyDetail.WarrantyCardID });

@@ -48,7 +48,7 @@ namespace MobileStore.Controllers
             order.IsPrinted = true;
             _context.Update(order);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", new {id});
+            return RedirectToAction("Edit", new {id});
         }
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -508,6 +508,7 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
             // Code Khóa sửa tại đây check đã in
+           
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, orderDetail.Order,
                 OrderOperations.Update);
             if (!isAuthorized.Succeeded)
@@ -555,6 +556,11 @@ namespace MobileStore.Controllers
             var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == editOrderDetailVm.OrderDetail.OrderID);
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
                 OrderOperations.Update);
+            if (order.IsPrinted)
+            {
+                ViewData["ErrorText"] = "Không thể sửa sau khi in";
+                return View("ErrorPage");
+            }
             if (!isAuthorized.Succeeded)
             {
                 return new ChallengeResult();
