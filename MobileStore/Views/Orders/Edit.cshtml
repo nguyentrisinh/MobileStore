@@ -1,4 +1,4 @@
-﻿@model MobileStore.Models.SellViewModel.SellViewModel
+﻿@model MobileStore.Models.Order
 @using MobileStore.Models
 
 @{
@@ -7,54 +7,6 @@
 }
 
 <div class="row">
-
-<!-- Modal -->
-    <div class="modal fade" id="createOrderDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form asp-action="CreateOrderDetail">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Thêm chi tiết đơn hàng</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="OrderDetail.OrderID" value="@Model.Order.OrderID" />
-
-                        <div class="form-group row">
-                            <label asp-for="OrderDetail.PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
-                            <div class="col-md-8">
-                                <input asp-for="OrderDetail.PriceSold" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.OrderDetail.PriceSold)..."/>
-                                <span asp-validation-for="OrderDetail.PriceSold" class="invalid-feedback"></span>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-
-                            <label class="col-md-4 form-control-label" asp-for="OrderDetail.ItemID"></label>
-                            <div class="col-md-8">
-                                <select class="form-control" asp-for="OrderDetail.ItemID" asp-items="@(new SelectList(Model.NewItems,"ItemID","DisplayName"))">
-                                    <option selected="selected" value="">Chọn trạng thái</option>
-                                </select>
-                                <span asp-validation-for="OrderDetail.ItemID" class="text-danger"></span>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-
-                        <button type="submit" class="btn btn-primary">Tạo</button>
-
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <div class=" col-lg-8">
         <div class="card">
             <form asp-action="Edit">
@@ -63,102 +15,31 @@
                 </div>
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="Order.OrderID" />
+                    <input type="hidden" asp-for="OrderID" />
                     <div class="form-group row">
-                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Order.Total)</label>
+                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Total)</label>
                         <div class="col-md-8">
-                            <div class="form-control">@Model.Order.Total</div>
-                            <span asp-validation-for="Order.Total" class="invalid-feedback"></span>
+                            <div class="form-control">@Model.Total</div>
+                            <span asp-validation-for="Total" class="invalid-feedback"></span>
                         </div>
                     </div>
                    
                     <div class="form-group row">
-                        <label asp-for="Order.CustomerID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Order.CustomerID)</label>
+                        <label asp-for="CustomerID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.CustomerID)</label>
                         <div class="col-md-8">
-
-                            <select asp-for="Order.CustomerID" class="form-control" asp-items="@(new SelectList(Model.Customers,"CustomerID","Name"))"></select>
-                            @*<input asp-for="ModelFromSupplier.SupplierID" type="text" class="form-control" placeholder="Chọn nhà cung cấp..">*@
-                            <span asp-validation-for="Order.CustomerID" class="invalid-feedback"></span>
+                            <select asp-for="CustomerID" class="form-control" asp-items="@ViewBag.Customers"></select>
+                            <span asp-validation-for="CustomerID" class="invalid-feedback"></span>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Sửa</button>
-
-                    <a asp-action="Print" type="submit" class="btn btn-warning" asp-route-id="@Model.Order.OrderID"><i class="fa fa-pencil-square-o"></i> In</a>
+                   
+                        <button type = "submit" class="btn btn-warning" ><i class="fa fa-pencil-square-o" ></i > Sửa </button>
+                      
+                    @*<a asp-action="Print" type="submit" class="btn @(Model.IsPrinted ? "btn-secondary" : "btn-success")" asp-route-id="@Model.Order.OrderID"><i class="fa fa-print"></i>@(Model.Order.IsPrinted ? " Đã In" : " In")</a>*@
                 </div>
             </form>
         </div>
-        <div class="card">
-            <div class="card-header">
-                Chi tiết đợt hàng
-            </div>
-            <div class="card-body">
-                <p class="mb-3">
-                    <button data-toggle="modal" data-target="#createOrderDetail" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Thêm chi tiết đơn hàng</button>
-                </p>
-
-                <div class=" table-striped table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.OrderDetails.First().Item.Name)
-                                </th>
-                                <th>
-
-                                    @Html.DisplayNameFor(model => model.OrderDetails.First().Item.IMEI)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.OrderDetails.First().PriceSold)
-                                </th>
-                                <th>
-
-                                </th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.OrderDetails)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Item.IMEI)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PriceSold)
-                                    </td>
-                                   
-
-                                    <td>
-                                        <div class="btn-group">
-                                            <a class="btn btn-warning btn-sm" asp-action="EditOrderDetail" asp-route-id="@item.OrderDetailID">
-                                                <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
-                                            </a>
-
-
-                                            <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.ItemID">
-                                                <i class="fa fa-info"></i>&nbsp; Chi tiết
-                                            </a>
-
-
-                                            <a class="btn btn-danger btn-sm" asp-action="DeleteOrderDetail" asp-route-id="@item.OrderDetailID">
-                                                <i class="fa fa-trash-o"></i>&nbsp; Xóa
-                                            </a>
-                                        </div>
-
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 

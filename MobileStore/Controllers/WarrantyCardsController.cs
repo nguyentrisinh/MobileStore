@@ -63,7 +63,7 @@ namespace MobileStore.Controllers
             warrantyDetail.IsPrinted = true;
             _context.Update(warrantyDetail);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Detail", new { id });
+            return RedirectToAction("Detail", new { id = warrantyDetail.WarrantyCardID });
         }
 
         // GET: WarrantyCards
@@ -139,6 +139,11 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
+            if (warrantyDetail.IsPrinted == false)
+            {
+                ViewData["ErrorText"] = "Chua in phieu hen";
+                return View("ErrorPage");
+            }
             warrantyDetail.WarrantyDate = DateTime.Now;
             warrantyDetail.Status = WarrantyDetailStatus.Fixed;
             _context.Update(warrantyDetail);
@@ -159,6 +164,11 @@ namespace MobileStore.Controllers
             if (warrantyDetail == null)
             {
                 return NotFound();
+            }
+            if (warrantyDetail.IsPrinted == false)
+            {
+                ViewData["ErrorText"] = "Chua in phieu hen";
+                return View("ErrorPage");
             }
             warrantyDetail.ReturnedDate = DateTime.Now;
             warrantyDetail.Status = WarrantyDetailStatus.Returned;
@@ -270,6 +280,11 @@ namespace MobileStore.Controllers
                     _context.Update(warrantyDetail);
                     await _context.SaveChangesAsync();
                 }
+                else
+                {
+                    ViewData["ErrorText"] = "Khong the them chi tiet bao hanh";
+                    return View("ErrorPage");
+                }
             }
             return RedirectToAction(nameof(Detail), "WarrantyCards", new { id = warrantyCardVm.WarrantyDetail.WarrantyCardID });
         }
@@ -309,16 +324,18 @@ namespace MobileStore.Controllers
 
             var returnDeadline = await _context.Constant.SingleAsync(m => m.ConstantID == 1);
             // Kiểm tra xem sản phẩm này đã bị đổi chưa
-            var returnItem = await _context.ReturnItem.Where(m => m.OldItemID == warrantyCard.ItemID).AnyAsync();
+            var isReturnItem = await _context.ReturnItem.Where(m => m.OldItemID == warrantyCard.ItemID).AnyAsync();
             // Nếu đã bị đổi thì gửi thông tin đổi qua view
-            if (returnItem)
+            if (isReturnItem)
             {
-               
-                warrantyCardVm.ReturnItem =
-                    await _context.ReturnItem.Include(m=>m.OldItem).Include(m=>m.NewItem).SingleAsync(m => m.OldItemID == warrantyCard.ItemID);
+                var returnItem = await _context.ReturnItem.Include(m => m.OldItem).Include(m => m.NewItem)
+                    .SingleAsync(m => m.OldItemID == warrantyCard.ItemID);
+                var newWarrantyCard = await _context.WarrantyCard.SingleAsync(m => m.ItemID == returnItem.NewItemID);
+                ViewData["WarrantyCardID"] = newWarrantyCard.WarrantyCardID;
+                warrantyCardVm.ReturnItem = returnItem;
             }
             // Xem warrantyCarrd này còn có thể đổi trả ko?
-            warrantyCardVm.CanReturn = DateTime.Now <= warrantyCard.StartDate.AddDays(returnDeadline.Parameter) && !returnItem ;
+            warrantyCardVm.CanReturn = DateTime.Now <= warrantyCard.StartDate.AddDays(returnDeadline.Parameter) && !isReturnItem ;
 
             //Return Item, WarrantyDetail dung de nhan Post
             var warrantyDetails =await _context.WarrantyDetail.Where(m => m.WarrantyCardID == id).ToListAsync();
@@ -328,7 +345,7 @@ namespace MobileStore.Controllers
             var items = await _context.Item
                 .Where(m => m.ModelID == warrantyCard.Item.ModelID && m.Status == ItemStatus.InStock).ToListAsync();
             warrantyCardVm.Items = items;
-            if (returnItem)
+            if (isReturnItem)
             {
                 warrantyCardVm.WarrantyCardStatus = WarrantyCardStatus.Returned;
             }

@@ -296,12 +296,15 @@ namespace MobileStore.Controllers
             if (ModelState.IsValid)
             {
                 var stockReceiving = await _context.StockReceiving.SingleAsync(m => m.StockReceivingID == stockReceivingVM.ModelFromSupplier.StockReceivingID);
+
+                
                 var timeSpan = DateTime.Now - stockReceiving.Date;
                 if (timeSpan.Hours > 2)
                 {
                     ViewData["ErrorText"] = "Bạn không thể sửa sau 2h";
                     return View("ErrorPage");
                 }
+                stockReceivingVM.ModelFromSupplier.Date = DateTime.Now;
                 _context.Add(stockReceivingVM.ModelFromSupplier);
                 await _context.SaveChangesAsync();
             }

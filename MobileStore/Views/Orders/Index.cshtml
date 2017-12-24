@@ -89,7 +89,7 @@
                                         <div class="btn-group">
                                             @{
                                                 var isCreateAuthorize = await AuthorizationService.AuthorizeAsync(User, item, OrderOperations.Update);
-                                                if (isCreateAuthorize.Succeeded)
+                                                if (isCreateAuthorize.Succeeded && item.IsPrinted==false)
                                                 {
                                                     <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.OrderID">
                                                         <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
@@ -98,14 +98,14 @@
                                             }
                                            
                                            
-                                                    <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.OrderID">
+                                                    <a class="btn btn-primary btn-sm" asp-action="Detail" asp-route-id="@item.OrderID">
                                                         <i class="fa fa-info"></i>&nbsp; Chi tiết
                                                     </a>
                                                
                                             
                                             @{
                                                 var isDeleteAuthorize = await AuthorizationService.AuthorizeAsync(User, item, OrderOperations.Delete);
-                                                if (isDeleteAuthorize.Succeeded)
+                                                if (isDeleteAuthorize.Succeeded && item.IsPrinted == false)
                                                 {
                                                     <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.OrderID">
                                                         <i class="fa fa-trash-o"></i>&nbsp; Xóa

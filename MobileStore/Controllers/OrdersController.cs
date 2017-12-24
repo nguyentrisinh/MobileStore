@@ -48,7 +48,7 @@ namespace MobileStore.Controllers
             order.IsPrinted = true;
             _context.Update(order);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", new {id});
+            return RedirectToAction("Detail", new {id});
         }
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -108,28 +108,6 @@ namespace MobileStore.Controllers
             return View(await PaginatedList<Order>.CreateAsync(orders.AsNoTracking(), page ?? 1, pageSize));
         }
         #endregion
-        #region Detail
-
-        // GET: Orders/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Order
-                .Include(o => o.ApplicationUser)
-                .Include(o => o.Customer)
-                .SingleOrDefaultAsync(m => m.OrderID == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return View(order);
-        }
-        #endregion
 
         #region Get Create
 
@@ -161,7 +139,7 @@ namespace MobileStore.Controllers
             order.Date = DateTime.Now;
             _context.Add(order);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Edit),new {id=order.OrderID});
+            return RedirectToAction(nameof(Detail),new {id=order.OrderID});
         }
         #endregion
 
@@ -184,7 +162,6 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
-
             // Kiem tra da in hay chua
 
             //if (order.IsPrinted)
@@ -193,13 +170,65 @@ namespace MobileStore.Controllers
             //    return View("ErrorPage");
             //}
             // Kiem tra quyen
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
-                OrderOperations.Update);
-            if (!isAuthorized.Succeeded)
-            {
-                return new ChallengeResult();
-            }
+
+            // Cho xem edit
+
+            //var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
+            //    OrderOperations.Update);
+            //if (!isAuthorized.Succeeded)
+            //{
+            //    return new ChallengeResult();
+            //}
+
             // Tien hanh thuc hien
+            
+           
+            
+            ViewData["Customers"] =new SelectList(_context.Customer,"CustomerID","Name",order.CustomerID);
+            return View(order);
+        }
+        #endregion
+
+
+        #region Detail
+        // GET: Orders/Edit/5
+        [Authorize(Roles = "Sale,Admin")]
+        public async Task<IActionResult> Detail(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+
+            var order = await _context.Order.Include(m=>m.Customer).SingleOrDefaultAsync(m => m.OrderID == id);
+
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+            // Kiem tra da in hay chua
+
+            //if (order.IsPrinted)
+            //{
+            //    ViewData["ErrorText"] = "Bạn không thể sửa sau khi in";
+            //    return View("ErrorPage");
+            //}
+            // Kiem tra quyen
+
+            // Cho xem edit
+
+            //var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
+            //    OrderOperations.Update);
+            //if (!isAuthorized.Succeeded)
+            //{
+            //    return new ChallengeResult();
+            //}
+
+            // Tien hanh thuc hien
+
             var orderDetails = await _context.OrderDetail.Where(m => m.OrderID == id).Include(m => m.Item).ToListAsync();
             var sellViewModel = new SellViewModel();
             sellViewModel.Order = order;
@@ -224,14 +253,14 @@ namespace MobileStore.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Sale,Admin")]
-        public async Task<IActionResult> Edit(int id, SellViewModel sellViewModel)
+        public async Task<IActionResult> Edit(int id, Order order)
         {
             if (!ModelState.IsValid)
             {
-                return View(sellViewModel);
+                return View(order);
             }
 
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, sellViewModel.Order,
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
                 OrderOperations.Update);
             if (!isAuthorized.Succeeded)
             {
@@ -239,8 +268,8 @@ namespace MobileStore.Controllers
             }
             try
             {
-                var newOrder = ViewModelToOrder(sellViewModel).Result;
-                var timeSpan = DateTime.Now - newOrder.Date;
+                var newOrder = ViewModelToOrder(order).Result;
+               // Kiem tra in thi k cho
                 if (newOrder.IsPrinted)
                 {
                     ViewData["ErrorText"] = "Bạn không thể sửa sau khi in";
@@ -252,7 +281,7 @@ namespace MobileStore.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!OrderExists(sellViewModel.Order.OrderID))
+                if (!OrderExists(order.OrderID))
                 {
                     return NotFound();
                 }
@@ -262,7 +291,7 @@ namespace MobileStore.Controllers
                 }
             }
 
-            return RedirectToAction(nameof(Edit), new { id });
+            return RedirectToAction(nameof(Detail), new { id });
 
         }
         #endregion
@@ -368,11 +397,22 @@ namespace MobileStore.Controllers
             if (ModelState.IsValid)
             {
                 var order = await _context.Order.SingleAsync(m => m.OrderID == sellViewModel.OrderDetail.OrderID);
+
+                // Check da in hay chua
                 if (order.IsPrinted == true)
                 {
                     ViewData["ErrorText"] = "Bạn không thể sửa sau khi in";
                     return View("ErrorPage");
                 }
+
+                //Kiem tra co quyen them ko
+                var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
+                    OrderOperations.Update);
+                if (!isAuthorized.Succeeded)
+                {
+                    return new ChallengeResult();
+                }
+
                 var warrantyCard = new WarrantyCard();
                 warrantyCard.NumberOfWarranty = 0;
                 warrantyCard.StartDate = DateTime.Now;
@@ -398,7 +438,7 @@ namespace MobileStore.Controllers
 
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction(nameof(Edit), new { id = sellViewModel.OrderDetail.OrderID });
+            return RedirectToAction(nameof(Detail), new { id = sellViewModel.OrderDetail.OrderID });
         }
         #endregion
 
@@ -485,7 +525,7 @@ namespace MobileStore.Controllers
                 throw;
             }
            
-            return RedirectToAction(nameof(Edit),new {id=orderDetail.OrderID});
+            return RedirectToAction(nameof(Detail),new {id=orderDetail.OrderID});
         }
 
         #endregion
@@ -508,6 +548,7 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
             // Code Khóa sửa tại đây check đã in
+           
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, orderDetail.Order,
                 OrderOperations.Update);
             if (!isAuthorized.Succeeded)
@@ -515,46 +556,37 @@ namespace MobileStore.Controllers
                 return new ChallengeResult();
             }
 
+            
+            ViewData["InStockItems"] = new SelectList(_context.Item.Where(m => (m.Status == ItemStatus.InStock) || (m.ItemID == orderDetail.ItemID)),"ItemID","Name",orderDetail.ItemID);
 
-            var editOrderDetailVM = new EditOrderDetailViewModel();
-            editOrderDetailVM.OrderDetail = orderDetail;
-
-            var warrantyCard = await _context.WarrantyCard.Include(m => m.Item).ThenInclude(m => m.Model).SingleOrDefaultAsync(m => m.ItemID == orderDetail.ItemID);
-            editOrderDetailVM.WarrantyCard = warrantyCard;
-            var items = await _context.Item.Where(m => (m.Status == ItemStatus.InStock) || (m.ItemID==orderDetail.ItemID)).ToListAsync();
-            editOrderDetailVM.Items = items;
-            var orders = await _context.Order.Where(m => (m.IsPrinted == false)||(m.OrderID==orderDetail.OrderID)).ToListAsync();
-            editOrderDetailVM.Orders = orders;
-
-            var returnDeadline = await _context.Constant.Where(m => m.ConstantID == 1).SingleAsync();
-            if (DateTime.Now < warrantyCard.StartDate.AddDays(returnDeadline.Parameter))
-            {
-                editOrderDetailVM.CanReturn = true;
-            }
-            else
-            {
-                editOrderDetailVM.CanReturn = false;
-            }
-            return View(editOrderDetailVM);
+           
+            return View(orderDetail);
         }
 
 
         #endregion
+
+
 
         #region POST Edit OrderDetail
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Sale,Admin")]
-        public async Task<IActionResult> EditOrderDetail(int id, EditOrderDetailViewModel editOrderDetailVm)
+        public async Task<IActionResult> EditOrderDetail(int id, OrderDetail orderDetail)
         {
-            if (id != editOrderDetailVm.OrderDetail.OrderDetailID)
+            if (id != orderDetail.OrderDetailID)
             {
                 return NotFound();
             }
-            var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == editOrderDetailVm.OrderDetail.OrderID);
+            var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderID == orderDetail.OrderID);
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
                 OrderOperations.Update);
+            if (order.IsPrinted)
+            {
+                ViewData["ErrorText"] = "Không thể sửa sau khi in";
+                return View("ErrorPage");
+            }
             if (!isAuthorized.Succeeded)
             {
                 return new ChallengeResult();
@@ -566,14 +598,14 @@ namespace MobileStore.Controllers
                 {
 
                     var oldOrderDetail = await _context.OrderDetail.SingleAsync(m => m.OrderDetailID == id);
-                    order.Total += editOrderDetailVm.OrderDetail.PriceSold - oldOrderDetail.PriceSold;
+                    order.Total += orderDetail.PriceSold - oldOrderDetail.PriceSold;
 
                     var newWarrantyCard = await _context.WarrantyCard.SingleAsync(m => m.ItemID == oldOrderDetail.ItemID);
-                    newWarrantyCard.ItemID = editOrderDetailVm.OrderDetail.ItemID;
+                    newWarrantyCard.ItemID = orderDetail.ItemID;
                     var oldItem = await _context.Item.SingleAsync(m => m.ItemID == oldOrderDetail.ItemID);
                     oldItem.Status = ItemStatus.InStock;
 
-                    var newOrderDetail = ViewModelToModelOrderDetail(editOrderDetailVm.OrderDetail).Result;
+                    var newOrderDetail = ViewModelToModelOrderDetail(orderDetail).Result;
 
                     var newItem = await _context.Item.SingleAsync(m => m.ItemID == newOrderDetail.ItemID);
                     newItem.Status = ItemStatus.Sold;
@@ -592,7 +624,7 @@ namespace MobileStore.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderDetailExists(editOrderDetailVm.OrderDetail.OrderDetailID))
+                    if (!OrderDetailExists(orderDetail.OrderDetailID))
                     {
                         return NotFound();
                     }
@@ -602,8 +634,60 @@ namespace MobileStore.Controllers
                     }
                 }
             }
-            return RedirectToAction(nameof(Edit), new { id = editOrderDetailVm.OrderDetail.OrderID });
+            return RedirectToAction(nameof(Detail), new { id = orderDetail.OrderID });
         }
+
+        #endregion
+
+
+        #region GET Detail OrderDetail 
+        [Authorize(Roles = "Sale,Admin")]
+        public async Task<IActionResult> DetailOrderDetail(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var orderDetail = await _context.OrderDetail.Include(m => m.Order).Include(m=>m.Item).ThenInclude(m=>m.Model).SingleOrDefaultAsync(m => m.OrderDetailID == id);
+
+            if (orderDetail == null)
+            {
+                return NotFound();
+            }
+            // Code Khóa sửa tại đây check đã in
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, orderDetail.Order,
+                OrderOperations.Update);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
+
+            var editOrderDetailVM = new EditOrderDetailViewModel();
+            editOrderDetailVM.OrderDetail = orderDetail;
+
+            var warrantyCard = await _context.WarrantyCard.Include(m => m.Item).ThenInclude(m => m.Model).SingleOrDefaultAsync(m => m.ItemID == orderDetail.ItemID);
+            editOrderDetailVM.WarrantyCard = warrantyCard;
+            var items = await _context.Item.Where(m => (m.Status == ItemStatus.InStock) || (m.ItemID == orderDetail.ItemID)).ToListAsync();
+            editOrderDetailVM.Items = items;
+            var orders = await _context.Order.Where(m => (m.IsPrinted == false) || (m.OrderID == orderDetail.OrderID)).ToListAsync();
+            editOrderDetailVM.Orders = orders;
+
+            var returnDeadline = await _context.Constant.Where(m => m.ConstantID == 1).SingleAsync();
+            if (DateTime.Now < warrantyCard.StartDate.AddDays(returnDeadline.Parameter))
+            {
+                editOrderDetailVM.CanReturn = true;
+            }
+            else
+            {
+                editOrderDetailVM.CanReturn = false;
+            }
+            return View(editOrderDetailVM);
+        }
+
 
         #endregion
 
@@ -617,11 +701,11 @@ namespace MobileStore.Controllers
             return _context.Order.Any(e => e.OrderID == id);
         }
 
-        public async Task<Order> ViewModelToOrder(SellViewModel sellViewModel)
+        public async Task<Order> ViewModelToOrder(Order order)
         {
             var item = await _context.Order.SingleOrDefaultAsync(m =>
-                m.OrderID == sellViewModel.Order.OrderID);
-            item.CustomerID = sellViewModel.Order.CustomerID;
+                m.OrderID == order.OrderID);
+            item.CustomerID = order.CustomerID;
             return item;
         }
 

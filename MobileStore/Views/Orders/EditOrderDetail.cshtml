@@ -1,4 +1,4 @@
-﻿@model MobileStore.Models.OrderDetailViewModels.EditOrderDetailViewModel
+﻿@model MobileStore.Models.OrderDetail
 
 @{
     ViewData["Title"] = "Edit";
@@ -14,24 +14,24 @@
                 </div>
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="OrderDetail.OrderDetailID" />
-                    <input type="hidden" asp-for="OrderDetail.OrderID" value="@Model.OrderDetail.OrderID" />
+                    <input type="hidden" asp-for="OrderDetailID" />
+                    <input type="hidden" asp-for="OrderID" value="@Model.OrderID" />
 
                     <div class="form-group row">
-                        <label asp-for="OrderDetail.PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
+                        <label asp-for="PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.PriceSold)</label>
                         <div class="col-md-8">
-                            <input asp-for="OrderDetail.PriceSold" type="text" class="form-control" placeholder="Nhập số lượng...">
-                            <span asp-validation-for="OrderDetail.PriceSold" class="invalid-feedback"></span>
+                            <input asp-for="PriceSold" type="text" class="form-control" placeholder="Nhập số lượng...">
+                            <span asp-validation-for="PriceSold" class="invalid-feedback"></span>
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label asp-for="OrderDetail.ItemID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.ItemID)</label>
+                        <label asp-for="ItemID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ItemID)</label>
                         <div class="col-md-8">
 
-                            <select asp-for="OrderDetail.ItemID" class="form-control" asp-items="@(new SelectList(Model.Items,"ItemID","Name",Model.OrderDetail.ItemID))"></select>
+                            <select asp-for="ItemID" class="form-control" asp-items="@ViewBag.InStockItems"></select>
                             @*<input asp-for="ModelFromSupplier.SupplierID" type="text" class="form-control" placeholder="Chọn nhà cung cấp..">*@
-                            <span asp-validation-for="OrderDetail.ItemID" class="invalid-feedback"></span>
+                            <span asp-validation-for="ItemID" class="invalid-feedback"></span>
                         </div>
                     </div>
                 </div>
@@ -43,92 +43,15 @@
                 </div>
             </form>
         </div>
-        <div class="card">
-            <div class="card-header">
-                Chi tiết bảo hành
-            </div>
-            <div class="card-body">
-               
-
-                <div class=" table-striped table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.WarrantyCardID)
-                                </th>
-                                <th>
-
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.Item.IMEI)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.Item.Model.Name)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.StartDate)
-                                </th>
-
-                                <th>
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.EndDate)
-                                </th>
-
-                                <th>
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.NumberOfWarranty)
-                                </th>
-                                <th>
-                                    
-                                </th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr>
-                                <td>
-                                    @Model.WarrantyCard.WarrantyCardID
-                                </td>
-                                <td>
-                                    @Model.WarrantyCard.Item.IMEI
-                                </td>
-                                <td>
-                                    @Model.WarrantyCard.Item.Model.Name
-                                </td>
-
-                                <td>
-                                    @Model.WarrantyCard.StartDate
-                                </td>
-
-                                <td>
-                                    @Model.WarrantyCard.EndDate
-                                </td>
-
-                                <td>
-                                    @Model.WarrantyCard.NumberOfWarranty
-                                </td>
-
-
-                                <td>
-                                    <div class="btn-group">
-                                        <a class="btn btn-success btn-sm" asp-controller="WarrantyCards" asp-action="Detail" asp-route-id="@Model.WarrantyCard.WarrantyCardID">
-                                            <i class="fa fa-pencil-square-o"></i>&nbsp; Chi tiết
-                                        </a>
-                                      </div>
-
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 
-<div>
-    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
-</div>
+<p>
+    <a asp-action="Detail" asp-route-id="@Model.OrderID"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
+</p>
+<p>
+    <a asp-action="DetailOrderDetail" asp-route-id="@Model.OrderDetailID"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Chi tiết</button></a>
+</p>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

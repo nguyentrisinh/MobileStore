@@ -91,115 +91,118 @@
             </div>
             <div class="card-footer">
                 <div class="btn-group">
-                    <a asp-action="PrintWarrantyCard" asp-route-id="@Model.WarrantyCard.WarrantyCardID" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> In</a>
+                    <a asp-action="PrintWarrantyCard" asp-route-id="@Model.WarrantyCard.WarrantyCardID" class="btn @(Model.WarrantyCard.IsPrinted ? "btn-secondary" : "btn-success")"><i class="fa fa-print"></i> @(Model.WarrantyCard.IsPrinted ? " Đã In" : " In")</a>
                     @{
-                        if (Model.CanReturn)
+                        if (Model.WarrantyCard.IsPrinted == true)
                         {
-                            <button data-toggle="modal" data-target="#return" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Đổi trả</button>
-                            <div class="modal fade" id="return" tabindex="-1" role="dialog" aria-labelledby="return" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <form asp-action="CreateReturnItem">
-
-                                            <input asp-for="ReturnItem.OldItemID" value="@Model.WarrantyCard.ItemID" hidden/>
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Thêm thông tin đổi trả</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-
-                                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                                <div class="form-group row">
-                                                    <label asp-for="ReturnItem.DefectInfo" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)</label>
-                                                    <div class="col-md-8">
-                                                        <input asp-for="ReturnItem.DefectInfo" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)..."/>
-                                                        <span asp-validation-for="ReturnItem.DefectInfo" class="invalid-feedback"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-md-4 form-control-label" asp-for="ReturnItem.NewItemID"></label>
-                                                    <div class="col-md-8">
-                                                        <select class="form-control" asp-for="ReturnItem.NewItemID" asp-items="@(new SelectList(Model.Items, "ItemID", "IMEI"))">
-                                                            <option selected="selected" value="">Chọn sản phẩm đổi</option>
-                                                        </select>
-                                                        <span asp-validation-for="ReturnItem.NewItemID" class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-
-                                                <button type="submit" class="btn btn-primary">Tạo</button>
-
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                        }
-                        else
-                        {
-                            switch (Model.WarrantyCardStatus)
+                            if (Model.CanReturn)
                             {
-                                case WarrantyCardStatus.Expired:
-                                    <button type="submit" class="btn btn-primary" disabled>Hết hạn bảo hành</button>
-                                    break;
-                                case WarrantyCardStatus.Returned:
-                                    <button type="submit" class="btn btn-primary" disabled>Đã đổi trả</button>
-                                    break;
-                                case WarrantyCardStatus.Waiting:
-                                    <button type="submit" class="btn btn-primary" disabled>Đang chờ bảo hành</button>
-                                    break;
-                                case WarrantyCardStatus.CanWarrant:
-                                    <button data-toggle="modal" data-target="#warrant" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Bảo hành</button>
-                                    <div class="modal fade" id="warrant" tabindex="-1" role="dialog" aria-labelledby="warrant" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <form
-                                                    asp-action="CreateWarrantyDetail">
-                                                    <input asp-for="WarrantyDetail.WarrantyCardID" value="@Model.WarrantyCard.WarrantyCardID" hidden/>
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Thêm thông tin bảo hành</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                                        <div class="form-group row">
-                                                            <label asp-for="WarrantyDetail.DefectInfo" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyDetail.Status)</label>
-                                                            <div class="col-md-8">
-                                                                <input asp-for="WarrantyDetail.DefectInfo" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.WarrantyDetail.DefectInfo)..."/>
-                                                                <span asp-validation-for="WarrantyDetail.DefectInfo" class="invalid-feedback"></span>
-                                                            </div>
-                                                        </div>
+                                <button data-toggle="modal" data-target="#return" class="btn btn-danger"><i class="fa fa-exchange"></i> Đổi trả</button>
+                                <div class="modal fade" id="return" tabindex="-1" role="dialog" aria-labelledby="return" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <form asp-action="CreateReturnItem">
 
-                                                        <div class="form-group row">
-                                                            <label asp-for="WarrantyDetail.ExpectedDate" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyDetail.ExpectedDate)</label>
-                                                            <div class="col-md-8">
-                                                                <input asp-for="WarrantyDetail.ExpectedDate" rows="8" class="form-control"/>
-                                                                <span asp-validation-for="WarrantyDetail.ExpectedDate" class="invalid-feedback"></span>
-                                                            </div>
+                                                <input asp-for="ReturnItem.OldItemID" value="@Model.WarrantyCard.ItemID" hidden />
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Thêm thông tin đổi trả</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+
+                                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                    <div class="form-group row">
+                                                        <label asp-for="ReturnItem.DefectInfo" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)</label>
+                                                        <div class="col-md-8">
+                                                            <input asp-for="ReturnItem.DefectInfo" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)..." />
+                                                            <span asp-validation-for="ReturnItem.DefectInfo" class="invalid-feedback"></span>
                                                         </div>
                                                     </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-
-                                                        <button type="submit" class="btn btn-primary">Tạo</button>
-
+                                                    <div class="form-group row">
+                                                        <label class="col-md-4 form-control-label" asp-for="ReturnItem.NewItemID"></label>
+                                                        <div class="col-md-8">
+                                                            <select class="form-control" asp-for="ReturnItem.NewItemID" asp-items="@(new SelectList(Model.Items, "ItemID", "IMEI"))">
+                                                                <option selected="selected" value="">Chọn sản phẩm đổi</option>
+                                                            </select>
+                                                            <span asp-validation-for="ReturnItem.NewItemID" class="text-danger"></span>
+                                                        </div>
                                                     </div>
-                                                </form>
-                                            </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"> Đóng</button>
+
+                                                    <button type="submit" class="btn btn-primary"> Tạo</button>
+
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
-                                    break;
+                                </div>
 
                             }
+                            else
+                            {
+                                switch (Model.WarrantyCardStatus)
+                                {
+                                    case WarrantyCardStatus.Expired:
+                                        <button type="submit" class="btn btn-danger" disabled>Hết hạn bảo hành</button>
+                                        break;
+                                    case WarrantyCardStatus.Returned:
+                                        <button type="submit" class="btn btn-danger" disabled>Đã đổi trả</button>
+                                        break;
+                                    case WarrantyCardStatus.Waiting:
+                                        <button type="submit" class="btn btn-success" disabled>Đang chờ bảo hành</button>
+                                        break;
+                                    case WarrantyCardStatus.CanWarrant:
+                                        <button data-toggle="modal" data-target="#warrant" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Bảo hành</button>
+                                        <div class="modal fade" id="warrant" tabindex="-1" role="dialog" aria-labelledby="warrant" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <form asp-action="CreateWarrantyDetail">
+                                                        <input asp-for="WarrantyDetail.WarrantyCardID" value="@Model.WarrantyCard.WarrantyCardID" hidden />
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Thêm thông tin bảo hành</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                            <div class="form-group row">
+                                                                <label asp-for="WarrantyDetail.DefectInfo" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyDetail.Status)</label>
+                                                                <div class="col-md-8">
+                                                                    <input asp-for="WarrantyDetail.DefectInfo" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.WarrantyDetail.DefectInfo)..." />
+                                                                    <span asp-validation-for="WarrantyDetail.DefectInfo" class="invalid-feedback"></span>
+                                                                </div>
+                                                            </div>
 
+                                                            <div class="form-group row">
+                                                                <label asp-for="WarrantyDetail.ExpectedDate" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyDetail.ExpectedDate)</label>
+                                                                <div class="col-md-8">
+                                                                    <input asp-for="WarrantyDetail.ExpectedDate" rows="8" class="form-control" />
+                                                                    <span asp-validation-for="WarrantyDetail.ExpectedDate" class="invalid-feedback"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
+
+                                                            <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Tạo</button>
+
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        break;
+
+                                }
+
+                            }
                         }
+
                     }
 
                 </div>
@@ -273,29 +276,33 @@
                                             <td>
                                                 <div class="btn-group">
                                                     @{
-                                                        if (item.Status == WarrantyDetailStatus.Fixing)
+                                                        if (item.IsPrinted == true)
                                                         {
-                                                            <a class="btn btn-warning btn-sm" asp-action="Fixed" asp-route-id="@item.WarrantyDetailID">
-                                                                <i class="fa fa-pencil-square-o"></i>&nbsp; Đã sửa xong
-                                                            </a>
-                                                        }
-                                                        else
-                                                        {
-                                                            if (item.Status == WarrantyDetailStatus.Fixed)
+                                                            if (item.Status == WarrantyDetailStatus.Fixing)
                                                             {
-                                                                <a class="btn btn-primary btn-sm" asp-action="Returned" asp-route-id="@item.WarrantyDetailID">
-                                                                    <i class="fa fa-info"></i>&nbsp; Đã trả khách
+                                                                <a class="btn btn-info" asp-action="Fixed" asp-route-id="@item.WarrantyDetailID">
+                                                                    <i class="fa fa-pencil-square-o"></i>&nbsp; Đã sửa xong
                                                                 </a>
                                                             }
                                                             else
                                                             {
-                                                                <button disabled class="btn btn-primary btn-sm" >
-                                                                    <i class="fa fa-info"></i>&nbsp; Hoàn thành bảo hành
-                                                                </button>
+                                                                if (item.Status == WarrantyDetailStatus.Fixed)
+                                                                {
+                                                                    <a class="btn btn-success" asp-action="Returned" asp-route-id="@item.WarrantyDetailID">
+                                                                        <i class="fa fa-info"></i>&nbsp; Đã trả khách
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <button disabled class="btn btn-secondary" >
+                                                                        <i class="fa fa-info"></i>&nbsp; Hoàn thành bảo hành
+                                                                    </button>
+                                                                }
                                                             }
                                                         }
+                                                        
                                                     }
-                                                    <a asp-action="PrintWarrantyDetail" asp-route-id="@item.WarrantyDetailID" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> In</a>
+                                                    <a asp-action="PrintWarrantyDetail" asp-route-id="@item.WarrantyDetailID" class="btn @(item.IsPrinted ? "btn-secondary" : "btn-success")" ><i class="fa fa-print"></i>@(item.IsPrinted ? " Đã In" : " In")</a>
                                                     
                                                     
                                                    
@@ -322,22 +329,24 @@
                     <div class="card-body">
                         <div class=" table-striped table-responsive">
                             <table class="table">
-                                <thead>
+                                <th>
                                     <tr>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)
-                                        </th>
-                                        <th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)
+                                    </th>
+                                    <th>
 
-                                            @Html.DisplayNameFor(model => model.ReturnItem.NewItem.IMEI)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.ReturnItem.ReturnDate)
-                                        </th>
-
+                                        @Html.DisplayNameFor(model => model.ReturnItem.NewItem.IMEI)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ReturnItem.ReturnDate)
+                                    </th>
+                                    <th>
+                                        
+                                    </th>
 
                                     </tr>
-                                </thead>
+                                </th>
                                 <tbody>
 
                                     <tr>
@@ -350,6 +359,11 @@
                                         </td>
                                         <td>
                                             @Model.ReturnItem.ReturnDate
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-success" asp-action="Detail" asp-controller="WarrantyCards" asp-route-id="@ViewBag.WarrantyCardID">
+                                                <i class="fa fa-caret-right"></i> Chi tiết phiếu bảo hành
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>
