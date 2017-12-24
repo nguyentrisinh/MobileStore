@@ -122,8 +122,13 @@
                         </div>
                     </div>
 
-
-
+                    <input asp-for="NormalizedUserName" class="form-control" style="display: none;"/>
+                    <input asp-for="PasswordHash" class="form-control" style="display: none;" />
+                    <input asp-for="TwoFactorEnabled" class="form-control" style="display: none;" />
+                    <input asp-for="NormalizedEmail" class="form-control" style="display: none;" />
+                    <input asp-for="TwoFactorEnabled" class="form-control" style="display: none;" />
+                    <input asp-for="SecurityStamp" class="form-control" style="display: none;" />
+                    <input asp-for="UserName" class="form-control" style="display: none;" />
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Cập nhật</button>
