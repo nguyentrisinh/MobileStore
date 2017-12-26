@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,18 +21,9 @@ namespace MobileStore.Controllers
         }
 
         // GET: Customers
-        public string Index(string searchString, bool notUsed)
+        public async Task<IActionResult> Index()
         {
-            return "From [HttpPost]Index: filter on " + searchString;
-        }
-        public async Task<IActionResult> Index(string searchString)
-        {
-            var customers = from c in _context.Customer select c;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                customers = customers.Where(s => s.Name.Contains(searchString));
-            }
-            return View(await customers.ToListAsync());
+            return View(await _context.Customer.ToListAsync());
         }
 
         // GET: Customers/Details/5
@@ -53,6 +45,8 @@ namespace MobileStore.Controllers
         }
 
         // GET: Customers/Create
+
+        [Authorize(Roles = "Sale,Admin")]
         public IActionResult Create()
         {
             return View();
@@ -62,6 +56,7 @@ namespace MobileStore.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Sale,Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerID,Name,Phone,Address,Gender,Birthday,Country")] Customer customer)
         {
@@ -75,6 +70,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: Customers/Edit/5
+        [Authorize(Roles = "Sale,Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -94,6 +90,7 @@ namespace MobileStore.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Sale,Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CustomerID,Name,Phone,Address,Gender,Birthday,Country")] Customer customer)
         {
@@ -126,6 +123,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: Customers/Delete/5
+        [Authorize(Roles = "Sale,Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -146,6 +144,7 @@ namespace MobileStore.Controllers
         // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Sale,Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customer.SingleOrDefaultAsync(m => m.CustomerID == id);

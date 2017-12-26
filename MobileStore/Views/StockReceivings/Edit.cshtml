@@ -1,0 +1,213 @@
+﻿@model MobileStore.Models.StockReceivingViewModels.StockReceivingViewModel
+@using MobileStore.Models
+
+@{
+    ViewData["Title"] = "Sửa đơn nhập hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+
+    <!-- Modal -->
+    <div class="modal fade" id="createOrderDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form asp-action="CreateModelFromSupplier">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm đơn nhập hàng</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="ModelFromSupplier.StockReceivingID" value="@Model.StockReceiving.StockReceivingID"/>
+                        <div class="form-group row">
+                            <label asp-for="ModelFromSupplier.Quantity" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Quantity)</label>
+                            <div class="col-md-8">
+                                <input asp-for="ModelFromSupplier.Quantity" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model=>model.ModelFromSupplier.Quantity)...">
+                                <span asp-validation-for="ModelFromSupplier.Quantity" class="invalid-feedback"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="ModelFromSupplier.PriceBought" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.PriceBought)</label>
+                            <div class="col-md-8">
+                                <input asp-for="ModelFromSupplier.PriceBought" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model=>model.ModelFromSupplier.PriceBought)...">
+                                <span asp-validation-for="ModelFromSupplier.PriceBought" class="invalid-feedback"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="ModelFromSupplier.PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.PriceSold)</label>
+                            <div class="col-md-8">
+                                <input asp-for="ModelFromSupplier.PriceSold" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model=>model.ModelFromSupplier.PriceSold)...">
+                                <span asp-validation-for="ModelFromSupplier.PriceSold" class="invalid-feedback"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <label asp-for="ModelFromSupplier.period" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.period)</label>
+                            <div class="col-md-8">
+                                <input asp-for="ModelFromSupplier.period" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model=>model.ModelFromSupplier.period)...">
+                                <span asp-validation-for="ModelFromSupplier.period" class="invalid-feedback"></span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label asp-for="ModelFromSupplier.ModelID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.ModelID)</label>
+                            <div class="col-md-8">
+                                <select class="form-control" asp-for="ModelFromSupplier.ModelID" class="form-control" asp-items="@(new SelectList(Model.Models,"ModelID","Name"))"></select>
+                                <span asp-validation-for="ModelFromSupplier.ModelID" class="invalid-feedback"></span>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+
+                        <button type="submit" class="btn btn-primary">Tạo</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class=" col-lg-8">
+        <div class="card">
+            <form asp-action="Edit">
+                <div class="card-header">
+                    <strong>Sửa đơn hàng</strong>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="StockReceiving.StockReceivingID" />
+                   
+
+                    <div class="form-group row">
+                        <label asp-for="StockReceiving.SupplierID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.StockReceiving.SupplierID)</label>
+                        <div class="col-md-8">
+                            <select class="form-control" asp-for="StockReceiving.SupplierID" class="form-control" asp-items="@(new SelectList(Model.Suppliers,"SupplierID","Name"))"></select>
+                            <span asp-validation-for="StockReceiving.SupplierID" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Sửa</button>
+                    @*<div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-default"/>
+                        </div>*@
+                </div>
+            </form>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Chi tiết đợt nhâp hàng
+            </div>
+            <div class="card-body">
+                <p class="mb-3">
+                    <button data-toggle="modal" data-target="#createOrderDetail" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Thêm chi tiết đơn hàng</button>
+                </p>
+
+                <div class=" table-striped table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().ModelFromSupplierID)
+                                </th>
+                                <th>
+
+                                    @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().Date)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().ModelID)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().PriceBought)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().PriceSold)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().Quantity)
+                                </th>
+                                
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().period)
+                                </th>
+                                <th>
+
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ModelFromSuppliers)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ModelFromSupplierID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Date)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PriceBought)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PriceSold)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Quantity)
+                                    </td>
+                                    
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.period)
+                                    </td>
+
+
+                                    <td>
+                                        <div class="btn-group">
+                                            <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="ModelFromSuppliers" asp-route-id="@item.ModelFromSupplierID">
+                                                <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
+                                            </a>
+
+
+                                            <a class="btn btn-primary btn-sm" asp-action="Details" asp-controller="ModelFromSuppliers" asp-route-id="@item.ModelFromSupplierID">
+                                                <i class="fa fa-info"></i>&nbsp; Chi tiết
+                                            </a>
+
+
+                                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="ModelFromSuppliers" asp-route-id="@item.ModelFromSupplierID">
+                                                <i class="fa fa-trash-o"></i>&nbsp; Xóa
+                                            </a>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

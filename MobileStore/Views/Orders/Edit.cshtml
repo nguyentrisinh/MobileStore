@@ -1,0 +1,52 @@
+﻿@model MobileStore.Models.Order
+@using MobileStore.Models
+
+@{
+    ViewData["Title"] = "Sửa hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class=" col-lg-8">
+        <div class="card">
+            <form asp-action="Edit">
+                <div class="card-header">
+                    <strong>Sửa đơn hàng</strong>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="OrderID" />
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Total)</label>
+                        <div class="col-md-8">
+                            <div class="form-control">@Model.Total</div>
+                            <span asp-validation-for="Total" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                   
+                    <div class="form-group row">
+                        <label asp-for="CustomerID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.CustomerID)</label>
+                        <div class="col-md-8">
+                            <select asp-for="CustomerID" class="form-control" asp-items="@ViewBag.Customers"></select>
+                            <span asp-validation-for="CustomerID" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                   
+                        <button type = "submit" class="btn btn-warning" ><i class="fa fa-pencil-square-o" ></i > Sửa </button>
+                      
+                    @*<a asp-action="Print" type="submit" class="btn @(Model.IsPrinted ? "btn-secondary" : "btn-success")" asp-route-id="@Model.Order.OrderID"><i class="fa fa-print"></i>@(Model.Order.IsPrinted ? " Đã In" : " In")</a>*@
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
