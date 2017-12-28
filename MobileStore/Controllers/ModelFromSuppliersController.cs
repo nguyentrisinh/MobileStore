@@ -449,7 +449,7 @@ namespace MobileStore.Controllers
             item.PriceBought = stockReceivingViewModel.ModelFromSupplier.PriceBought;
             item.PriceSold = stockReceivingViewModel.ModelFromSupplier.PriceSold;
             item.Quantity = stockReceivingViewModel.ModelFromSupplier.Quantity;
-            item.period = stockReceivingViewModel.ModelFromSupplier.period;
+            item.Period = stockReceivingViewModel.ModelFromSupplier.Period;
             item.StockReceivingID = stockReceivingViewModel.ModelFromSupplier.StockReceivingID;
             return item;
         }

@@ -48,10 +48,10 @@
                         </div>
                         
                         <div class="form-group row">
-                            <label asp-for="ModelFromSupplier.period" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.period)</label>
+                            <label asp-for="ModelFromSupplier.Period" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Period)</label>
                             <div class="col-md-8">
-                                <input asp-for="ModelFromSupplier.period" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model=>model.ModelFromSupplier.period)...">
-                                <span asp-validation-for="ModelFromSupplier.period" class="invalid-feedback"></span>
+                                <input asp-for="ModelFromSupplier.Period" type="text" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model=>model.ModelFromSupplier.Period)...">
+                                <span asp-validation-for="ModelFromSupplier.Period" class="invalid-feedback"></span>
                             </div>
                         </div>
 
@@ -139,7 +139,7 @@
                                 </th>
                                 
                                 <th>
-                                    @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().period)
+                                    @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().Period)
                                 </th>
                                 <th>
 
@@ -171,7 +171,7 @@
                                     </td>
                                     
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.period)
+                                        @Html.DisplayFor(modelItem => item.Period)
                                     </td>
 
 
