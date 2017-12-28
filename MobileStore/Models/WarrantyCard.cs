@@ -38,5 +38,14 @@ namespace MobileStore.Models
             this.TransactionCode = Guid.NewGuid();
         }
         #endregion
+
+        #region method
+
+        public bool CanWarrant()
+        {
+            return DateTime.Now >= StartDate && DateTime.Now < EndDate;
+        }
+
+        #endregion
     }
 }

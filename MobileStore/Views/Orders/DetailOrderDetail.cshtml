@@ -1,0 +1,139 @@
+﻿@model MobileStore.Models.OrderDetailViewModels.EditOrderDetailViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class=" col-lg-8">
+        <div class="card">
+                <div class="card-header">
+                    <strong>Sửa Chi tiết đơn hàng</strong>
+                </div>
+                <div class="card-body">
+                   
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
+                        <div class="col-md-8">
+                            <div class="form-control" >@Model.OrderDetail.PriceSold</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.Item.Name)</label>
+                        <div class="col-md-8">
+                            <div class="form-control">@Model.OrderDetail.Item.Name</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.Item.IMEI)</label>
+                        <div class="col-md-8">
+                            <div class="form-control">@Model.OrderDetail.Item.IMEI</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.Item.Model.Name)</label>
+                        <div class="col-md-8">
+                            <div class="form-control">@Model.OrderDetail.Item.Model.Name</div>
+                        </div>
+                    </div>
+                    
+
+                </div>
+                <div class="card-footer">
+                   
+                </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Chi tiết bảo hành
+            </div>
+            <div class="card-body">
+
+
+                <div class=" table-striped table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.WarrantyCard.WarrantyCardID)
+                                </th>
+                                <th>
+
+                                    @Html.DisplayNameFor(model => model.WarrantyCard.Item.IMEI)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.WarrantyCard.Item.Model.Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.WarrantyCard.StartDate)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.WarrantyCard.EndDate)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.WarrantyCard.NumberOfWarranty)
+                                </th>
+                                <th>
+
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>
+                                    @Model.WarrantyCard.WarrantyCardID
+                                </td>
+                                <td>
+                                    @Model.WarrantyCard.Item.IMEI
+                                </td>
+                                <td>
+                                    @Model.WarrantyCard.Item.Model.Name
+                                </td>
+
+                                <td>
+                                    @Model.WarrantyCard.StartDate
+                                </td>
+
+                                <td>
+                                    @Model.WarrantyCard.EndDate
+                                </td>
+
+                                <td>
+                                    @Model.WarrantyCard.NumberOfWarranty
+                                </td>
+
+
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-success btn-sm" asp-controller="WarrantyCards" asp-action="Detail" asp-route-id="@Model.WarrantyCard.WarrantyCardID">
+                                            <i class="fa fa-pencil-square-o"></i>&nbsp; Chi tiết
+                                        </a>
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
