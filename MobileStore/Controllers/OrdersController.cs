@@ -417,7 +417,7 @@ namespace MobileStore.Controllers
                 warrantyCard.NumberOfWarranty = 0;
                 warrantyCard.StartDate = DateTime.Now;
                 var itemInfo = await _context.Item.Where(m=>m.ItemID==sellViewModel.OrderDetail.ItemID).Include(m=>m.ModelFromSupplier).SingleOrDefaultAsync();
-                warrantyCard.EndDate= DateTime.Now.AddMonths(itemInfo.ModelFromSupplier.period);
+                warrantyCard.EndDate= DateTime.Now.AddMonths(itemInfo.ModelFromSupplier.Period);
                 warrantyCard.IsPrinted = false;
                 warrantyCard.IsDisabled = false;
                 warrantyCard.ItemID = sellViewModel.OrderDetail.ItemID;

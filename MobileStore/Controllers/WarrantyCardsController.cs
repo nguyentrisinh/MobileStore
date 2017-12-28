@@ -208,7 +208,7 @@ namespace MobileStore.Controllers
                     newWarrantyCard.StartDate = DateTime.Now;
                     var itemInfo = await _context.Item.Where(m => m.ItemID == warrantyCardVm.ReturnItem.NewItemID)
                         .Include(m => m.ModelFromSupplier).SingleOrDefaultAsync();
-                    newWarrantyCard.EndDate = DateTime.Now.AddMonths(itemInfo.ModelFromSupplier.period);
+                    newWarrantyCard.EndDate = DateTime.Now.AddMonths(itemInfo.ModelFromSupplier.Period);
                     newWarrantyCard.IsPrinted = false;
                     newWarrantyCard.IsDisabled = false;
                     newWarrantyCard.ItemID = warrantyCardVm.ReturnItem.NewItemID;
