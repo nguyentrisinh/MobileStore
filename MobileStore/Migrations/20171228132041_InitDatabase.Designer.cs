@@ -12,8 +12,8 @@ using System;
 namespace MobileStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171222171418_AllowNull_WarrantyDate-ReturnDate_WarrantyDetail")]
-    partial class AllowNull_WarrantyDateReturnDate_WarrantyDetail
+    [Migration("20171228132041_InitDatabase")]
+    partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

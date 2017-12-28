@@ -30,6 +30,7 @@ namespace MobileStore.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AvatarUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -67,6 +68,21 @@ namespace MobileStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Brand", x => x.BrandID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Constant",
+                columns: table => new
+                {
+                    ConstantID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Parameter = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Constant", x => x.ConstantID);
                 });
 
             migrationBuilder.CreateTable(
@@ -224,6 +240,9 @@ namespace MobileStore.Migrations
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PictureOneUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PictureThreeUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PictureTwoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Specification = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false)
                 },
@@ -247,6 +266,7 @@ namespace MobileStore.Migrations
                     ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsPrinted = table.Column<bool>(type: "bit", nullable: false),
                     Total = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -300,6 +320,7 @@ namespace MobileStore.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModelID = table.Column<int>(type: "int", nullable: false),
+                    Period = table.Column<int>(type: "int", nullable: false),
                     PriceBought = table.Column<double>(type: "float", nullable: false),
                     PriceSold = table.Column<double>(type: "float", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
@@ -423,9 +444,10 @@ namespace MobileStore.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDisabled = table.Column<bool>(type: "bit", nullable: false),
+                    IsPrinted = table.Column<bool>(type: "bit", nullable: false),
                     ItemID = table.Column<int>(type: "int", nullable: false),
                     NumberOfWarranty = table.Column<int>(type: "int", nullable: false),
-                    Period = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TransactionCode = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -455,8 +477,12 @@ namespace MobileStore.Migrations
                     ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DefectInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExpectedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsPrinted = table.Column<bool>(type: "bit", nullable: false),
+                    ReturnedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    WarrantyCardID = table.Column<int>(type: "int", nullable: false)
+                    WarrantyCardID = table.Column<int>(type: "int", nullable: false),
+                    WarrantyDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -624,6 +650,9 @@ namespace MobileStore.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Constant");
 
             migrationBuilder.DropTable(
                 name: "OrderDetail");
