@@ -1,0 +1,58 @@
+﻿@model MobileStore.Models.OrderDetail
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class=" col-lg-8">
+        <div class="card">
+            <form asp-action="EditOrderDetail">
+                <div class="card-header">
+                    <strong>Sửa Chi tiết đơn hàng</strong>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="OrderDetailID" />
+                    <input type="hidden" asp-for="OrderID" value="@Model.OrderID" />
+
+                    <div class="form-group row">
+                        <label asp-for="PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.PriceSold)</label>
+                        <div class="col-md-8">
+                            <input asp-for="PriceSold" type="text" class="form-control" placeholder="Nhập số lượng...">
+                            <span asp-validation-for="PriceSold" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label asp-for="ItemID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ItemID)</label>
+                        <div class="col-md-8">
+
+                            <select asp-for="ItemID" class="form-control" asp-items="@ViewBag.InStockItems"></select>
+                            @*<input asp-for="ModelFromSupplier.SupplierID" type="text" class="form-control" placeholder="Chọn nhà cung cấp..">*@
+                            <span asp-validation-for="ItemID" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Sửa</button>
+                    @*<div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-default"/>
+                        </div>*@
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<p>
+    <a asp-action="Detail" asp-route-id="@Model.OrderID"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
+</p>
+<p>
+    <a asp-action="DetailOrderDetail" asp-route-id="@Model.OrderDetailID"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Chi tiết</button></a>
+</p>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
