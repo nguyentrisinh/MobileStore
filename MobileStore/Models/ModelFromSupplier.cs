@@ -29,7 +29,7 @@ namespace MobileStore.Models
         //[DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
         [Required]
-        public int period { get; set; } // Count by month
+        public int Period { get; set; } // Count by month
         #endregion
 
         //#region Supplier Foreign Key
