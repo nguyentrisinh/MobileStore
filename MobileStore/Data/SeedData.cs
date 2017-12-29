@@ -17,7 +17,7 @@ namespace ContactManager.Data
 {
     public static class SeedData
     {
-        #region snippet_Initialize
+        #region seeddata
         public static async Task Initialize(IServiceProvider serviceProvider, string testUserPw)
         {
             using (var context = new ApplicationDbContext(
@@ -125,6 +125,147 @@ namespace ContactManager.Data
                 };
                 employerNgaTechnical = await CreateApplicationUser(serviceProvider, employerPhuongAccountant, "Abc123456!");
                 await EnsureRole(serviceProvider, employerPhuongAccountant.Id, Constants.AccountantRole);
+
+                #region Snipset_Seeddata 
+
+                #region Customer
+                var customers = new Customer[]
+                {
+                    new Customer{Name = "Trần Thị Thanh Thảo", Phone = "01672699288", Address = "164 Huỳnh Văn Bánh, quận Phú Nhuận", Birthday = DateTime.Parse("1996-07-13"), Gender = GenderType.Female,
+                    Country = "Vietnam"},
+                    new Customer{Name = "Trần Đức Duy", Phone = "0983254435", Address = "335/13 Nguyễn Thái Sơn, quận Gò Vấp", Birthday = DateTime.Parse("1992-04-01"), Gender = GenderType.Male,
+                    Country = "Vietnam"}
+                };
+
+                foreach (Customer c in customers)
+                {
+                    context.Customer.Add(c);
+                }
+
+                context.SaveChanges();
+                #endregion
+
+                #region Brand
+                var brands = new Brand[]
+                {
+                    new Brand {Name = "Samsung", Country = "Hàn Quốc", Description = "Không có"},
+                    new Brand {Name = "Apple", Country = "USA", Description = "" },
+                    new Brand {Name = "Oppo", Country = "China", Description = "" },
+                    new Brand {Name = "JBL", Country = "USA", Description = "" },
+                    new Brand {Name = "ESaver", Country="Vietnam", Description = ""}
+                };
+
+                foreach (Brand brand in brands)
+                {
+                    context.Brand.Add(brand);
+                }
+
+                context.SaveChanges();
+                #endregion
+
+                #region Supplier
+                var suppliers = new Supplier[]
+                {
+                    new Supplier {Name = "FPT", Address = "Lô 37-39A, đường 19, KCX Tân Thuận, Tân Thuận Đông, Q7", Phone = "+84 7300 2222", Email = "fpt@gmail.com", Code = "500000", Status = SupplierStatus.Active,
+                    PicName = "Nguyễn Văn A", PicEmail = "fpt@gmail.com", PicPhone = "+84 7300 2222"},
+                    new Supplier {Name = "Viettel", Address = "174 Trần Quang Khải, quận 1", Phone = "0963100900", Email = "viettel@gmail.com", Code = "500000", Status = SupplierStatus.Active,
+                    PicName = "Viettel", PicEmail = "viettel@gmail.com", PicPhone = "0963100900"},
+                    new Supplier {Name = "The Gioi Di Dong", Address = "128 Trần Quang Khải, P. Tân Định, Q.1", Phone = "18001060", Email = "tgdd@gmail.com", Code = "500000", Status = SupplierStatus.Active,
+                    PicName = "The Gioi Di Dong", PicEmail = "tgdd@gmail.com", PicPhone = "18001060"}
+                };
+                
+                foreach (Supplier s in suppliers)
+                {
+                    context.Supplier.Add(s);
+                }
+
+                context.SaveChanges();
+                #endregion
+
+                #region Model
+                var models = new Model[]
+                {
+                    new Model {Name = "Samsung Galaxy j7 Pro 64gbs", Color = "Black", Description = "Là chiếc điện thoại cao cấp thời thượng của giới trẻ", Specification = "Chip 8 nhân, Ram 3Gbs, ROM 64Gbs", Type = ModelType.Device,
+                    BrandID = brands.Single(i => i.Name == "Samsung").BrandID},
+                    new Model {Name = "Samsung Galaxy A8+ (2018)", Color = "Grey", Description = "Là chiếc điện thoại cao cấp thời thượng của giới trẻ", Specification = "Chip 8 nhân, Ram 4Gbs, ROM 64Gbs", Type = ModelType.Device,
+                    BrandID = brands.Single(i => i.Name == "Samsung").BrandID},
+                    new Model {Name = "IPhone X 64Gbs", Color = "Black", Description = "Smart phone cao cấp", Specification = "Chip 8 nhân, Ram 4Gbs, ROM 64Gbs", Type = ModelType.Device,
+                    BrandID = brands.Single(i => i.Name == "Apple").BrandID},
+                    new Model {Name = "IPhone 8 128Gbs", Color = "Black", Description = "Smart phone cao cấp", Specification = "Chip 8 nhân, Ram 4Gbs, ROM 64Gbs", Type = ModelType.Device,
+                    BrandID = brands.Single(i => i.Name == "Apple").BrandID},
+                    new Model {Name = "Tai Nghe JBL T450BT", Color = "Black", Description = "Tai nghe cao cấp", Specification = "", Type = ModelType.Accessory,
+                    BrandID = brands.Single(i => i.Name == "JBL").BrandID},
+                    new Model {Name = "Dây cáp Micro USB 0.2 m eSaver BST-0728", Color = "White", Description = "Dây cáp sạc", Specification = "", Type = ModelType.Accessory,
+                    BrandID = brands.Single(i => i.Name == "ESaver").BrandID}
+                };
+
+                foreach (Model m in models)
+                {
+                    context.Model.Add(m);
+                }
+
+                context.SaveChanges();
+                #endregion
+
+                #region StockReceiving
+                var stockReceivings = new StockReceiving[]
+                {
+                    new StockReceiving{Date = DateTime.Parse("2017-08-21 7:34:42Z"), SupplierID = suppliers.Single(i => i.Name == "FPT").SupplierID, ApplicationUserID = employerSinhWarehouse.Id },
+                    new StockReceiving{Date = DateTime.Parse("2017-10-15 11:34:42Z"), SupplierID = suppliers.Single(i => i.Name == "The Gioi Di Dong").SupplierID, ApplicationUserID = employerSinhWarehouse.Id },
+                    new StockReceiving{Date = DateTime.Parse("2017-12-15 11:34:42Z"), SupplierID = suppliers.Single(i => i.Name == "Viettel").SupplierID, ApplicationUserID = employerSinhWarehouse.Id },
+                };
+
+                foreach (StockReceiving sr in stockReceivings)
+                {
+                    context.StockReceiving.Add(sr);
+                }
+
+                context.SaveChanges();
+                #endregion
+
+                #region ModelFromSupplier
+                var modelFromSuppliers = new ModelFromSupplier[]
+                {
+                    new ModelFromSupplier{Quantity = 2, PriceBought = 22000000, PriceSold = 34000000, Date = DateTime.Parse("2017-08-21 7:34:42Z"), Period = 12, ModelID = models.Single(i => i.Name == "IPhone X 64Gbs").ModelID,
+                    StockReceivingID = stockReceivings[0].StockReceivingID},
+                    new ModelFromSupplier{Quantity = 1, PriceBought = 15000000, PriceSold = 24000000, Date = DateTime.Parse("2017-08-21 7:34:42Z"), Period = 12, ModelID = models.Single(i => i.Name == "Samsung Galaxy A8+ (2018)").ModelID,
+                    StockReceivingID = stockReceivings[0].StockReceivingID},
+                    new ModelFromSupplier{Quantity = 2, PriceBought = 800000, PriceSold = 1200000, Date = DateTime.Parse("2017-10-15 11:34:42Z"), Period = 12, ModelID = models.Single(i => i.Name == "Tai Nghe JBL T450BT").ModelID,
+                    StockReceivingID = stockReceivings[1].StockReceivingID},
+                };
+
+                foreach (ModelFromSupplier mfs in modelFromSuppliers)
+                {
+                    context.ModelFromSupplier.Add(mfs);
+                }
+
+                context.SaveChanges();
+                #endregion
+
+                #region Item
+                var items = new Item[]
+                {
+                    new Item{IMEI = "2546CQC189CQ438CSA", SerializerNumber = "220167955897642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[0].ModelFromSupplierID,
+                    ModelID = models.Single(i => i.Name == "IPhone X 64Gbs").ModelID},
+                    new Item{IMEI = "QC587QC189C8468CSA", SerializerNumber = "387457952854642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[0].ModelFromSupplierID,
+                    ModelID = models.Single(i => i.Name == "IPhone X 64Gbs").ModelID},
+                    new Item{IMEI = "59189VEB69C8468CSA", SerializerNumber = "387457952854642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[1].ModelFromSupplierID,
+                    ModelID = models.Single(i => i.Name == "Samsung Galaxy A8+ (2018)").ModelID},
+                    new Item{IMEI = "5846AVRW69C8468CSA", SerializerNumber = "587643215854642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[2].ModelFromSupplierID,
+                    ModelID = models.Single(i => i.Name == "Tai Nghe JBL T450BT").ModelID},
+                    new Item{IMEI = "589CQVLC5495V68CSA", SerializerNumber = "302164897524642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[2].ModelFromSupplierID,
+                    ModelID = models.Single(i => i.Name == "Tai Nghe JBL T450BT").ModelID}
+                };
+
+                foreach (Item i in items)
+                {
+                    context.Item.Add(i);
+                }
+
+                context.SaveChanges();
+                #endregion
+
+                #endregion
             }
         }
 
@@ -299,4 +440,5 @@ namespace ContactManager.Data
         #endregion
     }
 }
+
 #endif
