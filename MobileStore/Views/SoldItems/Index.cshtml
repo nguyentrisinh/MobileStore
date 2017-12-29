@@ -1,153 +1,177 @@
-﻿@model IEnumerable<MobileStore.Models.Item>
+﻿@model IEnumerable<MobileStore.Models.OrderDetail>
 @{
     ViewData["Title"] = "Index";
 }
 
-<div class="row">
-    <div class="col-lg-12">
+    <div class="row">
+        <div class="col-lg-12">
 
-        <div class="card">
-            <div class="card-header">
-                Sản phẩm đã bán được
-            </div>
-            <div class="card-body">
-                <form asp-action="Index" method="get" class="form-horizontal">
-                    <div class="form-group row">
-                        <div class="col-lg-6">
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
-                                </span>
-                                <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
-                                <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo tên sản phẩm...">
+            <div class="card">
+                <div class="card-header">
+                    Sản phẩm đã bán được
+                </div>
+                <div class="card-body">
+                    <form asp-action="Index" method="get" class="form-horizontal">
+                        <div class="form-group row">
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                                    </span>
+                                    <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
+                                    <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo tên sản phẩm...">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                </form>
-                <div class="table-striped table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                     @Html.DisplayNameFor(model => model.ItemID)
-                                </th>
-                                <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                        @Html.DisplayNameFor(model => model.Name)
-                                    </a>
-                                </th>
-                                <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NumberSoldParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                        SL đã bán
-                                    </a>
-                                </th>
-                                <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceBoughtParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                        Đơn giá gốc
-                                    </a>
-                                </th>
-                                <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSoldParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                        Đơn giá bán
-                                    </a>
-                                </th>
-                                <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["DiffInPriceParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                        Chênh lệch
-                                    </a>
-                                </th>
-                                <th>
-                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["RevenueParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                        Doanh thu
-                                    </a>
-                                </th>
-                                <th>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
+                    </form>
+                    <div class="table-striped table-responsive">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ItemID)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        Số lượng
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ModelFromSupplier.PriceBought)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ModelFromSupplier.PriceSold)
-                                    </td>
-                                    <td>
-                                        Chênh lệch
-                                    </td>
-                                    <td>
-                                        Doanh thu
-                                    </td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <a class="btn btn-primary btn-sm" asp-action="Detail" asp-route-id="@item.ItemID">
-                                                <i class="fa fa-info"></i>&nbsp; Chi tiết
-                                            </a>
-                                        </div>
-                                    </td>
+                                    <th>
+                                        ModelFromSupID
+                                    </th>
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                            Tên sản phẩm
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["NumberSoldSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                            SL đã bán
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceBoughtSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                            Đơn giá mua
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSoldSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                            Đơn giá bán
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["ActualPriceSoldParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                            Đơn giá bán thực
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["DiffInPriceSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                            Chênh lệch
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["RevenueSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                            Doanh thu
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a>
+                                            Nhà cung cấp
+                                        </a>
+                                    </th>
+                                    @*<th>
+                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSoldSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                            Ngày bán
+                                        </a>
+                                    </th>*@
+                                    <th>
+                                    </th>
                                 </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Item.ModelFromSupplier.ModelFromSupplierID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Item.Name)
+                                        </td>
+                                        <td>
+                                            @ViewData["NumberSoldParm"]
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Item.ModelFromSupplier.PriceBought)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Item.ModelFromSupplier.PriceSold)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.PriceSold)
+                                        </td>
+                                        <td>
+                                            Chênh lệch
+                                        </td>
+                                        <td>
+                                            Doanh thu
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Item.ModelFromSupplier.StockReceiving.Supplier.Name)
+                                        </td>
+                                        @*<td>
+                                            @Html.DisplayFor(modelItem => order.Order.Date)
+                                        </td>*@
+                                        <td>
+                                            <div class="btn-group">
+                                                <a class="btn btn-primary btn-sm" asp-action="Detail" asp-route-id="@order.ItemID">
+                                                    <i class="fa fa-info"></i>&nbsp; Chi tiết
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        @*@{
+
+                                PaginatedList<MobileStore.Models.Item> PaginatedModel = Model as PaginatedList<MobileStore.Models.Item>;
+
+                                string prevDisabled = !PaginatedModel.HasPreviousPage ? "disabled" : "";
+
+                                string nextDisabled = !PaginatedModel.HasNextPage ? "disabled" : "";
+
+
                             }
-                        </tbody>
-                    </table>
-                    @*@{
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    <li class="page-item @prevDisabled">
+                                        <a asp-action="Index"
+                                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                           asp-route-page="@(PaginatedModel.PageIndex - 1)"
+                                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                           class="page-link">Previous</a>
+                                    </li>
+                                    @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
+                                    {
+                                        <li class="page-item @( @PaginatedModel.PageIndex == i ? "active" : " " )">
+                                            <a asp-action="Index"
+                                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                               asp-route-page="@i"
+                                               asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
+                                        </li>
 
-                        PaginatedList<MobileStore.Models.Item> PaginatedModel = Model as PaginatedList<MobileStore.Models.Item>;
-
-                        string prevDisabled = !PaginatedModel.HasPreviousPage ? "disabled" : "";
-
-                        string nextDisabled = !PaginatedModel.HasNextPage ? "disabled" : "";
-
-
-                    }
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item @prevDisabled">
-                                <a asp-action="Index"
-                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
-                                   asp-route-page="@(PaginatedModel.PageIndex - 1)"
-                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                                   class="page-link">Previous</a>
-                            </li>
-                            @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
-                            {
-                                <li class="page-item @( @PaginatedModel.PageIndex == i ? "active" : " " )">
-                                    <a asp-action="Index"
-                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
-                                       asp-route-page="@i"
-                                       asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
-                                </li>
-
-                            }
-                            <li class="page-item @nextDisabled">
-                                <a asp-action="Index"
-                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
-                                   asp-route-page="@(PaginatedModel.PageIndex + 1)"
-                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                                   class="page-link">Next</a>
-                            </li>
-                        </ul>
-                    </nav>*@
+                                    }
+                                    <li class="page-item @nextDisabled">
+                                        <a asp-action="Index"
+                                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                           asp-route-page="@(PaginatedModel.PageIndex + 1)"
+                                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                           class="page-link">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>*@
+                    </div>
                 </div>
             </div>
         </div>
+        <!--/.col-->
     </div>
-    <!--/.col-->
-</div>
-<!--/.row-->
+    <!--/.row-->
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
