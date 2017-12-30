@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using MobileStore.Data;
 using Microsoft.EntityFrameworkCore;
 using MobileStore.Models;
+using System.Collections.Generic;
+using System.Collections;
+using MoreLinq;
 
 namespace MobileStore.Controllers
 {
@@ -16,17 +19,37 @@ namespace MobileStore.Controllers
         {
             _context = context;
         }
-
         // GET: Items
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var item = _context.OrderDetail.Include(i => i.Order)
-                        .Include(i => i.Item)
-                        .ThenInclude(i => i.ModelFromSupplier)
-                        .ThenInclude(i => i.StockReceiving)
-                        .ThenInclude(i => i.Supplier);
+            var orderDetail = _context.OrderDetail.Include(i => i.Order)
+                            .Include(i => i.Item)
+                            .ThenInclude(i => i.ModelFromSupplier)
+                            .ThenInclude(i => i.StockReceiving)
+                            .ThenInclude(i => i.Supplier);
 
-            item = from i in item group i by i.Item.ModelFromSupplierID into newModel select ;
+            // Nhóm theo nhà cung cấp và theo giá bán thực,
+            // vì item có thể có nhiều nhà cung cấp với giá mua khác nhau
+            // và giá bán thực cũng có thể khác nhau (đợt khuyến mãi)
+            var soldItemGroup = orderDetail.GroupBy(o => new {o.Item.ModelFromSupplierID, o.PriceSold});
+            List<SoldItems> returnedSoldItems = new List<SoldItems>();
+            soldItemGroup.ForEach(k =>
+            {
+                var first = k.FirstOrDefault();
+                returnedSoldItems.Add(new SoldItems()
+                {
+                    ModelFromSupplierID = first.Item.ModelFromSupplierID,
+                    Name = first.Item.Name,
+                    NumberSold = k.Count(),
+                    PriceBought = first.Item.ModelFromSupplier.PriceBought,
+                    PriceSold = first.Item.ModelFromSupplier.PriceSold,
+                    ActualPriceSold = first.PriceSold,
+                    DiffInPrice = 0, // fix late
+                    Revenue = 0, // fix late
+                    TotalRevenue = 0, // fix late
+                    SupplierName = first.Item.ModelFromSupplier.StockReceiving.Supplier.Name,
+                });
+            });
 
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "name";
             ViewData["NumberSoldSortParm"] = sortOrder == "numberSold" ? "numberSold_desc" : "numberSold";
@@ -46,21 +69,10 @@ namespace MobileStore.Controllers
             ViewData["CurrentFilter"] = searchString;
             if (!String.IsNullOrEmpty(searchString))
             {
-                //item = item.Include(i => i.Order)
-                //    .Include(i => i.Item)
-                //    .ThenInclude(i => i.ModelFromSupplier)
-                //    .ThenInclude(i => i.StockReceiving)
-                //    .ThenInclude(i => i.Supplier)
-                //    .Where(i => i.Item.Name.Contains(searchString));
+                soldItemGroup.Select(i => i).Where(i => i.FirstOrDefault().Item.Name == searchString);
             }
 
-            // Tinh so luong ban, chenh lech gia, loi nhuan, doanh thu
-            //var numberSold = from i in item select i.Item.ModelFromSupplierID;
-            //ViewData["NumberSoldParm"] = numberSold.Count();
-            ViewData["DiffInPriceParm"] = sortOrder == "diffInPrice" ? "diffInPrice_desc" : "diffInPrice";
-            ViewData["RevenueParm"] = sortOrder == "revenue" ? "revenue_desc" : "revenue";
-
-            return View(await item.ToListAsync());
+            return View(returnedSoldItems);
             //switch (sortOrder)
             //{
             //    case "name":
@@ -122,4 +134,5 @@ namespace MobileStore.Controllers
             //            return View(await item.ToListAsync());
         }
     }
+
 }
