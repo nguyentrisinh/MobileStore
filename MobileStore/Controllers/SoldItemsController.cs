@@ -36,17 +36,22 @@ namespace MobileStore.Controllers
             soldItemGroup.ForEach(k =>
             {
                 var first = k.FirstOrDefault();
+                var numberSold = k.Count();
+                var priceBought = first.Item.ModelFromSupplier.PriceBought;
+                var priceSold = first.Item.ModelFromSupplier.PriceSold;
+                var actualPriceSold = first.PriceSold;
+
                 returnedSoldItems.Add(new SoldItems()
                 {
                     ModelFromSupplierID = first.Item.ModelFromSupplierID,
                     Name = first.Item.Name,
-                    NumberSold = k.Count(),
-                    PriceBought = first.Item.ModelFromSupplier.PriceBought,
-                    PriceSold = first.Item.ModelFromSupplier.PriceSold,
-                    ActualPriceSold = first.PriceSold,
-                    DiffInPrice = 0, // fix late
-                    Revenue = 0, // fix late
-                    TotalRevenue = 0, // fix late
+                    NumberSold = numberSold,
+                    PriceBought = priceBought,
+                    PriceSold = priceSold,
+                    ActualPriceSold = actualPriceSold,
+                    DiffInPrice = priceSold - actualPriceSold, // chênh lệch giữa giá bán thực (có khuyến mãi) và đơn giá bán
+                    Revenue = actualPriceSold - priceBought, // lợi nhuận sinh ra từ chênh lệch giữa giá bán thực và giá mua trên 1 sản phẩm
+                    TotalRevenue = (actualPriceSold - priceBought) * numberSold, // tổng lợi nhuận trên n sản phẩm
                     SupplierName = first.Item.ModelFromSupplier.StockReceiving.Supplier.Name,
                 });
             });
