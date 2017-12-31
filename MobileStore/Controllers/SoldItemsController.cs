@@ -56,13 +56,21 @@ namespace MobileStore.Controllers
                 });
             });
 
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "name";
-            ViewData["NumberSoldSortParm"] = sortOrder == "numberSold" ? "numberSold_desc" : "numberSold";
-            ViewData["PriceBoughtSortParm"] = sortOrder == "priceBought" ? "priceBought_desc" : "priceBought";
-            ViewData["PriceSoldSortParm"] = sortOrder == "priceSold" ? "priceSold_desc" : "priceSold";
-            ViewData["DiffInPriceSortParm"] = sortOrder == "diffInPrice" ? "diffInPrice_desc" : "diffInPrice";
-            ViewData["RevenueSortParm"] = sortOrder == "revenue" ? "revenue_desc" : "revenue";
-            ViewData["DateSoldSortParm"] = sortOrder == "dateSold" ? "dateSold_desc" : "dateSold";
+            ViewData["TotalNumberSold"] = returnedSoldItems.Sum(i => i.NumberSold);
+            ViewData["TotalPriceBought"] = returnedSoldItems.Sum(i => i.PriceBought * i.NumberSold);
+            ViewData["TotalPriceSold"] = returnedSoldItems.Sum(i => i.PriceSold);
+            ViewData["TotalActualPriceSold"] = returnedSoldItems.Sum(i => i.ActualPriceSold * i.NumberSold);
+            ViewData["TotalDiffInPrice"] = returnedSoldItems.Sum(i => i.DiffInPrice * i.NumberSold);
+            ViewData["TotalRevenue"] = returnedSoldItems.Sum(i => i.Revenue * i.NumberSold);
+
+
+            //ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "name";
+            //ViewData["NumberSoldSortParm"] = sortOrder == "numberSold" ? "numberSold_desc" : "numberSold";
+            //ViewData["PriceBoughtSortParm"] = sortOrder == "priceBought" ? "priceBought_desc" : "priceBought";
+            //ViewData["PriceSoldSortParm"] = sortOrder == "priceSold" ? "priceSold_desc" : "priceSold";
+            //ViewData["DiffInPriceSortParm"] = sortOrder == "diffInPrice" ? "diffInPrice_desc" : "diffInPrice";
+            //ViewData["RevenueSortParm"] = sortOrder == "revenue" ? "revenue_desc" : "revenue";
+            //ViewData["DateSoldSortParm"] = sortOrder == "dateSold" ? "dateSold_desc" : "dateSold";
 
             // Filtering
             if (searchString != null)
