@@ -70,24 +70,49 @@
 
                                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                             <input type="hidden" asp-for="OrderDetail.OrderID" value="@Model.Order.OrderID" />
-
                                             <div class="form-group row">
-                                                <label asp-for="OrderDetail.PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
+
+                                                <label class="col-md-4 form-control-label">Chọn Mẫu mã</label>
                                                 <div class="col-md-8">
-                                                    <input asp-for="OrderDetail.PriceSold" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.OrderDetail.PriceSold)..." />
-                                                    <span asp-validation-for="OrderDetail.PriceSold" class="invalid-feedback"></span>
+                                                    <select id="js-select-models" class="form-control">
+                                                        <option selected="selected" value="">Chọn Mẫu mã</option>
+                                                        @{
+                                                            foreach (var i in Model.Models)
+                                                            {
+                                                                <option value="@i.ModelID">@i.Name</option>
+                                                            }
+                                                        }
+                                                    </select>
                                                 </div>
                                             </div>
+
                                             <div class="form-group row">
 
                                                 <label class="col-md-4 form-control-label" asp-for="OrderDetail.ItemID"></label>
                                                 <div class="col-md-8">
-                                                    <select class="form-control" asp-for="OrderDetail.ItemID" asp-items="@(new SelectList(Model.NewItems,"ItemID","DisplayName"))">
-                                                        <option selected="selected" value="">Chọn trạng thái</option>
+                                                    <select disabled id="js-select-items" class="form-control" asp-for="OrderDetail.ItemID">
+
+                                                        <option selected="selected" value="">Chọn Sản phẩm</option>
+                                                        @{
+                                                            foreach (var item in Model.NewItems)
+                                                            {
+                                                                <option model-id="@item.ModelID" price-sold="@item.ModelFromSupplier.PriceSold" value="@item.ItemID">@item.Model.Name - @item.IMEI</option> 
+                                                            }
+                                                        }
                                                     </select>
                                                     <span asp-validation-for="OrderDetail.ItemID" class="text-danger"></span>
                                                 </div>
                                             </div>
+                                            <div class="form-group row">
+                                                <label asp-for="OrderDetail.PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
+                                                <div class="col-md-8">
+                                                    <input id="price-sold" asp-for="OrderDetail.PriceSold" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.OrderDetail.PriceSold)..." />
+                                                    <span asp-validation-for="OrderDetail.PriceSold" class="invalid-feedback"></span>
+                                                </div>
+                                            </div>
+                                            
+
+                                           
 
 
                                         </div>
@@ -190,4 +215,31 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#js-select-items').on('change',
+            function() {
+                var priceSold = $('#js-select-items').find(":selected").attr('price-sold');
+                updatePriceSold(priceSold);
+            });
+        function updatePriceSold(priceSold) {
+            $('#price-sold').val(priceSold);
+        }
+
+        $('#js-select-models').on('change',
+            function () {
+                $('#price-sold').val('');
+                $('#js-select-items').prop('disabled', false);
+                $('#js-select-items').val('');
+                var selectedModelID = $('#js-select-models').children(":selected").val();
+                $('#js-select-items').children('option').each(function () {
+                   if ($(this).attr('model-id') != selectedModelID) {
+                       $(this).css({ display: 'none' });
+                   } else {
+                       $(this).css({ display: 'block' });
+                   }
+                });
+            });
+                                              
+    </script>
 }
+

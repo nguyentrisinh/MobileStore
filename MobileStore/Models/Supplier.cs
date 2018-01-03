@@ -15,7 +15,7 @@ namespace MobileStore.Models
 
     public class Supplier
     {
-        [DisplayName("Mã số")]
+        [DisplayName("Mã nhà cung cấp")]
         //[Display(Name = "Last Name")]
         public int SupplierID { get; set; }
 
