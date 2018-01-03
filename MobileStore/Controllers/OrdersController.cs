@@ -234,10 +234,10 @@ namespace MobileStore.Controllers
             sellViewModel.Order = order;
             sellViewModel.OrderDetails = orderDetails;
             sellViewModel.Customers = _context.Customer;
-            sellViewModel.NewItems = _context.Item.Where(m => m.Status == ItemStatus.InStock).Select(m => new
+            sellViewModel.NewItems = _context.Item.Where(m => m.Status == ItemStatus.InStock).Include(m=>m.Model).Select(m => new
             {
                 m.ItemID,
-                DisplayName = m.Name + m.IMEI
+                DisplayName = m.Model.Name +"="+ m.IMEI
             });
             return View(sellViewModel);
         }
