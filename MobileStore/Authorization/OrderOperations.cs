@@ -25,6 +25,7 @@ namespace MobileStore.Authorization
         public static readonly string SaleRole = "Sale";
         public static readonly string WarehouseManagerRole = "WarehouseManager";
         public static readonly string TechnicalRole = "Technical";
+        public static readonly string AccountantRole = "Accountant";
 
     }
 }

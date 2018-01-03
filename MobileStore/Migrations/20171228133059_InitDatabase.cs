@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MobileStore.Migrations
 {
-    public partial class init : Migration
+    public partial class InitDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,6 +30,7 @@ namespace MobileStore.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AvatarUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -67,6 +68,21 @@ namespace MobileStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Brand", x => x.BrandID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Constant",
+                columns: table => new
+                {
+                    ConstantID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Parameter = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Constant", x => x.ConstantID);
                 });
 
             migrationBuilder.CreateTable(
@@ -224,6 +240,9 @@ namespace MobileStore.Migrations
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PictureOneUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PictureThreeUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PictureTwoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Specification = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false)
                 },
@@ -247,6 +266,7 @@ namespace MobileStore.Migrations
                     ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsPrinted = table.Column<bool>(type: "bit", nullable: false),
                     Total = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -267,6 +287,32 @@ namespace MobileStore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StockReceiving",
+                columns: table => new
+                {
+                    StockReceivingID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SupplierID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StockReceiving", x => x.StockReceivingID);
+                    table.ForeignKey(
+                        name: "FK_StockReceiving_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StockReceiving_Supplier_SupplierID",
+                        column: x => x.SupplierID,
+                        principalTable: "Supplier",
+                        principalColumn: "SupplierID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ModelFromSupplier",
                 columns: table => new
                 {
@@ -274,10 +320,11 @@ namespace MobileStore.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModelID = table.Column<int>(type: "int", nullable: false),
+                    Period = table.Column<int>(type: "int", nullable: false),
                     PriceBought = table.Column<double>(type: "float", nullable: false),
                     PriceSold = table.Column<double>(type: "float", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    SupplierID = table.Column<int>(type: "int", nullable: false)
+                    StockReceivingID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -289,10 +336,10 @@ namespace MobileStore.Migrations
                         principalColumn: "ModelID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ModelFromSupplier_Supplier_SupplierID",
-                        column: x => x.SupplierID,
-                        principalTable: "Supplier",
-                        principalColumn: "SupplierID",
+                        name: "FK_ModelFromSupplier_StockReceiving_StockReceivingID",
+                        column: x => x.StockReceivingID,
+                        principalTable: "StockReceiving",
+                        principalColumn: "StockReceivingID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -360,6 +407,7 @@ namespace MobileStore.Migrations
                 {
                     ReturnItemID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DefectInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NewItemID = table.Column<int>(type: "int", nullable: false),
                     OldItemID = table.Column<int>(type: "int", nullable: false),
@@ -368,6 +416,12 @@ namespace MobileStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ReturnItem", x => x.ReturnItemID);
+                    table.ForeignKey(
+                        name: "FK_ReturnItem_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ReturnItem_Item_NewItemID",
                         column: x => x.NewItemID,
@@ -388,15 +442,24 @@ namespace MobileStore.Migrations
                 {
                     WarrantyCardID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDisabled = table.Column<bool>(type: "bit", nullable: false),
+                    IsPrinted = table.Column<bool>(type: "bit", nullable: false),
                     ItemID = table.Column<int>(type: "int", nullable: false),
                     NumberOfWarranty = table.Column<int>(type: "int", nullable: false),
-                    Period = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TransactionCode = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WarrantyCard", x => x.WarrantyCardID);
+                    table.ForeignKey(
+                        name: "FK_WarrantyCard_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_WarrantyCard_Item_ItemID",
                         column: x => x.ItemID,
@@ -411,14 +474,25 @@ namespace MobileStore.Migrations
                 {
                     WarrantyDetailID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ApplicationUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DefectInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExpectedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsPrinted = table.Column<bool>(type: "bit", nullable: false),
+                    ReturnedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    WarrantyCardID = table.Column<int>(type: "int", nullable: false)
+                    WarrantyCardID = table.Column<int>(type: "int", nullable: false),
+                    WarrantyDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WarrantyDetail", x => x.WarrantyDetailID);
+                    table.ForeignKey(
+                        name: "FK_WarrantyDetail_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_WarrantyDetail_WarrantyCard_WarrantyCardID",
                         column: x => x.WarrantyCardID,
@@ -487,9 +561,9 @@ namespace MobileStore.Migrations
                 column: "ModelID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ModelFromSupplier_SupplierID",
+                name: "IX_ModelFromSupplier_StockReceivingID",
                 table: "ModelFromSupplier",
-                column: "SupplierID");
+                column: "StockReceivingID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Order_ApplicationUserID",
@@ -513,6 +587,11 @@ namespace MobileStore.Migrations
                 column: "OrderID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ReturnItem_ApplicationUserID",
+                table: "ReturnItem",
+                column: "ApplicationUserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ReturnItem_NewItemID",
                 table: "ReturnItem",
                 column: "NewItemID",
@@ -525,9 +604,29 @@ namespace MobileStore.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_StockReceiving_ApplicationUserID",
+                table: "StockReceiving",
+                column: "ApplicationUserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StockReceiving_SupplierID",
+                table: "StockReceiving",
+                column: "SupplierID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarrantyCard_ApplicationUserID",
+                table: "WarrantyCard",
+                column: "ApplicationUserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WarrantyCard_ItemID",
                 table: "WarrantyCard",
                 column: "ItemID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarrantyDetail_ApplicationUserID",
+                table: "WarrantyDetail",
+                column: "ApplicationUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WarrantyDetail_WarrantyCardID",
@@ -553,6 +652,9 @@ namespace MobileStore.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Constant");
+
+            migrationBuilder.DropTable(
                 name: "OrderDetail");
 
             migrationBuilder.DropTable(
@@ -571,9 +673,6 @@ namespace MobileStore.Migrations
                 name: "WarrantyCard");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Customer");
 
             migrationBuilder.DropTable(
@@ -586,10 +685,16 @@ namespace MobileStore.Migrations
                 name: "Model");
 
             migrationBuilder.DropTable(
-                name: "Supplier");
+                name: "StockReceiving");
 
             migrationBuilder.DropTable(
                 name: "Brand");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Supplier");
         }
     }
 }
