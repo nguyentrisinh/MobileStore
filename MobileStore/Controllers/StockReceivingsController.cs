@@ -97,8 +97,13 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
-
-            return View(stockReceiving);
+            var modelFromSuppliers = await _context.ModelFromSupplier.Where(m => m.StockReceivingID == id).Include(m => m.Model).ToListAsync();
+            var stockReceivingVM = new StockReceivingViewModel();
+            stockReceivingVM.StockReceiving = stockReceiving;
+            stockReceivingVM.ModelFromSuppliers = modelFromSuppliers;
+            stockReceivingVM.Models = _context.Model;
+            stockReceivingVM.Suppliers = _context.Supplier;
+            return View(stockReceivingVM);
         }
 
         // GET: StockReceivings/Create
@@ -153,13 +158,9 @@ namespace MobileStore.Controllers
             {
                 return new ChallengeResult();
             }
-            var modelFromSuppliers = await _context.ModelFromSupplier.Where(m => m.StockReceivingID == id).Include(m => m.Model).ToListAsync();
-            var stockReceivingVM = new StockReceivingViewModel();
-            stockReceivingVM.StockReceiving = stockReceiving;
-            stockReceivingVM.ModelFromSuppliers = modelFromSuppliers;
-            stockReceivingVM.Models = _context.Model;
-            stockReceivingVM.Suppliers = _context.Supplier;
-            return View(stockReceivingVM);
+
+            ViewData["SupplierID"] = _context.Supplier;
+            return View(stockReceiving);
         }
 
         // POST: StockReceivings/Edit/5
@@ -168,9 +169,9 @@ namespace MobileStore.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "WarehouseManager, Admin")]
-        public async Task<IActionResult> Edit(Guid id, StockReceivingViewModel stockReceivingVM)
+        public async Task<IActionResult> Edit(Guid id, StockReceiving stockReceiving)
         {
-            if (id != stockReceivingVM.StockReceiving.StockReceivingID)
+            if (id != stockReceiving.StockReceivingID)
             {
                 return NotFound();
             }
@@ -181,7 +182,7 @@ namespace MobileStore.Controllers
             {
                 try
                 {
-                    var item = MakeNewStockReceiving(stockReceivingVM).Result;
+                    var item = MakeNewStockReceiving(stockReceiving).Result;
                     var timeSpan = DateTime.Now - item.Date;
                     if (timeSpan.Hours > 2)
                     {
@@ -199,7 +200,7 @@ namespace MobileStore.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StockReceivingExists(stockReceivingVM.StockReceiving.StockReceivingID))
+                    if (!StockReceivingExists(stockReceiving.StockReceivingID))
                     {
                         return NotFound();
                     }
@@ -209,7 +210,7 @@ namespace MobileStore.Controllers
                     }
                 }
             }
-            return RedirectToAction(nameof(Edit), new { id = stockReceivingVM.StockReceiving.StockReceivingID });
+            return RedirectToAction(nameof(Details), new { id = stockReceiving.StockReceivingID });
         }
 
         // GET: StockReceivings/Delete/5
@@ -321,11 +322,11 @@ namespace MobileStore.Controllers
             return _context.StockReceiving.Any(e => e.StockReceivingID == id);
         }
 
-        private async Task<StockReceiving> MakeNewStockReceiving(StockReceivingViewModel stockReceivingVM)
+        private async Task<StockReceiving> MakeNewStockReceiving(StockReceiving stockReceiving)
         {
             var newStockReceiving = await _context.StockReceiving
-                .Where(m => m.StockReceivingID == stockReceivingVM.StockReceiving.StockReceivingID).Include(m=>m.Supplier).SingleOrDefaultAsync();
-            newStockReceiving.SupplierID = stockReceivingVM.StockReceiving.SupplierID;
+                .Where(m => m.StockReceivingID == stockReceiving.StockReceivingID).Include(m=>m.Supplier).SingleOrDefaultAsync();
+            newStockReceiving.SupplierID = stockReceiving.SupplierID;
             return newStockReceiving;
         }
     }

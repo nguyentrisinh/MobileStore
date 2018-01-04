@@ -1,18 +1,13 @@
 ﻿@model IEnumerable<MobileStore.Models.Model>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Mẫu mã sản phẩm";
 }
-
-<h2>Index</h2>
-
-
-
 <div class="row">
     <div class="col-lg-12" style="margin:auto">
         <div class="card">
 
-            <div class="card-header">Danh Sách Model Sản Phẩm</div>
+            <div class="card-header">Danh sách Mẫu mã sản phẩm</div>
 
             <div class="card-body">
 
@@ -22,7 +17,8 @@
                             <div class="input-group">
                                 <input class="form-control"  type="text" name="SearchString" value="@ViewData["DataSearchString"]" placeholder="Tìm kiếm theo Tên" />
                                 <span class="input-group-btn">
-                                    <input type="submit" value="Search" class="btn btn-primary" />
+                                   
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
                                 </span>
                             </div>
                         </div>
@@ -32,72 +28,127 @@
 
                 <p>
                     <a asp-action="Create">
-                        <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm Model</button>
+                        <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm mẫu mã</button>
                     </a>
                 </p>
 
                 <div class="table-striped table-responsive">
                     <table class="table">
                         <thead>
-                            <tr>
-                                <th>
-                                    <a asp-controller="Models" asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"> Tên Model</a>
-                                </th>
-                                <th>
-                                    Màu Sắc
-                                </th>
-                                <th>
-                                   Mô Tả
-                                </th>
-                                <th>
-                                    Đặc điểm kỹ thuật
-                                </th>
-                                <th>
-                                    Loại
-                                </th>
-                                <th>
-                                    Tên nhãn hiệu
-                                </th>
-                                <th></th>
-                            </tr>
+                        <tr>
+                            <th>
+                                <a asp-controller="Models" asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"> Tên Model</a>
+                            </th>
+                            <th>
+                                Màu Sắc
+                            </th>
+                            <th>
+                                Mô Tả
+                            </th>
+                            <th>
+                                Đặc điểm kỹ thuật
+                            </th>
+                            <th>
+                                Loại
+                            </th>
+                            <th>
+                                Tên nhãn hiệu
+                            </th>
+                            <th></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Color)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Specification)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Type)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Brand.Name)
-                                    </td>
-                                    <td>
-                                        <a asp-action="Edit" asp-route-id="@item.ModelID">
-                                            <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
-                                        </a> |
-                                        <a asp-action="Details" asp-route-id="@item.ModelID">
-                                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i>&nbsp; Chi tiết</button>
-                                        </a> |
-                                        <a asp-action="Delete" asp-route-id="@item.ModelID">
-                                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i>&nbsp; Xóa</button>
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Color)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Specification)
+                                </td>
+                                <td>
+                                    @{
+                                        if (item.Type == ModelType.Accessory)
+                                        {
+
+                                            <span class="badge badge-dark">Phụ kiện</span>
+
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-info">Điện thoại</span>
+                                        }
+                                    }
+                                        
+                                </td>
+                                       
+                                        
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Brand.Name)
+                                </td>
+                                <td class="btn-group">
+                                        
+                                    <a asp-action="Edit" asp-route-id="@item.ModelID">
+                                        <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i>&nbsp; Sửa</button>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.ModelID">
+                                        <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i>&nbsp; Chi tiết</button>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.ModelID">
+                                        <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i>&nbsp; Xóa</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
+                    @{
+
+                        PaginatedList<MobileStore.Models.Model> PaginatedModel = Model as PaginatedList<MobileStore.Models.Model>;
+
+                        string prevDisabled = !PaginatedModel.HasPreviousPage ? "disabled" : "";
+
+                        string nextDisabled = !PaginatedModel.HasNextPage ? "disabled" : "";
+
+
+
+
+                    }
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item @prevDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex - 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Previous</a>
+                            </li>
+                            @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
+                            {
+                                <li class="page-item @( @PaginatedModel.PageIndex == i ? "active" : " " )">
+                                    <a asp-action="Index"
+                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                       asp-route-page="@i"
+                                       asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
+                                </li>
+
+                            }
+                            <li class="page-item @nextDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex + 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
 

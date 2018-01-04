@@ -16,10 +16,11 @@
                     <div class="form-group row">
                         <div class="col-lg-6">
                             <div class="input-group">
+                                
+                                <input name="CurrentFilter" type="text" class="form-control" placeholder="Tìm kiếm..." value="@ViewData["CurrentFilter"]">
                                 <span class="input-group-btn">
                                     <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
                                 </span>
-                                <input name="CurrentFilter" type="text" class="form-control" placeholder="Tìm kiếm..." value="@ViewData["CurrentFilter"]">
                             </div>
                         </div>
                     </div>
@@ -64,7 +65,7 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Address)
                                     </td>
-                                    <td>
+                                    <td class="btn-group">
                                         <a asp-action="Edit" asp-route-id="@item.CustomerID">
                                             <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i> Sửa</button>
                                         </a>

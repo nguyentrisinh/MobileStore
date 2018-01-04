@@ -1,36 +1,53 @@
 ﻿@model MobileStore.Models.Brand
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Edit";
 }
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+                <div class="card-header">
+                    <strong>Thông tin nhãn hiệu</strong>
+                </div>
 
-<h2>Details</h2>
+                <div class="card-body">
+
+                    
+                    <div class="form-group row">
+                        <label class="col-md-3 form-control-label">Tên nhãn hiệu</label>
+                        <div class="col-md-9">
+                            <div class="form-control">
+                                @Model.Name
+                            </div>
+                            </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 form-control-label">Nơi xuất xứ</label>
+                        <div class="col-md-9">
+                            <div class="form-control">
+                                @Model.Country
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 form-control-label">Mô tả</label>
+                        <div class="col-md-9">
+                            <div class="form-control" >
+                                @Model.Description &nbsp;
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
 
 <div>
-    <h4>Brand</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Nhãn hiệu
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-           Nơi sản xuất
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Country)
-        </dd>
-        <dt>
-           Mô tả
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-    </dl>
+    <a asp-action="Index"><button type="button" class="btn btn-primary"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.BrandID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

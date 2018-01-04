@@ -21,31 +21,28 @@ namespace MobileStore.Controllers
         }
 
         // GET: Models
-        public async Task<IActionResult> Index(string SearchString, string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            ViewData["DataSearchString"] = SearchString;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
-            //ViewData["CurrentSort"] = sortOrder;
+            ViewData["CurrentSort"] = sortOrder;
 
-            //if (SearchString != null)
-            //{
-            //    page = 1;
-            //}
-            //else
-            //{
-            //    SearchString = currentFilter;
-            //}
-            //ViewData["CurrentFilter"] = SearchString;
-
-            //var applicationDbContext =  _context.Model.Include(m => m.Brand);
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
             var applicationDbContext = from m in _context.Model
                                        .Include("Brand")
                                        select m;
 
-            if (!String.IsNullOrEmpty(SearchString))
+            if (!String.IsNullOrEmpty(searchString))
             {
-                applicationDbContext =applicationDbContext.Where(m => m.Name.Contains(SearchString));
+                applicationDbContext =applicationDbContext.Where(m => m.Name.Contains(searchString));
             }
 
             switch (sortOrder)
@@ -60,9 +57,9 @@ namespace MobileStore.Controllers
             }
 
 
-            return View( applicationDbContext);
-            //int pageSize = 2;
-            //return View(await PaginatedList<Model>.CreateAsync(applicationDbContext.AsNoTracking(), page ?? 1, pageSize));
+            int pageSize = 1;
+
+            return View(await PaginatedList<Model>.CreateAsync(applicationDbContext.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Models/Details/5
