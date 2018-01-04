@@ -38,13 +38,17 @@ namespace MobileStore.Models
 
         [DisplayName("Đợt hàng")]
         public int ModelFromSupplierID { get; set; }
+
+        [DisplayName("Đợt hàng")]
         public virtual ModelFromSupplier ModelFromSupplier { get; set; }
         #endregion
 
         #region Model foreign key
 
-        [DisplayName("Loại sản phẩm")]
+        [DisplayName("Mẫu mã")]
         public int ModelID { get; set; }
+
+        [DisplayName("Mẫu mã")]
         public virtual Model Model { get; set; }
         #endregion
 
