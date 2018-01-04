@@ -2,57 +2,85 @@
 
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Edit</h2>
-
-<h4>Customer</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CustomerID" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <select asp-for="Gender" class="form-control"></select>
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Birthday" class="control-label"></label>
-                <input asp-for="Birthday" class="form-control" />
-                <span asp-validation-for="Birthday" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Country" class="control-label"></label>
-                <input asp-for="Country" class="form-control" />
-                <span asp-validation-for="Country" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+    <div class="col-lg-8">
+        <div class="card">
+            <form asp-action="Edit">
+                <div class="card-header">
+                    <strong>Sửa thông tin khách hàng</strong>
+                </div>
+
+                <div class="card-body">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="CustomerID" />
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-md-3 form-control-label">Tên khách hàng</label>
+                        <div class="col-md-9">
+                            <input asp-for="Name" class="form-control" placeholder="Nhập tên khách hàng" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="Address" class="col-md-3 form-control-label">Địa chỉ</label>
+                        <div class="col-md-9">
+                            <textarea rows="8" asp-for="Address" class="form-control" placeholder="Nhập địa chỉ"></textarea>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="Birthday" class="col-md-3 form-control-label">Ngày sinh</label>
+                        <div class="col-md-9">
+                            <input asp-for="Birthday" class="form-control" placeholder="Nhập ngày sinh" />
+                            <span asp-validation-for="Birthday" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="Country" class="col-md-3 form-control-label">Quốc gia</label>
+                        <div class="col-md-9">
+                            <input asp-for="Country" class="form-control" placeholder="Nhập quốc gia" />
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="Gender" class="col-md-3 form-control-label">Giới tính</label>
+                        <div class="col-md-9">
+                            <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<GenderType>()">
+                                <option value="">
+                                    Chọn giới tính
+                                </option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label asp-for="Phone" class="col-md-3 form-control-label">Số điện thoại</label>
+                        <div class="col-md-9">
+                            <input asp-for="Phone" class="form-control" placeholder="Nhập Số điện thoại" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                   
+                    
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-pencil-square-o"></i> Sửa</button>
+                    @*<input type="submit" value="Save" class="btn btn-default" />*@
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index"><button type="button" class="btn btn-primary"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
 
 @section Scripts {
