@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -44,7 +45,7 @@ namespace MobileStore.Controllers
 
             if (!String.IsNullOrEmpty(SearchString))
             {
-                applicationDbContext = applicationDbContext.Where(m => m.Name.Contains(SearchString));
+                applicationDbContext =applicationDbContext.Where(m => m.Name.Contains(SearchString));
             }
 
             switch (sortOrder)
@@ -84,6 +85,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: Models/Create
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public IActionResult Create()
         {
             ViewData["BrandID"] = new SelectList(_context.Brand, "BrandID", "Name");
@@ -95,6 +97,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Create([Bind("ModelID,Name,Color,Description,Specification,Type,BrandID")] Model model)
         {
             if (ModelState.IsValid)
@@ -108,6 +111,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: Models/Edit/5
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -129,6 +133,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ModelID,Name,Color,Description,Specification,Type,BrandID")] Model model)
         {
             if (id != model.ModelID)
@@ -161,6 +166,7 @@ namespace MobileStore.Controllers
         }
 
         // GET: Models/Delete/5
+        [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -181,6 +187,7 @@ namespace MobileStore.Controllers
 
         // POST: Models/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "WarehouseManager, Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

@@ -60,7 +60,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(StockReceivingViewModel stockReceivingVM)
+        public async Task<IActionResult> Create(StockReceivingDetailViewModel stockReceivingVM)
         {
             if (ModelState.IsValid)
             {

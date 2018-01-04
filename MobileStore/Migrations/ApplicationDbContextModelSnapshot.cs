@@ -210,6 +210,22 @@ namespace MobileStore.Migrations
                     b.ToTable("Brand");
                 });
 
+            modelBuilder.Entity("MobileStore.Models.Constant", b =>
+                {
+                    b.Property<int>("ConstantID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Parameter");
+
+                    b.HasKey("ConstantID");
+
+                    b.ToTable("Constant");
+                });
+
             modelBuilder.Entity("MobileStore.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerID")
@@ -273,6 +289,12 @@ namespace MobileStore.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<string>("PictureOneUrl");
+
+                    b.Property<string>("PictureThreeUrl");
+
+                    b.Property<string>("PictureTwoUrl");
+
                     b.Property<string>("Specification");
 
                     b.Property<int>("Type");
@@ -289,12 +311,11 @@ namespace MobileStore.Migrations
                     b.Property<int>("ModelFromSupplierID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ApplicationUserID")
-                        .IsRequired();
-
                     b.Property<DateTime>("Date");
 
                     b.Property<int>("ModelID");
+
+                    b.Property<int>("Period");
 
                     b.Property<double>("PriceBought");
 
@@ -302,15 +323,13 @@ namespace MobileStore.Migrations
 
                     b.Property<int>("Quantity");
 
-                    b.Property<int>("SupplierID");
+                    b.Property<Guid>("StockReceivingID");
 
                     b.HasKey("ModelFromSupplierID");
 
-                    b.HasIndex("ApplicationUserID");
-
                     b.HasIndex("ModelID");
 
-                    b.HasIndex("SupplierID");
+                    b.HasIndex("StockReceivingID");
 
                     b.ToTable("ModelFromSupplier");
                 });
@@ -326,6 +345,8 @@ namespace MobileStore.Migrations
                     b.Property<int>("CustomerID");
 
                     b.Property<DateTime>("Date");
+
+                    b.Property<bool>("IsPrinted");
 
                     b.Property<double>("Total");
 
@@ -388,6 +409,27 @@ namespace MobileStore.Migrations
                     b.ToTable("ReturnItem");
                 });
 
+            modelBuilder.Entity("MobileStore.Models.StockReceiving", b =>
+                {
+                    b.Property<Guid>("StockReceivingID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApplicationUserID")
+                        .IsRequired();
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int>("SupplierID");
+
+                    b.HasKey("StockReceivingID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("SupplierID");
+
+                    b.ToTable("StockReceiving");
+                });
+
             modelBuilder.Entity("MobileStore.Models.Supplier", b =>
                 {
                     b.Property<int>("SupplierID")
@@ -426,11 +468,13 @@ namespace MobileStore.Migrations
 
                     b.Property<DateTime>("EndDate");
 
+                    b.Property<bool>("IsDisabled");
+
+                    b.Property<bool>("IsPrinted");
+
                     b.Property<int>("ItemID");
 
                     b.Property<int>("NumberOfWarranty");
-
-                    b.Property<int>("Period");
 
                     b.Property<DateTime>("StartDate");
 
@@ -457,9 +501,17 @@ namespace MobileStore.Migrations
 
                     b.Property<string>("DefectInfo");
 
+                    b.Property<DateTime>("ExpectedDate");
+
+                    b.Property<bool>("IsPrinted");
+
+                    b.Property<DateTime?>("ReturnedDate");
+
                     b.Property<int>("Status");
 
                     b.Property<int>("WarrantyCardID");
+
+                    b.Property<DateTime?>("WarrantyDate");
 
                     b.HasKey("WarrantyDetailID");
 
@@ -538,19 +590,14 @@ namespace MobileStore.Migrations
 
             modelBuilder.Entity("MobileStore.Models.ModelFromSupplier", b =>
                 {
-                    b.HasOne("MobileStore.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("ModelFromSuppliers")
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("MobileStore.Models.Model", "Model")
                         .WithMany("ModelFromSuppliers")
                         .HasForeignKey("ModelID")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MobileStore.Models.Supplier", "Supplier")
+                    b.HasOne("MobileStore.Models.StockReceiving", "StockReceiving")
                         .WithMany("ModelFromSuppliers")
-                        .HasForeignKey("SupplierID")
+                        .HasForeignKey("StockReceivingID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -596,6 +643,19 @@ namespace MobileStore.Migrations
                         .WithOne("OldItem")
                         .HasForeignKey("MobileStore.Models.ReturnItem", "OldItemID")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("MobileStore.Models.StockReceiving", b =>
+                {
+                    b.HasOne("MobileStore.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("StoceReceivings")
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MobileStore.Models.Supplier", "Supplier")
+                        .WithMany("StockReceivings")
+                        .HasForeignKey("SupplierID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MobileStore.Models.WarrantyCard", b =>

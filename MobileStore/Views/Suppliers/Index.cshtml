@@ -17,7 +17,7 @@
                 Danh sách Nhà cung cấp
             </div>
             <div class="card-body">
-                <form asp-controller="Suppliers" asp-action="Index" method="get" class="form-horizontal">
+                <form asp-action="Index" method="get" class="form-horizontal">
                     <div class="form-group row">
                         <div class="col-lg-6">
                             <div class="input-group">
@@ -51,19 +51,12 @@
                                 </a>
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Address)
-                            </th>
-                            <th>
                                 @Html.DisplayNameFor(model => model.Phone)
                             </th>
                             <th>
-
                                 <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                     @Html.DisplayNameFor(model => model.Email)
                                 </a>
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Code)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Status)
@@ -74,13 +67,7 @@
                                 </a>
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.PicPhone)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.PicEmail)
-                            </th>
-                            <th>
-
+                                
                             </th>
                            
                         </tr>
@@ -96,28 +83,16 @@
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Address)
-                                </td>
-                                <td>
                                     @Html.DisplayFor(modelItem => item.Phone)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Email)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Code)
-                                </td>
-                                <td>
                                     <span class="@("badge " + (item.Status == SupplierStatus.Active ? "badge-success" : "badge-secondary"))">@Html.DisplayFor(modelItem => item.Status)</span>
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.PicName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PicPhone)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PicEmail)
                                 </td>
                                 <td>
                                     <div class="btn-group">

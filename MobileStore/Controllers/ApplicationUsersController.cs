@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using MobileStore.Services;
 using Microsoft.Extensions.Logging;
-
+using Microsoft.AspNetCore.NodeServices;
 
 namespace MobileStore.Controllers
 {
@@ -205,7 +205,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("FirstName,LastName,Birthday,Phone,Address,Role,Id,Email,ConcurrencyStamp")] ApplicationUser applicationUser)
+        public async Task<IActionResult> Edit(string id, ApplicationUser applicationUser)
         {
             if (id != applicationUser.Id)
             {
@@ -232,11 +232,14 @@ namespace MobileStore.Controllers
                         _logger.LogInformation("Create UserRole successfully");
                     }
 
-                    
+
                     // -------------------------------------------End-----------------------------------------
 
                     _context.Update(applicationUser);
                     await _context.SaveChangesAsync();
+
+                    //await _userManager.UpdateAsync(applicationUser);
+                    //await _context.SaveChangesAsync();
 
                 }
                 catch (DbUpdateConcurrencyException)
@@ -286,6 +289,22 @@ namespace MobileStore.Controllers
             return RedirectToAction(nameof(Index));
         }
         #endregion
+
+
+        [HttpGet]
+        public async Task<IActionResult> ExportPdf([FromServices] INodeServices nodeServices)
+        {
+            var result = await nodeServices.InvokeAsync<byte[]>("./pdf", "the data from a controller");
+
+            HttpContext.Response.ContentType = "application/pdf";
+
+            string filename = @"report.pdf";
+            HttpContext.Response.Headers.Add("x-filename", filename);
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "x-filename");
+            HttpContext.Response.Body.Write(result, 0, result.Length);
+
+            return new ContentResult();
+        }
 
 
         #region Support Function for ApplicationUserController

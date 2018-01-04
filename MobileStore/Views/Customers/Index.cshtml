@@ -1,0 +1,128 @@
+﻿@model PaginatedList<MobileStore.Models.Customer>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                Danh sách Người sử dụng
+            </div>
+            <div class="card-body">
+                <form asp-action="Index" method="get" class="form-horizontal">
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                                </span>
+                                <input name="CurrentFilter" type="text" class="form-control" placeholder="Tìm kiếm..." value="@ViewData["CurrentFilter"]">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <p>
+                    <a asp-action="Create">
+                        <button type="button" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp; Thêm khách hàng</button>
+                    </a>
+                </p>
+                <div class="table-striped table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                        Họ và tên
+                                    </a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["PhoneSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                        Số điện thoại
+                                    </a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["AddressSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                        Địa chỉ
+                                    </a>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Phone)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Address)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.CustomerID">
+                                            <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i> Sửa</button>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.CustomerID">
+                                            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-info"></i> Chi tiết</button>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.CustomerID">
+                                            <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Xóa</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    @{
+                        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+                    }
+
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item @prevDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(Model.PageIndex - 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Previous</a>
+                            </li>
+                            @for (var i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @( @Model.PageIndex == i ? "active" : " " )">
+                                    <a asp-action="Index"
+                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                       asp-route-page="@i"
+                                       asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
+                                </li>
+
+                            }
+                            <li class="page-item @nextDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(Model.PageIndex + 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+</div>
+
+<!--/.row-->
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

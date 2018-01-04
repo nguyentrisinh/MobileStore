@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
@@ -18,15 +19,25 @@ namespace MobileStore.Models
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
-        [Display(Name = "First Name")]
+        [Display(Name = "Họ nhân viên")]
         public string FirstName { get; set; }
-        [Display(Name = "Last Name")]
+        [Display(Name = "Tên nhân viên")]
         public string LastName { get; set; }
         [DataType(DataType.Date)]
+        
+        [DisplayName("Mẫu mã")]
         public DateTime Birthday { get; set; }
+
+        [DisplayName("SĐT")]
         public string Phone { get; set; }
+
+        [DisplayName("Địa chỉ")]
         public string Address { get; set; }
+
+        [DisplayName("Avatar")]
         public string AvatarUrl { get; set; }
+
+        [DisplayName("Chức vụ")]
 
         public UserRole Role { get; set; }
 
@@ -34,8 +45,8 @@ namespace MobileStore.Models
         public IList<Order> Orders { get; set; }
         #endregion
 
-        #region Navigator ModelFromSuppliers
-        public IList<ModelFromSupplier> ModelFromSuppliers { get; set; }
+        #region Navigator StockReceiving
+        public IList<StockReceiving> StoceReceivings { get; set; }
         #endregion
 
         #region Navigator ReturnItems

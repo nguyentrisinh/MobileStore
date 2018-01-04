@@ -7,8 +7,12 @@ namespace MobileStore.Models.StockReceivingViewModels
 {
     public class StockReceivingViewModel
     {
+        public StockReceiving StockReceiving { get; set; }
         public ModelFromSupplier ModelFromSupplier { get; set; }
-        public Item Item { get; set; }
-        public IEnumerable<Item> Items { get; set; }
+        public IEnumerable<ModelFromSupplier> ModelFromSuppliers { get; set; }
+
+        public IEnumerable<Supplier> Suppliers { get; set; }
+        public IEnumerable<Model> Models { get; set; }
+
     }
 }

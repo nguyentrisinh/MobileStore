@@ -1,4 +1,4 @@
-﻿@model MobileStore.Models.StockReceivingViewModels.StockReceivingViewModel
+﻿@model MobileStore.Models.StockReceivingViewModels.StockReceivingDetailViewModel
 @using MobileStore.Models
 
 @{
@@ -23,6 +23,9 @@
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="ModelFromSupplier.ModelFromSupplierID" />
+
+                        <input type="hidden" asp-for="Item.Status" value="@ItemStatus.InStock" />
+
                         <input type="hidden" asp-for="Item.ModelFromSupplierID" value="@ViewBag.ModelFromSupplierID" />
                         <input type="hidden" asp-for="Item.ModelID" value="@ViewBag.ModelItemID" />
 
@@ -37,7 +40,7 @@
                         <div class="form-group row">
                             <label asp-for="Item.IMEI" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Item.IMEI)</label>
                             <div class="col-md-8">
-                                <input asp-for="Item.IMEI" rows="8" class="form-control" placeholder="Nhập IMEI..."></input>
+                                <input asp-for="Item.IMEI" rows="8" class="form-control" placeholder="Nhập IMEI..."/>
                                 <span asp-validation-for="Item.IMEI" class="invalid-feedback"></span>
                             </div>
                         </div>
@@ -53,25 +56,18 @@
                         <div class="form-group row">
                             <label asp-for="Item.Note" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Item.Note)</label>
                             <div class="col-md-8">
-                                <input asp-for="Item.Note" rows="8" class="form-control" placeholder="Nhập ghi chú..."></input>
+                                <input asp-for="Item.Note" rows="8" class="form-control" placeholder="Nhập ghi chú..."/>
                                 <span asp-validation-for="Item.Note" class="invalid-feedback"></span>
                             </div>
                         </div>
+                        
+                    
 
 
 
 
 
-                        <div class="form-group row">
-
-                            <label class="col-md-4 form-control-label" asp-for="Item.Status"></label>
-                            <div class="col-md-8">
-                                <select class="form-control" asp-for="Item.Status" asp-items="Html.GetEnumSelectList<ItemStatus>()">
-                                    @*<option selected="selected" value="">Chọn trạng thái</option>*@
-                                </select>
-                                <span asp-validation-for="Item.Status" class="text-danger"></span>
-                            </div>
-                        </div>
+                       
 
 
                     </div>
@@ -117,19 +113,12 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="ModelFromSupplier.Date" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Date)</label>
-                        <div class="col-md-8">
-                            <input asp-for="ModelFromSupplier.Date" class="form-control" placeholder="Ngày nhập hàng...">
-                            <span asp-validation-for="ModelFromSupplier.Date" class="invalid-feedback"></span>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="ModelFromSupplier.SupplierID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.SupplierID)</label>
+                        <label asp-for="ModelFromSupplier.StockReceivingID" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.StockReceivingID)</label>
                         <div class="col-md-8">
 
-                            <select asp-for="ModelFromSupplier.SupplierID" class="form-control" asp-items="ViewBag.SupplierID"></select>
+                            <select asp-for="ModelFromSupplier.StockReceivingID" class="form-control" asp-items="ViewBag.StockReceivingID"></select>
                             @*<input asp-for="ModelFromSupplier.SupplierID" type="text" class="form-control" placeholder="Chọn nhà cung cấp..">*@
-                            <span asp-validation-for="ModelFromSupplier.SupplierID" class="invalid-feedback"></span>
+                            <span asp-validation-for="ModelFromSupplier.StockReceivingID" class="invalid-feedback"></span>
                         </div>
                     </div>
 
@@ -139,6 +128,13 @@
                             <select asp-for="ModelFromSupplier.ModelID" class="form-control" asp-items="ViewBag.ModelID"></select>
                             @*<input asp-for="ModelFromSupplier.ModelID" type="text" class="form-control" placeholder="Nhập lọai sản phẩm...">*@
                             <span asp-validation-for="ModelFromSupplier.ModelID" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="ModelFromSupplier.Period" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Period)</label>
+                        <div class="col-md-8">
+                            <input asp-for="ModelFromSupplier.Period" type="text" class="form-control" placeholder="Nhập giá bán...">
+                            <span asp-validation-for="ModelFromSupplier.Period" class="invalid-feedback"></span>
                         </div>
                     </div>
                 </div>
@@ -214,17 +210,13 @@
                                     <td>
                                         @switch (item.Status)
                                         {
-                                            case ItemStatus.New:
+                                            case ItemStatus.InStock:
                                                 <span class="badge badge-info">
                                                     @Html.DisplayFor(modelItem => item.Status)
                                                 </span>
                                                 break;
-                                            case ItemStatus.Change:
-                                                <span class="badge badge-dark">
-                                                    @Html.DisplayFor(modelItem => item.Status)
-                                                </span>
-                                                break;
-                                            case ItemStatus.Return:
+                                           
+                                            case ItemStatus.Returned:
                                                 <span class="badge badge-danger">
                                                     @Html.DisplayFor(modelItem => item.Status)
                                                 </span>
@@ -234,11 +226,7 @@
                                                     @Html.DisplayFor(modelItem => item.Status)
                                                 </span>
                                                 break;
-                                            case ItemStatus.Warranty:
-                                                <span class="badge badge-warning">
-                                                    @Html.DisplayFor(modelItem => item.Status)
-                                                </span>
-                                                break;
+                                           
                                         }
 
                                     </td>
@@ -273,7 +261,7 @@
 </div>
 
 <div>
-    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
+    <a asp-action="Edit" asp-controller="StockReceivings" asp-route-id="@Model.ModelFromSupplier.StockReceivingID"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
 
 @section Scripts {

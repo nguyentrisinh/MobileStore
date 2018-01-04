@@ -15,7 +15,7 @@ namespace MobileStore.Models
 
     public class Supplier
     {
-        [DisplayName("Mã số")]
+        [DisplayName("Mã nhà cung cấp")]
         //[Display(Name = "Last Name")]
         public int SupplierID { get; set; }
 
@@ -43,8 +43,8 @@ namespace MobileStore.Models
         public string PicEmail { get; set; }
         #endregion
 
-        #region Navigator ModelFromSuppliers
-        public IList<ModelFromSupplier> ModelFromSuppliers { get; set; }
+        #region Navigator StockReceiving
+        public IList<StockReceiving> StockReceivings { get; set; }
         #endregion
        
 
