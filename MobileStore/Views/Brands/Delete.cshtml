@@ -1,39 +1,61 @@
 ﻿@model MobileStore.Models.Brand
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Edit";
 }
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <strong>Thông tin nhãn hiệu</strong>
+            </div>
 
-<h2>Delete</h2>
+            <div class="card-body">
 
-<h3>Bạn có chắc muốn xóa nhãn hiệu này?</h3>
-<div>
-    <h4>Brand</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Tên nhãn hiệu
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-           Nơi sản xuất
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Country)
-        </dd>
-        <dt>
-            Mô tả
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="BrandID" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+                    
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Tên nhãn hiệu</label>
+                    <div class="col-md-9">
+                        <div class="form-control">
+                            @Model.Name
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Nơi xuất xứ</label>
+                    <div class="col-md-9">
+                        <div class="form-control">
+                            @Model.Country
+                        </div>
+                            
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Mô tả</label>
+                    <div class="col-md-9">
+                        <div class="form-control" >
+                            @Model.Description &nbsp;
+                        </div>
+                            
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <form asp-action="Delete">
+                    <input asp-for="BrandID" hidden />
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> Tiếp tục xóa?</button>
+                </form>
+               
+                @*<input type="submit" value="Save" class="btn btn-default" />*@
+            </div>
+        </div>
+    </div>
 </div>
+
+<div>
+    <a asp-action="Index"><button type="button" class="btn btn-primary"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
