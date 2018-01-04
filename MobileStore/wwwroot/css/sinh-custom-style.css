@@ -1,4 +1,4 @@
-﻿@media print {
+﻿/*@media print {
     .no-print, .main-sidebar, .left-side, .main-header, .content-header {
         display: none !important;
     }
@@ -39,5 +39,5 @@
 
 .red-color {
     color: red;
-}
+}*/
 
