@@ -132,12 +132,38 @@
                        class="@nextDisabled">
                         <button type="button" class="btn btn-primary btn-sm @nextDisabled"><i class="fa fa-arrow-right"></i></button>
                     </a>
+                    <p class="red-color">red-colore</p>
+                    <div class="no-print">
+                        <button onclick="AlertName('Sinh')">Test</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!--/.col-->
+    <script type="text/javascript">
+        function AlertName(name) {
+
+            window.print()
+            var printEvent = window.matchMedia('print');
+            printEvent.addListener(function (printEnd) {
+                if (printEnd.matches) {
+                    // do whatever you wish to do
+                    console.log(this)
+                };
+            });
+
+        }
+    </script>
+    <script>
+        document.getElementsByTagName("BODY")[0].onafterprint = function () { myFunction("Sinh") };
+
+        function myFunction(name) {
+            alert("This document is now being printed" + name);
+        }
+    </script>
 </div>
+
 <!--/.row-->
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
