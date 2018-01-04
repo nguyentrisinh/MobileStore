@@ -8,22 +8,76 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MobileStore.Data;
 using MobileStore.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace MobileStore.Controllers
 {
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public CustomersController(ApplicationDbContext context)
+        public CustomersController(
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            SignInManager<ApplicationUser> signInManager,
+            ApplicationDbContext context
+            )
         {
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
             _context = context;
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, int? page, int? pageSize)
         {
-            return View(await _context.Customer.ToListAsync());
+            // ViewData["NameSortParm"] is not the param for current sort but the sortOrder for the next sort 
+            // If sortOrder is null or empty => current will sort NameAscending => Next sort of FirstName is first_name_desc => ViewData["NameSortParm"] = first_name_desc
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["PhoneSortParm"] = sortOrder == "phone_asc" ? "phone_desc" : "phone_asc";
+            ViewData["AddressSortParm"] = sortOrder == "address_asc" ? "address_desc" : "address_asc";
+
+            var customers = from ent in _context.Customer
+                                   select ent;
+
+            // Search method
+            ViewData["CurrentFilter"] = currentFilter;
+            if (!String.IsNullOrEmpty(currentFilter))
+            {
+                customers = customers.Where(ent => ent.Name.Contains(currentFilter)
+                                                    || ent.Phone.Contains(currentFilter) || ent.Address.Contains(currentFilter));
+            }
+
+            // Order with sortOrder
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    customers = customers.OrderByDescending(s => s.Name);
+                    break;
+                case "phone_asc":
+                    customers = customers.OrderBy(s => s.Phone);
+                    break;
+                case "phone_desc":
+                    customers = customers.OrderByDescending(s => s.Phone);
+                    break;
+                case "address_asc":
+                    customers = customers.OrderBy(s => s.Address);
+                    break;
+                case "address_desc":
+                    customers = customers.OrderByDescending(s => s.Address);
+                    break;
+                default:
+                    customers = customers.OrderBy(s => s.Name);
+                    break;
+            }
+
+            return View(await PaginatedList<Customer>.CreateAsync(customers.AsNoTracking(), page ?? 1, pageSize ?? 10));
+
         }
 
         // GET: Customers/Details/5
