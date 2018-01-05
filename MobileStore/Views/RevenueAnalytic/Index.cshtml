@@ -2,15 +2,163 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                Danh sách Người sử dụng
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-5">
+                <h4 class="card-title mb-0">Traffic</h4>
+                <div class="small text-muted">November 2015</div>
             </div>
-            <div class="card-body">
-                <h1>This is the RevenueAnalytic Index view</h1>
+            <!--/.col-->
+            <div class="col-sm-7 d-none d-md-block">
+                <button type="button" class="btn btn-primary float-right" onclick="printChart()"><i class="icon-cloud-download"></i></button>
             </div>
+            <!--/.col-->
+        </div>
+        <!--/.row-->
+        <div class="chart-wrapper" style="height:300px;margin-top:40px;">
+            <canvas id="newChart2" class="chart" height="300"></canvas>
         </div>
     </div>
+    <div class="card-footer no-print">
+        <ul>
+            <li>
+                <div class="text-muted">Visits</div>
+                <strong>29.703 Users (40%)</strong>
+                <div class="progress progress-xs mt-2">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </li>
+            <li class="d-none d-md-table-cell">
+                <div class="text-muted">Unique</div>
+                <strong>24.093 Users (20%)</strong>
+                <div class="progress progress-xs mt-2">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </li>
+            <li>
+                <div class="text-muted">Pageviews</div>
+                <strong>78.706 Views (60%)</strong>
+                <div class="progress progress-xs mt-2">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </li>
+            <li class="d-none d-md-table-cell">
+                <div class="text-muted">New Users</div>
+                <strong>22.123 Users (80%)</strong>
+                <div class="progress progress-xs mt-2">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </li>
+            <li class="d-none d-md-table-cell">
+                <div class="text-muted">Bounce Rate</div>
+                <strong>40.15%</strong>
+                <div class="progress progress-xs mt-2">
+                    <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </li>
+            <input value='@ViewData["ListDate"]' style="display: none;" id="ListDate"/>
+        </ul>
+
+        <script>
+            window.onload = function () {
+                var ctx = document.getElementById("myChart5").getContext('2d')
+                console.log(ctx, document.getElementById("myChart5"))
+                var myChart5 = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        //labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                        datasets: [{
+                            label: '# of Votes',
+                            data: [12, 19, 3, 5, 2, 3],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+        </script>
+
+        <script>
+            window.onload = function () {
+                var listDate = @Html.Raw(Json.Serialize(ViewData["ListDate"]));
+                var listTotalSold = @Html.Raw(Json.Serialize(ViewData["TotalSold"]));
+                var listTotalRevenue = @Html.Raw(Json.Serialize(ViewData["TotalRevenue"]));
+
+                var ctx = document.getElementById("newChart2").getContext('2d');
+
+                var lineChartData = {
+                    //labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                    @*labels: @ViewData["ListDate"]*@
+                    labels: listDate,
+                    datasets: [
+                        {
+                            label: 'Total Sold Amount',
+                            backgroundColor: 'rgba(220,220,220,0.2)',
+                            borderColor: 'rgba(220,220,220,1)',
+                            pointBackgroundColor: 'rgba(220,220,220,1)',
+                            pointBorderColor: '#fff',
+                            data: listTotalSold
+                            //data: [25, 68, 34, 19, 34, 24, 55]
+                            @*data: @ViewData["TotalSold"]*@
+                        },
+                        {
+                            label: 'Total Revenue Amount',
+                            backgroundColor: 'rgba(151,187,205,0.2)',
+                            borderColor: 'rgba(151,187,205,1)',
+                            pointBackgroundColor: 'rgba(151,187,205,1)',
+                            pointBorderColor: '#fff',
+                            data: listTotalRevenue
+                            //data: [64, 43, 64, 15, 32, 37, 24]
+                            @*data: @ViewData["TotalRevenue"]*@
+                        }
+                    ]
+                }
+
+                var chart = new Chart(ctx, {
+                    type: 'line',
+                    data: lineChartData,
+                    options: {
+                        responsive: true
+                    }
+                });
+            }
+        </script>
+        <script>
+            function printChart() {
+                window.print()
+
+            }
+        </script>
+    </div>
 </div>
+
+<!--/.card-->
+<!--/.row-->
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

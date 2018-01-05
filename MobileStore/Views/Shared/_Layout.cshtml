@@ -117,7 +117,7 @@
             <button class="sidebar-minimizer brand-minimizer" type="button"></button>
         </div>
         <div class="main">
-            <ol class="breadcrumb">
+            <ol class="breadcrumb no-print">
 
                 <a class="breadcrumb-item" asp-area="" asp-action="Index" asp-controller="@ViewContext.RouteData.Values["controller"].ToString()">@ViewContext.RouteData.Values["controller"].ToString()</a>
                 <a asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"].ToString()" asp-action="@ViewContext.RouteData.Values["action"].ToString()" class="breadcrumb-item">@ViewContext.RouteData.Values["action"].ToString()</a>
