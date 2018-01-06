@@ -98,7 +98,7 @@
     border: 1px solid #ddd !important; }
 
   .no-print {
-      display: none; } }
+      display: none !important; } }
 
 *,
 *::before,
