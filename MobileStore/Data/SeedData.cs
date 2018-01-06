@@ -20,6 +20,9 @@ namespace ContactManager.Data
         #region seeddata
         public static async Task Initialize(IServiceProvider serviceProvider, string testUserPw)
         {
+
+
+
             using (var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
@@ -27,6 +30,13 @@ namespace ContactManager.Data
                 // The password is set with the following command:
                 // dotnet user-secrets set SeedUserPW <pw>
                 // The admin user can do anything
+
+                // Check that database has had anything
+                // Look for any movies.
+                if (context.ApplicationUser.Any())
+                {
+                    return;   // DB has been seeded
+                }
 
                 //var listApplicationUserID = await InitApplicationUser(serviceProvider, testUserPw);
 
@@ -128,12 +138,26 @@ namespace ContactManager.Data
 
                 #region Snipset_Seeddata 
 
+                var constants = new Constant[]
+                {
+                    new Constant {Name = "Hạn đổi trả", Description ="Thời hạn mà người dùng có thể đổi trả sản phẩm tính từ lúc lập phiếu bảo hành", Parameter = 7}
+                };
+
+                foreach (Constant constant in constants)
+                {
+                    context.Add(constant);
+                }
+
+                context.SaveChanges();
+
                 #region Customer
                 var customers = new Customer[]
                 {
                     new Customer{Name = "Trần Thị Thanh Thảo", Phone = "01672699288", Address = "164 Huỳnh Văn Bánh, quận Phú Nhuận", Birthday = DateTime.Parse("1996-07-13"), Gender = GenderType.Female,
                     Country = "Vietnam"},
                     new Customer{Name = "Trần Đức Duy", Phone = "0983254435", Address = "335/13 Nguyễn Thái Sơn, quận Gò Vấp", Birthday = DateTime.Parse("1992-04-01"), Gender = GenderType.Male,
+                    Country = "Vietnam"},
+                    new Customer{Name = "Phạm Đình Vy", Phone = "0167254435", Address = "335/13 Nguyễn Thái Sơn, quận Gò Vấp", Birthday = DateTime.Parse("1991-04-01"), Gender = GenderType.Male,
                     Country = "Vietnam"}
                 };
 
@@ -230,8 +254,14 @@ namespace ContactManager.Data
                     StockReceivingID = stockReceivings[0].StockReceivingID},
                     new ModelFromSupplier{Quantity = 1, PriceBought = 15000000, PriceSold = 24000000, Date = DateTime.Parse("2017-08-21 7:34:42Z"), Period = 12, ModelID = models.Single(i => i.Name == "Samsung Galaxy A8+ (2018)").ModelID,
                     StockReceivingID = stockReceivings[0].StockReceivingID},
+                    new ModelFromSupplier{Quantity = 3, PriceBought = 800000, PriceSold = 1200000, Date = DateTime.Parse("2017-08-21 7:34:42Z"), Period = 12, ModelID = models.Single(i => i.Name == "Tai Nghe JBL T450BT").ModelID,
+                    StockReceivingID = stockReceivings[0].StockReceivingID},
                     new ModelFromSupplier{Quantity = 2, PriceBought = 800000, PriceSold = 1200000, Date = DateTime.Parse("2017-10-15 11:34:42Z"), Period = 12, ModelID = models.Single(i => i.Name == "Tai Nghe JBL T450BT").ModelID,
                     StockReceivingID = stockReceivings[1].StockReceivingID},
+                    new ModelFromSupplier{Quantity = 2, PriceBought = 80000, PriceSold = 150000, Date = DateTime.Parse("2017-10-15 11:34:42Z"), Period = 3, ModelID = models.Single(i => i.Name == "Dây cáp Micro USB 0.2 m eSaver BST-0728").ModelID,
+                    StockReceivingID = stockReceivings[1].StockReceivingID},
+                    new ModelFromSupplier{Quantity = 2, PriceBought = 22000000, PriceSold = 32000000, Date = DateTime.Parse("2017-12-21 7:34:42Z"), Period = 12, ModelID = models.Single(i => i.Name == "IPhone X 64Gbs").ModelID,
+                    StockReceivingID = stockReceivings[0].StockReceivingID},
                 };
 
                 foreach (ModelFromSupplier mfs in modelFromSuppliers)
@@ -245,21 +275,91 @@ namespace ContactManager.Data
                 #region Item
                 var items = new Item[]
                 {
-                    new Item{IMEI = "2546CQC189CQ438CSA", SerializerNumber = "220167955897642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[0].ModelFromSupplierID,
+                    new Item{IMEI = "2546CQC189CQ438CSA", SerializerNumber = "220167955897642", Note = "", Status = ItemStatus.Sold, ModelFromSupplierID = modelFromSuppliers[0].ModelFromSupplierID,
                     ModelID = models.Single(i => i.Name == "IPhone X 64Gbs").ModelID},
                     new Item{IMEI = "QC587QC189C8468CSA", SerializerNumber = "387457952854642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[0].ModelFromSupplierID,
                     ModelID = models.Single(i => i.Name == "IPhone X 64Gbs").ModelID},
-                    new Item{IMEI = "59189VEB69C8468CSA", SerializerNumber = "387457952854642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[1].ModelFromSupplierID,
+                    new Item{IMEI = "59189VEB69C8468CSA", SerializerNumber = "387457952854642", Note = "", Status = ItemStatus.Sold, ModelFromSupplierID = modelFromSuppliers[1].ModelFromSupplierID,
                     ModelID = models.Single(i => i.Name == "Samsung Galaxy A8+ (2018)").ModelID},
-                    new Item{IMEI = "5846AVRW69C8468CSA", SerializerNumber = "587643215854642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[2].ModelFromSupplierID,
+                    // Model From Supplier [2] - 3 
+                    new Item{IMEI = "8642134FW528468CSA", SerializerNumber = "487995313284612", Note = "", Status = ItemStatus.Sold, ModelFromSupplierID = modelFromSuppliers[2].ModelFromSupplierID,
                     ModelID = models.Single(i => i.Name == "Tai Nghe JBL T450BT").ModelID},
-                    new Item{IMEI = "589CQVLC5495V68CSA", SerializerNumber = "302164897524642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[2].ModelFromSupplierID,
-                    ModelID = models.Single(i => i.Name == "Tai Nghe JBL T450BT").ModelID}
+                    new Item{IMEI = "CE468CQF2FW87VWSCE", SerializerNumber = "652217985431287", Note = "", Status = ItemStatus.Sold, ModelFromSupplierID = modelFromSuppliers[2].ModelFromSupplierID,
+                    ModelID = models.Single(i => i.Name == "Tai Nghe JBL T450BT").ModelID},
+                    new Item{IMEI = "PIV477VWV658VWC249", SerializerNumber = "320549785423187", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[2].ModelFromSupplierID,
+                    ModelID = models.Single(i => i.Name == "Tai Nghe JBL T450BT").ModelID},
+                    // Model From Supplier [3] - 2
+                    new Item{IMEI = "5846AVRW69C8468CSA", SerializerNumber = "587643215854642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[3].ModelFromSupplierID,
+                    ModelID = models.Single(i => i.Name == "Tai Nghe JBL T450BT").ModelID},
+                    new Item{IMEI = "589CQVLC5495V68CSA", SerializerNumber = "302164897524642", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[3].ModelFromSupplierID,
+                    ModelID = models.Single(i => i.Name == "Tai Nghe JBL T450BT").ModelID},
+                    // Model From Supplier [4] - 2
+                    new Item{IMEI = "TY7985CQC46CQE879V", SerializerNumber = "978521347852794", Note = "", Status = ItemStatus.Sold, ModelFromSupplierID = modelFromSuppliers[4].ModelFromSupplierID,
+                    ModelID = models.Single(i => i.Name == "Dây cáp Micro USB 0.2 m eSaver BST-0728").ModelID},
+                    new Item{IMEI = "CV7854VWV6216VWV58", SerializerNumber = "217985462318746", Note = "", Status = ItemStatus.InStock, ModelFromSupplierID = modelFromSuppliers[4].ModelFromSupplierID,
+                    ModelID = models.Single(i => i.Name == "Dây cáp Micro USB 0.2 m eSaver BST-0728").ModelID}
                 };
 
                 foreach (Item i in items)
                 {
                     context.Item.Add(i);
+                }
+
+                context.SaveChanges();
+                #endregion
+
+                #region Order 
+                var orders = new Order[]
+                {
+                    new Order{Total = 34000000, Date = DateTime.Parse("2017-08-29 7:34:42Z"), IsPrinted = true, CustomerID = customers[0].CustomerID, ApplicationUserID = employerThuSale.Id},
+                    new Order{Total = 25200000, Date = DateTime.Parse("2017-09-05 11:34:42Z"), IsPrinted = true, CustomerID = customers[1].CustomerID, ApplicationUserID = saleID},
+                    new Order{Total = 1350000, Date = DateTime.Parse("2017-09-16 15:24:42Z"), IsPrinted = false, CustomerID = customers[2].CustomerID, ApplicationUserID = employerThuSale.Id},
+                };
+                
+                foreach (Order order in orders)
+                {
+                    context.Order.Add(order);
+                }
+
+                context.SaveChanges();
+                #endregion
+
+                #region OrderDetail 
+                var orderDetails = new OrderDetail[]
+                {
+                    new OrderDetail{PriceSold = 34000000, ItemID = items[0].ItemID, OrderID = orders[0].OrderID},
+                    new OrderDetail{PriceSold = 24000000, ItemID = items[2].ItemID, OrderID = orders[1].OrderID},
+                    new OrderDetail{PriceSold = 1200000, ItemID = items[3].ItemID, OrderID = orders[1].OrderID},
+                    new OrderDetail{PriceSold = 1200000, ItemID = items[4].ItemID, OrderID = orders[2].OrderID},
+                    new OrderDetail{PriceSold = 150000, ItemID = items[8].ItemID, OrderID = orders[2].OrderID},
+                };
+
+                foreach (OrderDetail orderDetail in orderDetails)
+                {
+                    context.OrderDetail.Add(orderDetail);
+                }
+
+                context.SaveChanges();
+                #endregion
+
+                #region WarrantyCard 
+                var warrantyCards = new WarrantyCard[]
+                {
+                    new WarrantyCard{NumberOfWarranty = 0, StartDate = DateTime.Parse("2017-08-29"), EndDate = DateTime.Parse("2018-08-29"), ItemID = items[0].ItemID, IsPrinted = true, IsDisabled = false,
+                    TransactionCode = Guid.NewGuid(), ApplicationUserID = employerThuSale.Id},
+                    new WarrantyCard{NumberOfWarranty = 0, StartDate = DateTime.Parse("2017-09-05"), EndDate = DateTime.Parse("2018-09-05"), ItemID = items[2].ItemID, IsPrinted = true, IsDisabled = false,
+                    TransactionCode = Guid.NewGuid(), ApplicationUserID = employerThuSale.Id },
+                    new WarrantyCard{NumberOfWarranty = 0, StartDate = DateTime.Parse("2017-09-05"), EndDate = DateTime.Parse("2018-09-05"), ItemID = items[3].ItemID, IsPrinted = true, IsDisabled = false,
+                    TransactionCode = Guid.NewGuid(), ApplicationUserID = employerThuSale.Id},
+                    new WarrantyCard{NumberOfWarranty = 0, StartDate = DateTime.Parse("2017-09-16"), EndDate = DateTime.Parse("2018-09-16"), ItemID = items[4].ItemID, IsPrinted = false, IsDisabled = false,
+                    TransactionCode = Guid.NewGuid(), ApplicationUserID = employerThuSale.Id},
+                    new WarrantyCard{NumberOfWarranty = 0, StartDate = DateTime.Parse("2017-09-16"), EndDate = DateTime.Parse("2017-12-16"), ItemID = items[8].ItemID, IsPrinted = false, IsDisabled = false,
+                    TransactionCode = Guid.NewGuid(), ApplicationUserID = employerThuSale.Id},
+                };
+
+                foreach (WarrantyCard warrantyCard in warrantyCards)
+                {
+                    context.WarrantyCard.Add(warrantyCard);
                 }
 
                 context.SaveChanges();

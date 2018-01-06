@@ -1,31 +1,52 @@
 ﻿@model MobileStore.Models.StockReceiving
+@using MobileStore.Models
+@*@using System.Collections.Generic.IEnumerable<MobileStore.Models.Supplier.SupplierStatus>*@
+@*@model IEnumerable<MobileStore.Models.Supplier.SupplierStatus>*@
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Thêm đơn hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Create</h2>
-
-<h4>StockReceiving</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="SupplierID" class="control-label"></label>
-                <select asp-for="SupplierID" class ="form-control" asp-items="ViewBag.SupplierID"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+    <div class=" col-lg-8">
+        <div class="card">
+            <form asp-action="Create">
+                <div class="card-header">
+                    <strong>Thêm đơn hàng</strong>
+                </div>
+                <div class="card-body">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label" for="select">@Html.DisplayNameFor(model => model.SupplierID)</label>
+                        <div class="col-md-8">
+                            <select class="form-control" asp-for="SupplierID" asp-items="ViewBag.SupplierID"></select>
+
+                        </div>
+                    </div>
+
+                   
+
+
+
+
+
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Tạo</button>
+                    @*<div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-default"/>
+                        </div>*@
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+
+    <a asp-action="Index"><button type="button" class="btn btn-primary"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
 
 @section Scripts {

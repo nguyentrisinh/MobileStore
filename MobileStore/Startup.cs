@@ -143,7 +143,7 @@ namespace MobileStore
 
             try
             {
-                //SeedData.Initialize(app.ApplicationServices, testUserPw).Wait();
+                SeedData.Initialize(app.ApplicationServices, testUserPw).Wait();
             }
             catch
             {

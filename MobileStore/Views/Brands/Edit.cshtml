@@ -3,13 +3,8 @@
 @{
     ViewData["Title"] = "Edit";
 }
-
-<h2>Edit</h2>
-
-<h4>Brand</h4>
-<hr />
 <div class="row">
-    <div class="col-lg-6" style="margin:auto">
+    <div class="col-lg-8">
         <div class="card">
             <form asp-action="Edit">
                 <div class="card-header">
@@ -43,7 +38,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> Sửa</button>
+                    <button type="submit" class="btn btn-success"><i class="fa fa-pencil-square-o"></i> Sửa</button>
                     @*<input type="submit" value="Save" class="btn btn-default" />*@
                 </div>
             </form>
@@ -52,7 +47,7 @@
 </div>
 
 <div>
-    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
+    <a asp-action="Index"><button type="button" class="btn btn-primary"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </div>
 
 @section Scripts {

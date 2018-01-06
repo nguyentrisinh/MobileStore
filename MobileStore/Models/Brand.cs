@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
@@ -8,14 +9,16 @@ namespace MobileStore.Models
 {
     public class Brand
     {
+
+        [DisplayName("Mã thương hiệu")]
         public int BrandID { get; set; }
 
         #region Brand Information
-        [Display(Name = "Brand")]
+        [Display(Name = "Tên thương hiệu")]
         public string Name { get; set; }
-        [Display(Name = "Country")]
+        [Display(Name = "Quốc gia")]
         public string Country { get; set; }
-        [Display(Name = "Description")]
+        [Display(Name = "Mô tả")]
         public string Description { get; set; }
         #endregion
 
