@@ -11,6 +11,7 @@ using MobileStore.Authorization;
 using MobileStore.Data;
 using MobileStore.Models;
 using MobileStore.Models.StockReceivingViewModels;
+using Remotion.Linq.Clauses;
 
 namespace MobileStore.Controllers
 {
@@ -82,8 +83,9 @@ namespace MobileStore.Controllers
         }
 
         // GET: StockReceivings/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid? id, string sortOrder, string currentFilter, string searchString, int? page)
         {
+
             if (id == null)
             {
                 return NotFound();
@@ -97,13 +99,83 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
-            var modelFromSuppliers = await _context.ModelFromSupplier.Where(m => m.StockReceivingID == id).Include(m => m.Model).ToListAsync();
-            var stockReceivingVM = new StockReceivingViewModel();
-            stockReceivingVM.StockReceiving = stockReceiving;
-            stockReceivingVM.ModelFromSuppliers = modelFromSuppliers;
-            stockReceivingVM.Models = _context.Model;
-            stockReceivingVM.Suppliers = _context.Supplier;
-            return View(stockReceivingVM);
+            // Code Filter and Sort
+            ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date" : "";
+            ViewData["QuantitySortParm"] = sortOrder == "quantity" ? "quantity_desc" : "quantity";
+            ViewData["PriceBoughtSortParm"] = sortOrder == "pricebought" ? "pricebought_desc" : "pricebought";
+            ViewData["PriceSoldSortParm"] = sortOrder == "pricesold" ? "pricesold_desc" : "pricesold";
+            ViewData["ModelSortParm"] = sortOrder == "model" ? "model_desc" : "model";
+            ViewData["PeriodSortParm"] = sortOrder == "period" ? "period_desc" : "period";
+
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var modelsFromSuppliers = _context.ModelFromSupplier.Where(m=>m.StockReceivingID==id);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                modelsFromSuppliers = modelsFromSuppliers.Include(m=>m.Model).Where(m => m.Model.Name.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "date":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Date).Include(m => m.Model);
+                    break;
+                case "quantity":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Quantity).Include(m => m.Model);
+                    break;
+                case "quantity_desc":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Quantity).Include(m => m.Model);
+                    break;
+                case "period":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Period).Include(m => m.Model);
+                    break;
+                case "period_desc":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Period).Include(m => m.Model);
+                    break;
+
+                case "pricebought":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.PriceBought).Include(m => m.Model);
+                    break;
+                case "pricebought_desc":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.PriceBought).Include(m => m.Model);
+                    break;
+                case "pricesold":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.PriceSold).Include(m => m.Model);
+                    break;
+                case "pricesold_desc":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.PriceSold).Include(m => m.Model);
+                    break;
+                case "model":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Model.Name).Include(m => m.Model);
+                    break;
+                case "model_desc":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Model.Name).Include(m => m.Model);
+                    break;
+                default:
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Date).Include(m => m.Model);
+                    break;
+            }
+            int pageSize = 1;
+            //End code Filter and Sort
+            var stockReceivingVm = new StockReceivingViewModel();
+            stockReceivingVm.StockReceiving = stockReceiving;
+            stockReceivingVm.Models = _context.Model;
+            stockReceivingVm.Suppliers = _context.Supplier;
+            PaginatedList<ModelFromSupplier> pagesModelsFromSuppliers = await PaginatedList<ModelFromSupplier>.CreateAsync(modelsFromSuppliers.AsNoTracking(), page ?? 1, pageSize);
+            stockReceivingVm.ModelFromSuppliers = pagesModelsFromSuppliers;
+            //return View(stockReceivingVM);
+            return View(stockReceivingVm);
         }
 
         // GET: StockReceivings/Create

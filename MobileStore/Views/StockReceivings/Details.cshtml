@@ -122,6 +122,24 @@
                 Chi tiết đợt nhâp hàng
             </div>
             <div class="card-body">
+                @*Search*@
+                <form asp-action="Details" asp-route-id="@Model.StockReceiving.StockReceivingID" method="get" class="form-horizontal">
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <div class="input-group">
+                                
+                                <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
+                                <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo tẹn mẫu mã...">
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                
+                @*End Search*@
                 <p class="mb-3">
                     <button data-toggle="modal" data-target="#createOrderDetail" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Thêm chi tiết đơn hàng</button>
                 </p>
@@ -129,86 +147,145 @@
                 <div class=" table-striped table-responsive">
                     <table class="table">
                         <thead>
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().ModelFromSupplierID)
-                                </th>
-                                <th>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().ModelFromSupplierID)
+                            </th>
+                            <th>
+                                <a asp-action="Details" asp-route-id="@Model.StockReceiving.StockReceivingID" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
 
                                     @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().Date)
-                                </th>
-                                <th>
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="Details" asp-route-id="@Model.StockReceiving.StockReceivingID" asp-route-sortOrder="@ViewData["ModelSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                     @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().ModelID)
-                                </th>
-                                <th>
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="Details" asp-route-id="@Model.StockReceiving.StockReceivingID" asp-route-sortOrder="@ViewData["PriceBoughtSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                     @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().PriceBought)
-                                </th>
-                                <th>
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="Details" asp-route-id="@Model.StockReceiving.StockReceivingID" asp-route-sortOrder="@ViewData["PriceSoldSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                                
                                     @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().PriceSold)
-                                </th>
-                                <th>
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="Details" asp-route-id="@Model.StockReceiving.StockReceivingID" asp-route-sortOrder="@ViewData["QuantitySortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+
                                     @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().Quantity)
-                                </th>
+                                </a>
+                            </th>
 
-                                <th>
+                            <th>
+                                <a asp-action="Details" asp-route-id="@Model.StockReceiving.StockReceivingID" asp-route-sortOrder="@ViewData["PeriodSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+
                                     @Html.DisplayNameFor(model => model.ModelFromSuppliers.First().Period)
-                                </th>
-                                <th>
+                                </a>
+                            </th>
+                            <th>
 
-                                </th>
+                            </th>
 
-                            </tr>
+                        </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.ModelFromSuppliers)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ModelFromSupplierID)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Date)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Model.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PriceBought)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PriceSold)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Quantity)
-                                    </td>
+                        @foreach (var item in Model.ModelFromSuppliers)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ModelFromSupplierID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PriceBought)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PriceSold)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                </td>
 
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Period)
-                                    </td>
-
-
-                                    <td>
-                                        <div class="btn-group">
-                                            <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="ModelFromSuppliers" asp-route-id="@item.ModelFromSupplierID">
-                                                <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
-                                            </a>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Period)
+                                </td>
 
 
-                                            <a class="btn btn-primary btn-sm" asp-action="Details" asp-controller="ModelFromSuppliers" asp-route-id="@item.ModelFromSupplierID">
-                                                <i class="fa fa-info"></i>&nbsp; Chi tiết
-                                            </a>
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="ModelFromSuppliers" asp-route-id="@item.ModelFromSupplierID">
+                                            <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
+                                        </a>
 
 
-                                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="ModelFromSuppliers" asp-route-id="@item.ModelFromSupplierID">
-                                                <i class="fa fa-trash-o"></i>&nbsp; Xóa
-                                            </a>
-                                        </div>
+                                        <a class="btn btn-primary btn-sm" asp-action="Details" asp-controller="ModelFromSuppliers" asp-route-id="@item.ModelFromSupplierID">
+                                            <i class="fa fa-info"></i>&nbsp; Chi tiết
+                                        </a>
 
-                                    </td>
-                                </tr>
-                            }
+
+                                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="ModelFromSuppliers" asp-route-id="@item.ModelFromSupplierID">
+                                            <i class="fa fa-trash-o"></i>&nbsp; Xóa
+                                        </a>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
+                    @{
+
+                        PaginatedList<MobileStore.Models.ModelFromSupplier> PaginatedModel = Model.ModelFromSuppliers as PaginatedList<MobileStore.Models.ModelFromSupplier>;
+
+                        string prevDisabled = !PaginatedModel.HasPreviousPage ? "disabled" : "";
+
+                        string nextDisabled = !PaginatedModel.HasNextPage ? "disabled" : "";
+
+
+                    }
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item @prevDisabled">
+                                <a asp-action="Details"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex - 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   asp-route-id="@Model.StockReceiving.StockReceivingID"
+                                   class="page-link">Previous</a>
+                            </li>
+                            @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
+                            {
+                                <li class="page-item @( @PaginatedModel.PageIndex == i ? "active" : " " )">
+                                    <a asp-action="Details"
+                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                       asp-route-page="@i"
+                                       
+                                       asp-route-id="@Model.StockReceiving.StockReceivingID"
+                                       asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
+                                </li>
+
+                            }
+                            <li class="page-item @nextDisabled">
+                                <a asp-action="Details"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex + 1)"
+                                   
+                                   asp-route-id="@Model.StockReceiving.StockReceivingID"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+
                 </div>
             </div>
         </div>
