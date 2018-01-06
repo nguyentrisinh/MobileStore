@@ -8,126 +8,102 @@
 <div class="row">
     <div class=" col-lg-8">
         <div class="card">
-                <div class="card-header">
-                    <strong>Sửa Chi tiết đơn hàng</strong>
-                </div>
-                <div class="card-body">
+            <div class="card-header">
+                <strong>Thông tin chi tiết đơn hàng</strong>
+            </div>
+            <div class="card-body">
                    
-                    <div class="form-group row">
-                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
-                        <div class="col-md-8">
-                            <div class="form-control" >@Model.OrderDetail.PriceSold</div>
-                        </div>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
+                    <div class="col-md-8">
+                        <div class="form-control" >@Model.OrderDetail.PriceSold</div>
                     </div>
-
-                    <div class="form-group row">
-                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.Item.Name)</label>
-                        <div class="col-md-8">
-                            <div class="form-control">@Model.OrderDetail.Item.Name</div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group row">
-                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.Item.IMEI)</label>
-                        <div class="col-md-8">
-                            <div class="form-control">@Model.OrderDetail.Item.IMEI</div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group row">
-                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.Item.Model.Name)</label>
-                        <div class="col-md-8">
-                            <div class="form-control">@Model.OrderDetail.Item.Model.Name</div>
-                        </div>
-                    </div>
-                    
-
                 </div>
-                <div class="card-footer">
-                   
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.Item.Name)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">@Model.OrderDetail.Item.Name &nbsp;</div>
+                    </div>
                 </div>
+                    
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.Item.IMEI)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">@Model.OrderDetail.Item.IMEI</div>
+                    </div>
+                </div>
+                    
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.Item.Model.Name)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">@Model.OrderDetail.Item.Model.Name</div>
+                    </div>
+                </div>
+                    
+
+            </div>
         </div>
         <div class="card">
             <div class="card-header">
-                Chi tiết bảo hành
+                <strong>Phiếu bảo hành</strong>
             </div>
             <div class="card-body">
 
-
-                <div class=" table-striped table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.WarrantyCardID)
-                                </th>
-                                <th>
-
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.Item.IMEI)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.Item.Model.Name)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.StartDate)
-                                </th>
-
-                                <th>
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.EndDate)
-                                </th>
-
-                                <th>
-                                    @Html.DisplayNameFor(model => model.WarrantyCard.NumberOfWarranty)
-                                </th>
-                                <th>
-
-                                </th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr>
-                                <td>
-                                    @Model.WarrantyCard.WarrantyCardID
-                                </td>
-                                <td>
-                                    @Model.WarrantyCard.Item.IMEI
-                                </td>
-                                <td>
-                                    @Model.WarrantyCard.Item.Model.Name
-                                </td>
-
-                                <td>
-                                    @Model.WarrantyCard.StartDate
-                                </td>
-
-                                <td>
-                                    @Model.WarrantyCard.EndDate
-                                </td>
-
-                                <td>
-                                    @Model.WarrantyCard.NumberOfWarranty
-                                </td>
-
-
-                                <td>
-                                    <div class="btn-group">
-                                        <a class="btn btn-success btn-sm" asp-controller="WarrantyCards" asp-action="Detail" asp-route-id="@Model.WarrantyCard.WarrantyCardID">
-                                            <i class="fa fa-pencil-square-o"></i>&nbsp; Chi tiết
-                                        </a>
-                                    </div>
-
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.WarrantyCardID)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">@Model.WarrantyCard.WarrantyCardID</div>
+                    </div>
                 </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.Item.IMEI)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">@Model.WarrantyCard.Item.IMEI</div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.Item.Model.Name)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">@Model.WarrantyCard.Item.Model.Name</div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.StartDate)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">@Model.WarrantyCard.StartDate</div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.EndDate)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">@Model.WarrantyCard.EndDate</div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.WarrantyCard.NumberOfWarranty)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">@Model.WarrantyCard.NumberOfWarranty</div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-primary" asp-controller="WarrantyCards" asp-action="Detail" asp-route-id="@Model.WarrantyCard.WarrantyCardID">
+                    <i class="fa fa-info-circle"></i>&nbsp; Chi tiết bảo hành
+                </a>
             </div>
         </div>
+       
 
     </div>
+       
 </div>
 
 <div>

@@ -338,7 +338,7 @@ namespace MobileStore.Controllers
             warrantyCardVm.CanReturn = DateTime.Now <= warrantyCard.StartDate.AddDays(returnDeadline.Parameter) && !isReturnItem ;
 
             //Return Item, WarrantyDetail dung de nhan Post
-            var warrantyDetails =await _context.WarrantyDetail.Where(m => m.WarrantyCardID == id).ToListAsync();
+            var warrantyDetails =await _context.WarrantyDetail.Where(m => m.WarrantyCardID == id).OrderByDescending(m=>m.Date).ToListAsync();
             warrantyCardVm.WarrantyDetails = warrantyDetails;
             
 
