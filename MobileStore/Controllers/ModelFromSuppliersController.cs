@@ -247,8 +247,9 @@ namespace MobileStore.Controllers
         }
 
         // GET: ModelFromSuppliers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string sortOrder, string currentFilter, string searchString, int? page)
         {
+            #region Check Exists
             if (id == null)
             {
                 return NotFound();
@@ -260,14 +261,74 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
-            var listItems = await _context.Item.Where(i => i.ModelFromSupplierID == id).ToListAsync();
+            #endregion
+
+            #region Filter and Search
+            ViewData["ModelSortParm"] = String.IsNullOrEmpty(sortOrder) ? "model_desc" : "";
+            ViewData["StatusSortParm"] = sortOrder == "status" ? "status_desc" : "status";
+            ViewData["SerializerNumberSortParm"] = sortOrder == "serializer_number" ? "serializer_number_desc" : "serializer_number";
+            ViewData["NameSortParm"] = sortOrder == "name" ? "name_desc" : "name";
+
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var items = _context.Item.Include(m=>m.Model).Where(m => m.ModelFromSupplierID == id);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                items = items.Include(m=>m.Model).Where(m => m.SerializerNumber.ToString().ToLower().Contains(searchString.ToLower()) || m.IMEI.ToString().ToLower().Contains(searchString.ToLower()));
+            }
+            switch (sortOrder)
+            {
+                case "model_desc":
+                    items = items.OrderByDescending(s => s.Model.Name).Include(m => m.Model);
+                    break;
+                case "status":
+                    items = items.OrderBy(s => s.Status).Include(m => m.Model);
+                    break;
+                case "status_desc":
+                    items = items.OrderByDescending(s => s.Status).Include(m => m.Model);
+                    break;
+                case "serializer_number":
+                    items = items.OrderBy(s => s.SerializerNumber).Include(m => m.Model);
+                    break;
+                case "serializer_number_desc":
+                    items = items.OrderByDescending(s => s.SerializerNumber).Include(m => m.Model);
+                    break;
+                case "name":
+                    items = items.OrderBy(s => s.Name).Include(m => m.Model);
+                    break;
+                case "name_desc":
+                    items = items.OrderByDescending(s => s.Name).Include(m => m.Model);
+                    break;
+
+                default:
+                    items = items.OrderBy(s => s.Model.Name).Include(m => m.Model);
+                    break;
+            }
+            #endregion
             ViewData["ModelItemID"] = item.ModelID;
             ViewData["ModelFromSupplierID"] = item.ModelFromSupplierID;
             ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "Name", item.ModelID);
             ViewData["StockReceivingID"] = new SelectList(_context.StockReceiving, "StockReceivingID", "StockReceivingID", item.StockReceivingID);
             var stockReceivingDetailVM = new StockReceivingDetailViewModel();
             stockReceivingDetailVM.ModelFromSupplier = item;
-            stockReceivingDetailVM.Items = listItems;
+
+            #region Paging
+            int pageSize = 1;
+            PaginatedList<Item> pagesItems = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), page ?? 1, pageSize);
+            stockReceivingDetailVM.Items = pagesItems;
+            #endregion
 
             return View(stockReceivingDetailVM);
         }

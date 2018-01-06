@@ -26,14 +26,14 @@
                         <div class="form-group row">
                             <label asp-for="Item.Name" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Item.Name)</label>
                             <div class="col-md-8">
-                                <input rows="8" asp-for="Item.Name" class="form-control" placeholder="Nhập tên sản phẩm..."/>
+                                <input rows="8" asp-for="Item.Name" class="form-control" placeholder="Nhập tên sản phẩm..." />
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label asp-for="Item.IMEI" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Item.IMEI)</label>
                             <div class="col-md-8">
-                                <input asp-for="Item.IMEI" rows="8" class="form-control" placeholder="Nhập IMEI..."/>
+                                <input asp-for="Item.IMEI" rows="8" class="form-control" placeholder="Nhập IMEI..." />
                                 <span asp-validation-for="Item.IMEI" class="invalid-feedback"></span>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                         <div class="form-group row">
                             <label asp-for="Item.Note" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Item.Note)</label>
                             <div class="col-md-8">
-                                <input asp-for="Item.Note" rows="8" class="form-control" placeholder="Nhập ghi chú..."/>
+                                <input asp-for="Item.Note" rows="8" class="form-control" placeholder="Nhập ghi chú..." />
                                 <span asp-validation-for="Item.Note" class="invalid-feedback"></span>
                             </div>
                         </div>
@@ -66,68 +66,68 @@
 
     <div class=" col-lg-8">
         <div class="card">
-                <div class="card-header">
-                    <strong>Chi tiết đợt hàng</strong>
+            <div class="card-header">
+                <strong>Chi tiết đợt hàng</strong>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Quantity)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.Quantity
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="form-group row">
-                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Quantity)</label>
-                        <div class="col-md-8">
-                            <div class="form-control">
-                                @Model.ModelFromSupplier.Quantity
-                            </div>
-                            </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.PriceBought)</label>
-                        <div class="col-md-8">
-                            <div class="form-control">
-                                @Model.ModelFromSupplier.PriceBought
-                            </div>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.PriceBought)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.PriceBought
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.PriceSold)</label>
-                        <div class="col-md-8">
-                            <div class="form-control">
-                                @Model.ModelFromSupplier.PriceSold
-                            </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.PriceSold)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.PriceSold
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.StockReceivingID)</label>
-                        <div class="col-md-8">
-                            <div class="form-control">
-                                @Model.ModelFromSupplier.StockReceivingID
-                            </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.StockReceivingID)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.StockReceivingID
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-group row">
-                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.ModelID)</label>
-                        <div class="col-md-8">
-                            <div class="form-control">
-                                @Model.ModelFromSupplier.Model.Name
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Period)</label>
-                        <div class="col-md-8">
-                            <div class="form-control">
-                                @Model.ModelFromSupplier.Period
-                            </div>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.ModelID)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.Model.Name
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <a asp-action="Edit" asp-route-id="@Model.ModelFromSupplier.ModelFromSupplierID" class="btn btn-primary"><i class="fa fa-angle-right"></i> Sửa</a>
-                    @*<div class="form-group">
-                            <input type="submit" value="Create" class="btn btn-default"/>
-                        </div>*@
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Period)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.Period
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Edit" asp-route-id="@Model.ModelFromSupplier.ModelFromSupplierID" class="btn btn-primary"><i class="fa fa-angle-right"></i> Sửa</a>
+                @*<div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-default"/>
+                    </div>*@
+            </div>
         </div>
-        
+
 
     </div>
     <div class="col-lg-12">
@@ -136,6 +136,24 @@
                 Chi tiết đợt hàng
             </div>
             <div class="card-body">
+                @*Search*@
+                <form asp-action="Details" asp-route-id="@Model.ModelFromSupplier.ModelFromSupplierID" method="get" class="form-horizontal">
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <div class="input-group">
+
+                                <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
+                                <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo Số Seri và IMEI...">
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+                @*End Search*@
                 <p class="mb-3">
                     <button data-toggle="modal" data-target="#exampleModal" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Thêm sản phẩm</button>
                 </p>
@@ -148,14 +166,28 @@
                                     @Html.DisplayNameFor(model => model.Items.First().ItemID)
                                 </th>
                                 <th>
+                                    <a asp-action="Details" asp-route-id="@Model.ModelFromSupplier.ModelFromSupplierID" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
 
-                                    @Html.DisplayNameFor(model => model.Items.First().Name)
+
+                                        @Html.DisplayNameFor(model => model.Items.First().Name)
+                                    </a>
+                                </th>
+                                <th>
+                                    <a asp-action="Details" asp-route-id="@Model.ModelFromSupplier.ModelFromSupplierID" asp-route-sortOrder="@ViewData["ModelSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+
+
+                                        @Html.DisplayNameFor(model => model.Items.First().ModelID)
+                                    </a>
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Items.First().IMEI)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Items.First().SerializerNumber)
+                                    <a asp-action="Details" asp-route-id="@Model.ModelFromSupplier.ModelFromSupplierID" asp-route-sortOrder="@ViewData["SerializerNumberSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+
+                                        @Html.DisplayNameFor(model => model.Items.First().SerializerNumber)
+                                    </a>
+
                                 </th>
                                 <th>
 
@@ -163,7 +195,10 @@
                                     @Html.DisplayNameFor(model => model.Items.First().Note)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Items.First().Status)
+                                    <a asp-action="Details" asp-route-id="@Model.ModelFromSupplier.ModelFromSupplierID" asp-route-sortOrder="@ViewData["StatusSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+
+                                        @Html.DisplayNameFor(model => model.Items.First().Status)
+                                    </a>
                                 </th>
 
 
@@ -182,6 +217,9 @@
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.Name)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.IMEI)
@@ -231,6 +269,48 @@
                             }
                         </tbody>
                     </table>
+                    @{
+
+                        PaginatedList<MobileStore.Models.Item> PaginatedModel = Model.Items as PaginatedList<MobileStore.Models.Item>;
+
+                        string prevDisabled = !PaginatedModel.HasPreviousPage ? "disabled" : "";
+
+                        string nextDisabled = !PaginatedModel.HasNextPage ? "disabled" : "";
+
+
+                    }
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item @prevDisabled">
+                                <a asp-action="Details"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex - 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   asp-route-id="@Model.ModelFromSupplier.ModelFromSupplierID"
+                                   class="page-link">Previous</a>
+                            </li>
+                            @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
+                            {
+                                <li class="page-item @(@PaginatedModel.PageIndex == i ? "active" : " ")">
+                                    <a asp-action="Details"
+                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                       asp-route-page="@i"
+                                       asp-route-id="@Model.ModelFromSupplier.ModelFromSupplierID"
+                                       asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
+                                </li>
+
+                            }
+                            <li class="page-item @nextDisabled">
+                                <a asp-action="Details"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(PaginatedModel.PageIndex + 1)"
+                                   asp-route-id="@Model.ModelFromSupplier.ModelFromSupplierID"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+
                 </div>
             </div>
         </div>
