@@ -130,7 +130,7 @@ namespace MobileStore.Controllers
                 stockReceiving.StockReceivingID = Guid.NewGuid();
                 _context.Add(stockReceiving);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details),new {id=stockReceiving.StockReceivingID});
             }
             ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "Name", stockReceiving.SupplierID);
             return View(stockReceiving);
@@ -249,8 +249,14 @@ namespace MobileStore.Controllers
             {
                 return new ChallengeResult();
             }
+            var modelFromSuppliers = await _context.ModelFromSupplier.Where(m => m.StockReceivingID == id).Include(m => m.Model).ToListAsync();
+            var stockReceivingVM = new StockReceivingViewModel();
+            stockReceivingVM.StockReceiving = stockReceiving;
+            stockReceivingVM.ModelFromSuppliers = modelFromSuppliers;
+            stockReceivingVM.Models = _context.Model;
+            stockReceivingVM.Suppliers = _context.Supplier;
 
-            return View(stockReceiving);
+            return View(stockReceivingVM);
         }
 
         // POST: StockReceivings/Delete/5
@@ -309,7 +315,7 @@ namespace MobileStore.Controllers
                 _context.Add(stockReceivingVM.ModelFromSupplier);
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction(nameof(Edit), new { id = stockReceivingVM.ModelFromSupplier.StockReceivingID });
+            return RedirectToAction(nameof(Details), new { id = stockReceivingVM.ModelFromSupplier.StockReceivingID });
         }
 
 
