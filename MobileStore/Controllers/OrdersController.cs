@@ -193,9 +193,9 @@ namespace MobileStore.Controllers
         #region Detail
         // GET: Orders/Edit/5
         [Authorize(Roles = "Sale,Admin")]
-        public async Task<IActionResult> Detail(int? id)
+        public async Task<IActionResult> Detail(int? id, string sortOrder, string currentFilter, string searchString, int? page)
         {
-
+            #region Check Exists
             if (id == null)
             {
                 return NotFound();
@@ -209,40 +209,85 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
-            // Kiem tra da in hay chua
 
-            //if (order.IsPrinted)
-            //{
-            //    ViewData["ErrorText"] = "Bạn không thể sửa sau khi in";
-            //    return View("ErrorPage");
-            //}
-            // Kiem tra quyen
+            #endregion
 
-            // Cho xem edit
+            #region Filter and Search
+            ViewData["ItemModelNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "item_model_name_desc" : "";
+            ViewData["ItemNameSortParm"] = sortOrder == "item_name" ? "item_name_desc" : "item_name";
+            ViewData["IMEISortParm"] = sortOrder == "imei" ? "imei_desc" : "imei";
+            ViewData["SerializerNumberSortParm"] = sortOrder == "serializer_number" ? "serializer_number_desc" : "serializer_number";
+            ViewData["PriceSoldSortParm"] = sortOrder == "pricesold" ? "pricesold_desc" : "pricesold";
 
-            //var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
-            //    OrderOperations.Update);
-            //if (!isAuthorized.Succeeded)
-            //{
-            //    return new ChallengeResult();
-            //}
+            ViewData["CurrentSort"] = sortOrder;
 
-            // Tien hanh thuc hien
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
 
-            var orderDetails = await _context.OrderDetail.Where(m => m.OrderID == id).Include(m => m.Item).ToListAsync();
+            ViewData["CurrentFilter"] = searchString;
+
+            var orderDetails = _context.OrderDetail.Where(m => m.OrderID == id);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                orderDetails = orderDetails.Include(m => m.Item).ThenInclude(m=>m.Model).Where(m => m.Item.Model.Name.ToLower().Contains(searchString.ToLower())
+                || m.Item.IMEI.ToString().ToLower().Contains(searchString.ToLower())
+                || m.Item.SerializerNumber.ToString().ToLower().Contains(searchString.ToLower())
+                );
+            }
+            switch (sortOrder)
+            {
+                case "item_model_name_desc":
+                    orderDetails = orderDetails.Include(m => m.Item).ThenInclude(m => m.Model).OrderByDescending(s => s.Item.Model.Name);
+                    break;
+                case "item_name":
+                    orderDetails = orderDetails.Include(m => m.Item).ThenInclude(m => m.Model).OrderBy(s => s.Item.Name);
+                    break;
+                case "item_name_desc":
+                    orderDetails = orderDetails.Include(m => m.Item).ThenInclude(m => m.Model).OrderByDescending(s => s.Item.Name);
+                    break;
+                case "imei":
+                    orderDetails = orderDetails.Include(m => m.Item).ThenInclude(m => m.Model).OrderBy(s => s.Item.IMEI);
+                    break;
+                case "imei_desc":
+                    orderDetails = orderDetails.Include(m => m.Item).ThenInclude(m => m.Model).OrderByDescending(s => s.Item.IMEI);
+                    break;
+
+                case "serializer_number":
+                    orderDetails = orderDetails.Include(m => m.Item).ThenInclude(m => m.Model).OrderBy(s => s.Item.SerializerNumber);
+                    break;
+                case "serializer_number_desc":
+                    orderDetails = orderDetails.Include(m => m.Item).ThenInclude(m => m.Model).OrderByDescending(s => s.Item.SerializerNumber);
+                    break;
+                case "pricesold":
+                    orderDetails = orderDetails.Include(m => m.Item).ThenInclude(m => m.Model).OrderBy(s => s.PriceSold);
+                    break;
+                case "pricesold_desc":
+                    orderDetails = orderDetails.Include(m => m.Item).ThenInclude(m => m.Model).OrderByDescending(s => s.PriceSold);
+                    break;
+                default:
+                    orderDetails = orderDetails.Include(m => m.Item).ThenInclude(m => m.Model).OrderBy(s => s.Item.Model.Name);
+                    break;
+            }
+            #endregion
+
+            
             var sellViewModel = new SellViewModel();
             sellViewModel.Order = order;
-            sellViewModel.OrderDetails = orderDetails;
             sellViewModel.Customers = _context.Customer;
-            sellViewModel.NewItems = _context.Item.Where(m => m.Status == ItemStatus.InStock).Include(m=>m.Model).Include(m=>m.ModelFromSupplier)
-            //    .Select(m => new
-            //{
-            //    m.ItemID,
-            //    DisplayName = m.Model.Name +" - "+ m.IMEI,
-            //    Price = m.ModelFromSupplier.PriceSold
-            //})
-            ;
+            sellViewModel.NewItems = _context.Item.Where(m => m.Status == ItemStatus.InStock).Include(m=>m.Model).Include(m=>m.ModelFromSupplier);
             sellViewModel.Models = _context.Model;
+            #region Paging
+            int pageSize = 1;
+            PaginatedList<OrderDetail> pagesOrderDetails = await PaginatedList<OrderDetail>.CreateAsync(orderDetails.AsNoTracking(), page ?? 1, pageSize);
+            sellViewModel.OrderDetails = pagesOrderDetails;
+            #endregion
             return View(sellViewModel);
         }
         #endregion

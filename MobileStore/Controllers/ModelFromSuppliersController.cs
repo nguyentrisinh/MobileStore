@@ -75,9 +75,11 @@ namespace MobileStore.Controllers
             {
                 return new ChallengeResult();
             }
+            item.ModelFromSupplier.Quantity -= 1;
+            _context.Update(item.ModelFromSupplier);
             _context.Item.Remove(item);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Edit","ModelFromSuppliers",new{id=item.ModelFromSupplierID});
+            return RedirectToAction("Details","ModelFromSuppliers",new{id=item.ModelFromSupplierID});
         }
         // GET: Items/Edit/5
         [Authorize(Roles = "WarehouseManager, Admin")]
@@ -175,7 +177,7 @@ namespace MobileStore.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Edit", new { id = item.ModelFromSupplierID });
+                return RedirectToAction("Details", new { id = item.ModelFromSupplierID });
             }
             ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "ModelID", item.ModelID);
             ViewData["ModelFromSupplierID"] = new SelectList(_context.ModelFromSupplier, "ModelFromSupplierID", "ModelFromSupplierID", item.ModelFromSupplierID);
@@ -247,22 +249,90 @@ namespace MobileStore.Controllers
         }
 
         // GET: ModelFromSuppliers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string sortOrder, string currentFilter, string searchString, int? page)
         {
+            #region Check Exists
             if (id == null)
             {
                 return NotFound();
             }
+            var item = await _context.ModelFromSupplier.Include(m => m.StockReceiving).Include(m=>m.Model).SingleOrDefaultAsync(m => m.ModelFromSupplierID == id);
 
-            var modelFromSupplier = await _context.ModelFromSupplier
-                .Include(m => m.Model)
-                .SingleOrDefaultAsync(m => m.ModelFromSupplierID == id);
-            if (modelFromSupplier == null)
+           
+            if (item == null)
             {
                 return NotFound();
             }
+            #endregion
 
-            return View(modelFromSupplier);
+            #region Filter and Search
+            ViewData["ModelSortParm"] = String.IsNullOrEmpty(sortOrder) ? "model_desc" : "";
+            ViewData["StatusSortParm"] = sortOrder == "status" ? "status_desc" : "status";
+            ViewData["SerializerNumberSortParm"] = sortOrder == "serializer_number" ? "serializer_number_desc" : "serializer_number";
+            ViewData["NameSortParm"] = sortOrder == "name" ? "name_desc" : "name";
+
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var items = _context.Item.Include(m=>m.Model).Where(m => m.ModelFromSupplierID == id);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                items = items.Include(m=>m.Model).Where(m => m.SerializerNumber.ToString().ToLower().Contains(searchString.ToLower()) || m.IMEI.ToString().ToLower().Contains(searchString.ToLower()));
+            }
+            switch (sortOrder)
+            {
+                case "model_desc":
+                    items = items.OrderByDescending(s => s.Model.Name).Include(m => m.Model);
+                    break;
+                case "status":
+                    items = items.OrderBy(s => s.Status).Include(m => m.Model);
+                    break;
+                case "status_desc":
+                    items = items.OrderByDescending(s => s.Status).Include(m => m.Model);
+                    break;
+                case "serializer_number":
+                    items = items.OrderBy(s => s.SerializerNumber).Include(m => m.Model);
+                    break;
+                case "serializer_number_desc":
+                    items = items.OrderByDescending(s => s.SerializerNumber).Include(m => m.Model);
+                    break;
+                case "name":
+                    items = items.OrderBy(s => s.Name).Include(m => m.Model);
+                    break;
+                case "name_desc":
+                    items = items.OrderByDescending(s => s.Name).Include(m => m.Model);
+                    break;
+
+                default:
+                    items = items.OrderBy(s => s.Model.Name).Include(m => m.Model);
+                    break;
+            }
+            #endregion
+            ViewData["ModelItemID"] = item.ModelID;
+            ViewData["ModelFromSupplierID"] = item.ModelFromSupplierID;
+            ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "Name", item.ModelID);
+            ViewData["StockReceivingID"] = new SelectList(_context.StockReceiving, "StockReceivingID", "StockReceivingID", item.StockReceivingID);
+            var stockReceivingDetailVM = new StockReceivingDetailViewModel();
+            stockReceivingDetailVM.ModelFromSupplier = item;
+
+            #region Paging
+            int pageSize = 1;
+            PaginatedList<Item> pagesItems = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), page ?? 1, pageSize);
+            stockReceivingDetailVM.Items = pagesItems;
+            #endregion
+
+            return View(stockReceivingDetailVM);
         }
 
         // GET: ModelFromSuppliers/Edit/5
@@ -287,16 +357,16 @@ namespace MobileStore.Controllers
             {
                 return new ChallengeResult();
             }
-            var listItems = await _context.Item.Where(i => i.ModelFromSupplierID == id).ToListAsync();
-            ViewData["ModelItemID"] = item.ModelID;
-            ViewData["ModelFromSupplierID"] = item.ModelFromSupplierID;
+            //var listItems = await _context.Item.Where(i => i.ModelFromSupplierID == id).ToListAsync();
+            //ViewData["ModelItemID"] = item.ModelID;
+            //ViewData["ModelFromSupplierID"] = item.ModelFromSupplierID;
             ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "Name", item.ModelID);
             ViewData["StockReceivingID"] = new SelectList(_context.StockReceiving, "StockReceivingID", "StockReceivingID", item.StockReceivingID);
-            var stockReceivingDetailVM =new StockReceivingDetailViewModel();
-            stockReceivingDetailVM.ModelFromSupplier = item;
-            stockReceivingDetailVM.Items = listItems;
-          
-            return View(stockReceivingDetailVM);
+            //var stockReceivingDetailVM =new StockReceivingDetailViewModel();
+            //stockReceivingDetailVM.ModelFromSupplier = item;
+            //stockReceivingDetailVM.Items = listItems;
+
+            return View(item);
         }
 
         // POST: ModelFromSuppliers/Edit/5
@@ -305,11 +375,11 @@ namespace MobileStore.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "WarehouseManager, Admin")]
-        public async Task<IActionResult> Edit(int id, StockReceivingViewModel stockReceivingVM)
+        public async Task<IActionResult> Edit(int id, ModelFromSupplier modelFromSupplier)
         {
             try
             {
-                var item = ViewModelToModelFromSupplier(stockReceivingVM).Result;
+                var item = ViewModelToModelFromSupplier(modelFromSupplier).Result;
                 var timeSpan = DateTime.Now - item.StockReceiving.Date;
                 if (timeSpan.Hours > 2)
                 {
@@ -328,7 +398,7 @@ namespace MobileStore.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ModelFromSupplierExists(stockReceivingVM.ModelFromSupplier.ModelFromSupplierID))
+                if (!ModelFromSupplierExists(modelFromSupplier.ModelFromSupplierID))
                 {
                     return NotFound();
                 }
@@ -337,7 +407,7 @@ namespace MobileStore.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Edit), new { id = stockReceivingVM.ModelFromSupplier.ModelFromSupplierID });
+            return RedirectToAction(nameof(Details), new { id = modelFromSupplier.ModelFromSupplierID });
 
             //ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "ModelID", stockReceivingVM.ModelFromSupplier.ModelID);ModelFromSupplier.StockReceiving
             //ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID", stockReceivingVM.ModelFromSupplier.SupplierID);
@@ -350,24 +420,27 @@ namespace MobileStore.Controllers
         [Authorize(Roles = "WarehouseManager, Admin")]
         public async Task<IActionResult> CreateItem(StockReceivingDetailViewModel stockReceivingDetailVM)
         {
+
+            var modelFromSupplier = await _context.ModelFromSupplier.Include(m => m.StockReceiving)
+                .SingleOrDefaultAsync(m => m.ModelFromSupplierID == stockReceivingDetailVM.Item.ModelFromSupplierID);
+
             if (ModelState.IsValid)
             {
-                var modelFromSupplier = await _context.ModelFromSupplier.Include(m=>m.StockReceiving)
-                    .SingleOrDefaultAsync(m => m.ModelFromSupplierID == stockReceivingDetailVM.Item.ModelFromSupplierID);
-                    
                 var timeSpan = DateTime.Now - modelFromSupplier.StockReceiving.Date;
                 if (timeSpan.Hours > 2)
                 {
                     ViewData["ErrorText"] = "Không thể tạo sản phẩm sau 2 giờ";
                     return View("ErrorPage");
                 }
+                stockReceivingDetailVM.Item.Status = ItemStatus.InStock;
+                modelFromSupplier.Quantity = modelFromSupplier.Quantity + 1;
+                _context.Update(modelFromSupplier);
                 _context.Add(stockReceivingDetailVM.Item);
                 await _context.SaveChangesAsync();
             }
-            ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "ModelID", stockReceivingDetailVM.ModelFromSupplier.ModelID);
             //ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID", stockReceivingDetailVM.ModelFromSupplier.SupplierID);
 
-            return RedirectToAction("Edit","ModelFromSuppliers",new {id = stockReceivingDetailVM.ModelFromSupplier.ModelFromSupplierID});
+            return RedirectToAction("Details","ModelFromSuppliers",new {id = modelFromSupplier.ModelFromSupplierID});
         }
 
         // GET: ModelFromSuppliers/Delete/5
@@ -379,29 +452,36 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
 
-            var modelFromSupplier = await _context.ModelFromSupplier
+            var item = await _context.ModelFromSupplier
                 .Include(m => m.Model).Include(m=>m.StockReceiving)
                 .SingleOrDefaultAsync(m => m.ModelFromSupplierID == id);
-            if (modelFromSupplier == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            var timeSpan = DateTime.Now - modelFromSupplier.StockReceiving.Date;
+            var timeSpan = DateTime.Now - item.StockReceiving.Date;
             if (timeSpan.Hours > 2)
             {
                 ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
                 return View("ErrorPage");
             }
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, modelFromSupplier.StockReceiving,
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, item.StockReceiving,
                 OrderOperations.Delete);
             if (!isAuthorized.Succeeded)
             {
                 return new ChallengeResult();
             }
+            var listItems = await _context.Item.Where(i => i.ModelFromSupplierID == id).ToListAsync();
+            ViewData["ModelItemID"] = item.ModelID;
+            ViewData["ModelFromSupplierID"] = item.ModelFromSupplierID;
+            ViewData["ModelID"] = new SelectList(_context.Model, "ModelID", "Name", item.ModelID);
+            ViewData["StockReceivingID"] = new SelectList(_context.StockReceiving, "StockReceivingID", "StockReceivingID", item.StockReceivingID);
+            var stockReceivingDetailVM = new StockReceivingDetailViewModel();
+            stockReceivingDetailVM.ModelFromSupplier = item;
+            stockReceivingDetailVM.Items = listItems;
 
-
-            return View(modelFromSupplier);
+            return View(stockReceivingDetailVM);
         }
 
         // POST: ModelFromSuppliers/Delete/5
@@ -431,7 +511,7 @@ namespace MobileStore.Controllers
             _context.ModelFromSupplier.Remove(modelFromSupplier);
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Edit","StockReceivings",new {id = modelFromSupplier.StockReceivingID});
+            return RedirectToAction("Details","StockReceivings",new {id = modelFromSupplier.StockReceivingID});
         }
         #region helper
 
@@ -440,17 +520,17 @@ namespace MobileStore.Controllers
             return _context.ModelFromSupplier.Any(e => e.ModelFromSupplierID == id);
         }
 
-        public async Task<ModelFromSupplier> ViewModelToModelFromSupplier(StockReceivingViewModel stockReceivingViewModel)
+        public async Task<ModelFromSupplier> ViewModelToModelFromSupplier(ModelFromSupplier modelFromSupplier)
         {
             var item = await _context.ModelFromSupplier.Include(m=>m.StockReceiving).SingleOrDefaultAsync(m =>
-                m.ModelFromSupplierID == stockReceivingViewModel.ModelFromSupplier.ModelFromSupplierID);
-            item.ModelFromSupplierID = stockReceivingViewModel.ModelFromSupplier.ModelFromSupplierID;
-            item.ModelID = stockReceivingViewModel.ModelFromSupplier.ModelID;
-            item.PriceBought = stockReceivingViewModel.ModelFromSupplier.PriceBought;
-            item.PriceSold = stockReceivingViewModel.ModelFromSupplier.PriceSold;
-            item.Quantity = stockReceivingViewModel.ModelFromSupplier.Quantity;
-            item.Period = stockReceivingViewModel.ModelFromSupplier.Period;
-            item.StockReceivingID = stockReceivingViewModel.ModelFromSupplier.StockReceivingID;
+                m.ModelFromSupplierID == modelFromSupplier.ModelFromSupplierID);
+            item.ModelFromSupplierID = modelFromSupplier.ModelFromSupplierID;
+            item.ModelID = modelFromSupplier.ModelID;
+            item.PriceBought = modelFromSupplier.PriceBought;
+            item.PriceSold = modelFromSupplier.PriceSold;
+            item.Quantity = modelFromSupplier.Quantity;
+            item.Period = modelFromSupplier.Period;
+            item.StockReceivingID = modelFromSupplier.StockReceivingID;
             return item;
         }
 
