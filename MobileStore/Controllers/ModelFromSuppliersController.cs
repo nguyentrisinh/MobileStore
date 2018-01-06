@@ -75,9 +75,11 @@ namespace MobileStore.Controllers
             {
                 return new ChallengeResult();
             }
+            item.ModelFromSupplier.Quantity -= 1;
+            _context.Update(item.ModelFromSupplier);
             _context.Item.Remove(item);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Edit","ModelFromSuppliers",new{id=item.ModelFromSupplierID});
+            return RedirectToAction("Details","ModelFromSuppliers",new{id=item.ModelFromSupplierID});
         }
         // GET: Items/Edit/5
         [Authorize(Roles = "WarehouseManager, Admin")]
@@ -431,6 +433,8 @@ namespace MobileStore.Controllers
                     return View("ErrorPage");
                 }
                 stockReceivingDetailVM.Item.Status = ItemStatus.InStock;
+                modelFromSupplier.Quantity = modelFromSupplier.Quantity + 1;
+                _context.Update(modelFromSupplier);
                 _context.Add(stockReceivingDetailVM.Item);
                 await _context.SaveChangesAsync();
             }

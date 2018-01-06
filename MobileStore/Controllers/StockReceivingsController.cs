@@ -390,6 +390,7 @@ namespace MobileStore.Controllers
                     return View("ErrorPage");
                 }
                 stockReceivingVM.ModelFromSupplier.Date = DateTime.Now;
+                stockReceivingVM.ModelFromSupplier.Quantity = 0;
                 _context.Add(stockReceivingVM.ModelFromSupplier);
                 await _context.SaveChangesAsync();
             }

@@ -16,13 +16,13 @@
                 <div class="card-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="ModelFromSupplierID" />
-                    <div class="form-group row">
+                    @*<div class="form-group row">
                         <label asp-for="Quantity" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.Quantity)</label>
                         <div class="col-md-8">
                             <input asp-for="Quantity" type="text" class="form-control" placeholder="Nhập số lượng...">
                             <span asp-validation-for="Quantity" class="invalid-feedback"></span>
                         </div>
-                    </div>
+                    </div>*@
                     <div class="form-group row">
                         <label asp-for="PriceBought" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.PriceBought)</label>
                         <div class="col-md-8">
