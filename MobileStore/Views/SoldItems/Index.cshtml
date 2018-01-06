@@ -7,54 +7,40 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="jumbotron-heading"></h4>
-
+                <h4 class="jumbotron-heading">Thống kê hàng hóa đã bán </h4>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                        Dropdown Example
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">T</a></li>
+                        <li><a href="#">CSS</a></li>
+                        <li><a href="#">JavaScript</a></li>
+                    </ul>
+                </div>
                 <div class="table-striped table-responsive">
                     <h6>Tổng</h6>
                     <div class="table-striped table-responsive">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <td>
-                                        SL đã bán
-                                    </td>
-                                    <td>
-                                        Tổng giá mua
-                                    </td>
-                                    <td>
-                                        Tổng giá bán
-                                    </td>
-                                    <td>
-                                        Tổng giá bán thực
-                                    </td>
-                                    <td>
-                                        Tổng chênh lệch
-                                    </td>
-                                    <td>
-                                        Tổng doanh thu
-                                    </td>
+                                    <td>SL đã bán</td>
+                                    <td>Tổng giá mua</td>
+                                    <td>Tổng giá bán</td>
+                                    <td>Tổng giá bán thực</td>
+                                    <td>Tổng chênh lệch</td>
+                                    <td>Tổng doanh thu</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
-                                        @ViewData["TotalNumberSold"]
-                                    </td>
-                                    <td>
-                                        @ViewData["TotalPriceBought"]
-                                    </td>
-                                    <td>
-                                        @ViewData["TotalPriceSold"]
-                                    </td>
-                                    <td>
-                                        @ViewData["TotalActualPriceSold"]
-                                    </td>
-                                    <td>
-                                        @ViewData["TotalDiffInPrice"]
-                                    </td>
-                                    <td>
-                                        @ViewData["TotalRevenue"]
-                                    </td>
+                                    <td>@ViewData["TotalNumberSold"]</td>
+                                    <td>@ViewData["TotalPriceBought"]</td>
+                                    <td>@ViewData["TotalPriceSold"]</td>
+                                    <td>@ViewData["TotalActualPriceSold"]</td>
+                                    <td>@ViewData["TotalDiffInPrice"]</td>
+                                    <td>@ViewData["TotalRevenue"]</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -173,6 +159,7 @@
                                     <tr>
                                 </tbody>
                             </table>
+                        </div>
 
 
                             @*@{
@@ -213,13 +200,11 @@
                     </li>
                 </ul>
             </nav>*@
-                        </div>
                 </div>
+            </div>
         </div>
     </div>
-    <!--/.col-->
 </div>
-<!--/.row-->
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
