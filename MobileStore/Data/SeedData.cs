@@ -20,6 +20,9 @@ namespace ContactManager.Data
         #region seeddata
         public static async Task Initialize(IServiceProvider serviceProvider, string testUserPw)
         {
+
+
+
             using (var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
@@ -27,6 +30,13 @@ namespace ContactManager.Data
                 // The password is set with the following command:
                 // dotnet user-secrets set SeedUserPW <pw>
                 // The admin user can do anything
+
+                // Check that database has had anything
+                // Look for any movies.
+                if (context.ApplicationUser.Any())
+                {
+                    return;   // DB has been seeded
+                }
 
                 //var listApplicationUserID = await InitApplicationUser(serviceProvider, testUserPw);
 
