@@ -1,58 +1,165 @@
-﻿@model MobileStore.Models.ModelFromSupplier
+﻿@model MobileStore.Models.StockReceivingViewModels.StockReceivingDetailViewModel
+@using MobileStore.Models
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Xóa chi tiết đợt hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Delete</h2>
+<div class="row">
+    <div class=" col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <strong>Xóa chi tiết đợt hàng</strong>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Quantity)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.Quantity
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.PriceBought)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.PriceBought
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.PriceSold)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.PriceSold
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.StockReceivingID)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.StockReceivingID
+                        </div>
+                    </div>
+                </div>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>ModelFromSupplier</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Quantity)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Quantity)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.PriceBought)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.PriceBought)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.PriceSold)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.PriceSold)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Model)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Model.ModelID)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.StockReceivingID)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.StockReceiving.StockReceivingID)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="ModelFromSupplierID" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.ModelID)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.Model.Name
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.ModelFromSupplier.Period)</label>
+                    <div class="col-md-8">
+                        <div class="form-control">
+                            @Model.ModelFromSupplier.Period
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <form asp-action="Delete">
+                    <input hidden asp-for="ModelFromSupplier.ModelFromSupplierID"/>
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> Tiếp tục xóa?</button>
+                </form>
+            </div>
+        </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Toàn bộ sản phẩm
+            </div>
+            <div class="card-body">
+                <div class=" table-striped table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Items.First().ItemID)
+                                </th>
+                                <th>
+
+                                    @Html.DisplayNameFor(model => model.Items.First().Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Items.First().IMEI)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Items.First().SerializerNumber)
+                                </th>
+                                <th>
+
+
+                                    @Html.DisplayNameFor(model => model.Items.First().Note)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Items.First().Status)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ItemID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IMEI)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SerializerNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Note)
+                                    </td>
+                                    <td>
+                                        @switch (item.Status)
+                                        {
+                                            case ItemStatus.InStock:
+                                                <span class="badge badge-info">
+                                                    @Html.DisplayFor(modelItem => item.Status)
+                                                </span>
+                                                break;
+
+                                            case ItemStatus.Returned:
+                                                <span class="badge badge-danger">
+                                                    @Html.DisplayFor(modelItem => item.Status)
+                                                </span>
+                                                break;
+                                            case ItemStatus.Sold:
+                                                <span class="badge badge-success">
+                                                    @Html.DisplayFor(modelItem => item.Status)
+                                                </span>
+                                                break;
+
+                                        }
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
+
+<div>
+    <a asp-action="Details" asp-controller="StockReceivings" asp-route-id="@Model.ModelFromSupplier.StockReceivingID"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

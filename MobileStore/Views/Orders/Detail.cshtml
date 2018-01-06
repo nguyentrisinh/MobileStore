@@ -39,178 +39,280 @@
                 </div>
                 <div class="card-footer">
                     <a asp-action="Print" type="submit" class="btn @(Model.Order.IsPrinted ? "btn-secondary" : "btn-success")" asp-route-id="@Model.Order.OrderID"><i class="fa fa-print"></i>@(Model.Order.IsPrinted ? " Đã In" : " In")</a>
+                    @{
+                        var canUpdateOrder = await AuthorizationService.AuthorizeAsync(User, Model.Order, OrderOperations.Update);
+                        if (canUpdateOrder.Succeeded && Model.Order.IsPrinted == false)
+                        {
+
+                            <a asp-action="Edit" asp-route-id="@Model.Order.OrderID"><button type="button" class="btn btn-primary">Sửa&nbsp;<i class="fa fa-angle-right"></i></button></a>
+                        }
+                    }
+    
                 </div>
             </form>
         </div>
+        
+
+    </div>
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
                 Chi tiết đơn hàng
             </div>
-            <div class="card-body">
-                @{
-                    // Kiem tra xem co the tao orderdetail hay ko, co the tao khi nguoi do phai co quyen sua order
-                    var canCreate = await AuthorizationService.AuthorizeAsync(User, Model.Order, OrderOperations.Update);
-                    // Chi co the tao khi chua in va co quyen
-                    if (canCreate.Succeeded && Model.Order.IsPrinted==false)
-                    {
-                        <p class="mb-3">
-                            <button data-toggle="modal" data-target="#createOrderDetail" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Thêm chi tiết đơn hàng</button>
-                        </p>
-                        <div class="modal fade" id="createOrderDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <form asp-action="CreateOrderDetail">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Thêm chi tiết đơn hàng</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-
-                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                            <input type="hidden" asp-for="OrderDetail.OrderID" value="@Model.Order.OrderID" />
-                                            <div class="form-group row">
-
-                                                <label class="col-md-4 form-control-label">Chọn Mẫu mã</label>
-                                                <div class="col-md-8">
-                                                    <select id="js-select-models" class="form-control">
-                                                        <option selected="selected" value="">Chọn Mẫu mã</option>
-                                                        @{
-                                                            foreach (var i in Model.Models)
-                                                            {
-                                                                <option value="@i.ModelID">@i.Name</option>
-                                                            }
-                                                        }
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-
-                                                <label class="col-md-4 form-control-label" asp-for="OrderDetail.ItemID"></label>
-                                                <div class="col-md-8">
-                                                    <select disabled id="js-select-items" class="form-control" asp-for="OrderDetail.ItemID">
-
-                                                        <option selected="selected" value="">Chọn Sản phẩm</option>
-                                                        @{
-                                                            foreach (var item in Model.NewItems)
-                                                            {
-                                                                <option model-id="@item.ModelID" price-sold="@item.ModelFromSupplier.PriceSold" value="@item.ItemID">@item.Model.Name - @item.IMEI</option> 
-                                                            }
-                                                        }
-                                                    </select>
-                                                    <span asp-validation-for="OrderDetail.ItemID" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label asp-for="OrderDetail.PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
-                                                <div class="col-md-8">
-                                                    <input id="price-sold" asp-for="OrderDetail.PriceSold" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.OrderDetail.PriceSold)..." />
-                                                    <span asp-validation-for="OrderDetail.PriceSold" class="invalid-feedback"></span>
-                                                </div>
-                                            </div>
-                                            
-
-                                           
-
-
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-
-                                            <button type="submit" class="btn btn-primary">Tạo</button>
-
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                }
-
-               
-
-                <div class=" table-striped table-responsive">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.OrderDetails.First().Item.Name)
-                            </th>
-                            <th>
-
-                                @Html.DisplayNameFor(model => model.OrderDetails.First().Item.IMEI)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.OrderDetails.First().PriceSold)
-                            </th>
-                            <th>
-
-                            </th>
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach (var item in Model.OrderDetails)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Item.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Item.IMEI)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PriceSold)
-                                </td>
-
-
-                                <td>
-                                    <div class="btn-group">
-                                        @{
-                                            // Kiem tra neu co quyen sua order thi co quyen sua order detail
-                                            var canUpdate = await AuthorizationService.AuthorizeAsync(User, Model.Order, OrderOperations.Update);
-                                            if (canUpdate.Succeeded && Model.Order.IsPrinted == false)
-                                            {
-                                                <a class="btn btn-warning btn-sm" asp-action="EditOrderDetail" asp-route-id="@item.OrderDetailID">
-                                                    <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
-                                                </a>
-                                            }
-                                        }
-
-                                        <a class="btn btn-primary btn-sm" asp-action="DetailOrderDetail" asp-route-id="@item.OrderDetailID">
-                                            <i class="fa fa-info"></i>&nbsp; Chi tiết
-                                        </a>
-
-                                        @{
-                                            // Kiem tra neu co quyen sua order thi co quyen sua order detail
-                                            var canDelete = await AuthorizationService.AuthorizeAsync(User, Model.Order, OrderOperations.Update);
-                                            if (canDelete.Succeeded && Model.Order.IsPrinted == false)
-                                            {
-                                                <a class="btn btn-danger btn-sm" asp-action="DeleteOrderDetail" asp-route-id="@item.OrderDetailID">
-                                                    <i class="fa fa-trash-o"></i>&nbsp; Xóa
-                                                </a>
-                                            }
-                                        }
-                                       
-                                    </div>
-
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
+        <div class="card-body">
+        @*Search*@
+        <form asp-action="Detail" asp-route-id="@Model.Order.OrderID" method="get" class="form-horizontal">
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <div class="input-group">
+                                
+                        <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
+                        <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo Tên mẫu mã, IMEI, Số Seri...">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
 
+        </form>
+                
+        @*End Search*@
+        @{
+            // Kiem tra xem co the tao orderdetail hay ko, co the tao khi nguoi do phai co quyen sua order
+            var canCreate = await AuthorizationService.AuthorizeAsync(User, Model.Order, OrderOperations.Update);
+            // Chi co the tao khi chua in va co quyen
+            if (canCreate.Succeeded && Model.Order.IsPrinted == false)
+            {
+                <p class="mb-3">
+                    <button data-toggle="modal" data-target="#createOrderDetail" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Thêm chi tiết đơn hàng</button>
+                </p>
+                <div class="modal fade" id="createOrderDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <form asp-action="CreateOrderDetail">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Thêm chi tiết đơn hàng</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="OrderDetail.OrderID" value="@Model.Order.OrderID"/>
+                                    <div class="form-group row">
+
+                                        <label class="col-md-4 form-control-label">Chọn Mẫu mã</label>
+                                        <div class="col-md-8">
+                                            <select id="js-select-models" class="form-control">
+                                                <option selected="selected" value="">Chọn Mẫu mã</option>
+                                                @{
+                                                    foreach (var i in Model.Models)
+                                                    {
+                                                        <option value="@i.ModelID">@i.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+
+                                        <label class="col-md-4 form-control-label" asp-for="OrderDetail.ItemID"></label>
+                                        <div class="col-md-8">
+                                            <select disabled id="js-select-items" class="form-control" asp-for="OrderDetail.ItemID">
+
+                                                <option selected="selected" value="">Chọn Sản phẩm</option>
+                                                @{
+                                                    foreach (var item in Model.NewItems)
+                                                    {
+                                                        <option model-id="@item.ModelID" price-sold="@item.ModelFromSupplier.PriceSold" value="@item.ItemID">@item.Model.Name - @item.IMEI</option>
+                                                    }
+                                                }
+                                            </select>
+                                            <span asp-validation-for="OrderDetail.ItemID" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label asp-for="OrderDetail.PriceSold" class="col-md-4 form-control-label">@Html.DisplayNameFor(model => model.OrderDetail.PriceSold)</label>
+                                        <div class="col-md-8">
+                                            <input id="price-sold" asp-for="OrderDetail.PriceSold" rows="8" class="form-control" placeholder="Nhập @Html.DisplayNameFor(model => model.OrderDetail.PriceSold)..."/>
+                                            <span asp-validation-for="OrderDetail.PriceSold" class="invalid-feedback"></span>
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+
+                                    <button type="submit" class="btn btn-primary">Tạo</button>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+
+
+        <div class=" table-striped table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        <a asp-action="Detail" asp-route-id="@Model.Order.OrderID" asp-route-sortOrder="@ViewData["ItemModelNameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+
+                            @Html.DisplayNameFor(model => model.OrderDetails.First().Item.ModelID)
+                        </a>
+</th>
+                    <th>
+                        <a asp-action="Detail" asp-route-id="@Model.Order.OrderID" asp-route-sortOrder="@ViewData["ItemNameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+                             
+                            @Html.DisplayNameFor(model => model.OrderDetails.First().Item.Name)
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="Detail" asp-route-id="@Model.Order.OrderID" asp-route-sortOrder="@ViewData["IMEISortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+
+                            @Html.DisplayNameFor(model => model.OrderDetails.First().Item.IMEI)
+                        </a>
+</th>
+                    <th>
+                        <a asp-action="Detail" asp-route-id="@Model.Order.OrderID" asp-route-sortOrder="@ViewData["SerializerNumberSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+
+                            @Html.DisplayNameFor(model => model.OrderDetails.First().Item.SerializerNumber)
+                        </a>
+</th>
+                    <th>
+                        <a asp-action="Detail" asp-route-id="@Model.Order.OrderID" asp-route-sortOrder="@ViewData["PriceSoldSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
+
+                            @Html.DisplayNameFor(model => model.OrderDetails.First().PriceSold)
+                        </a>
+</th>
+                    <th>
+
+                    </th>
+
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.OrderDetails)
+                {
+                    <tr>
+                        <td>
+                            
+                                @Html.DisplayFor(modelItem => item.Item.Model.Name)
+</td>
+                        <td>
+
+                              @Html.DisplayFor(modelItem => item.Item.Name)
+                           
+</td>
+                        <td>
+
+                               @Html.DisplayFor(modelItem => item.Item.IMEI)
+</td>
+                        <td>
+
+                            @Html.DisplayFor(model => item.Item.SerializerNumber)
+</td>
+                        <td>
+
+                               @Html.DisplayFor(modelItem => item.PriceSold)
+</td>
+
+
+                        <td>
+                            <div class="btn-group">
+                                @{
+                                    // Kiem tra neu co quyen sua order thi co quyen sua order detail
+                                    var canUpdate = await AuthorizationService.AuthorizeAsync(User, Model.Order, OrderOperations.Update);
+                                    if (canUpdate.Succeeded && Model.Order.IsPrinted == false)
+                                    {
+                                        <a class="btn btn-warning btn-sm" asp-action="EditOrderDetail" asp-route-id="@item.OrderDetailID">
+                                            <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
+                                        </a>
+                                    }
+                                }
+
+                                <a class="btn btn-primary btn-sm" asp-action="DetailOrderDetail" asp-route-id="@item.OrderDetailID">
+                                    <i class="fa fa-info"></i>&nbsp; Chi tiết
+                                </a>
+
+                                @{
+                                    // Kiem tra neu co quyen sua order thi co quyen sua order detail
+                                    var canDelete = await AuthorizationService.AuthorizeAsync(User, Model.Order, OrderOperations.Update);
+                                    if (canDelete.Succeeded && Model.Order.IsPrinted == false)
+                                    {
+                                        <a class="btn btn-danger btn-sm" asp-action="DeleteOrderDetail" asp-route-id="@item.OrderDetailID">
+                                            <i class="fa fa-trash-o"></i>&nbsp; Xóa
+                                        </a>
+                                    }
+                                }
+
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            @{
+
+                PaginatedList<MobileStore.Models.OrderDetail> PaginatedModel = Model.OrderDetails as PaginatedList<MobileStore.Models.OrderDetail>;
+
+                string prevDisabled = !PaginatedModel.HasPreviousPage ? "disabled" : "";
+
+                string nextDisabled = !PaginatedModel.HasNextPage ? "disabled" : "";
+
+
+            }
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item @prevDisabled">
+                        <a asp-action="Detail"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-page="@(PaginatedModel.PageIndex - 1)"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                           asp-route-id="@Model.Order.OrderID"
+                           class="page-link">Previous</a>
+                    </li>
+                    @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
+                    {
+                        <li class="page-item @(@PaginatedModel.PageIndex == i ? "active" : " ")">
+                            <a asp-action="Detail"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-page="@i"
+                               asp-route-id="@Model.Order.OrderID"
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
+                        </li>
+
+                    }
+                    <li class="page-item @nextDisabled">
+                        <a asp-action="Detail"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-page="@(PaginatedModel.PageIndex + 1)"
+                           asp-route-id="@Model.Order.OrderID"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                           class="page-link">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        </div>
+        </div>
     </div>
 </div>
 
 <p class="btn-group">
-    <a asp-action="Index"><button type="button" class="btn btn-success"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
-    <a asp-action="Edit" asp-route-id="@Model.Order.OrderID"><button type="button" class="btn btn-success"><i class="fa fa-angle-right"></i>&nbsp; Sửa</button></a>
+    <a asp-action="Index"><button type="button" class="btn btn-primary"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button></a>
 </p>
 
 @section Scripts {
