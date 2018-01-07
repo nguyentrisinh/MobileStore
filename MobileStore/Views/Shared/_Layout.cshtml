@@ -86,36 +86,47 @@
                         QUẢN LÝ CỬA HÀNG
                     </li>
                     <li class="nav-item ">
-                       
-                           
-                        <a class="nav-link" asp-action="Index" asp-controller="Suppliers"><i class="icon-plane"></i> Nhà cung cấp</a>
-                          
+                        <a class="nav-link" asp-action="Index" asp-controller="ApplicationUsers"><i class="icon-user"></i> Nhân viên cửa hàng</a>
+                    </li>
+                    <li class="nav-item ">
+
+
+                        <a class="nav-link" asp-action="Index" asp-controller="Suppliers"><i class="icon-energy"></i> Nhà cung cấp</a>
+
 
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" asp-action="Index" asp-controller="Customers"><i class="icon-plane"></i> Khách hàng</a>
+                        <a class="nav-link" asp-action="Index" asp-controller="Customers"><i class="icon-people"></i> Khách hàng</a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" asp-action="Index" asp-controller="Models"><i class="icon-plane"></i> Loại sản phẩm</a>
+                        <a class="nav-link" asp-action="Index" asp-controller="Models"><i class="icon-phone"></i> Loại sản phẩm</a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" asp-action="Index" asp-controller="Brands"><i class="icon-plane"></i> Nhãn hiệu</a>
+                        <a class="nav-link" asp-action="Index" asp-controller="Brands"><i class="icon-globe"></i> Nhãn hiệu</a>
                     </li>
-                    
-                   
+
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-puzzle"></i> Thống kê</a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="RevenueAnalytic" asp-action="Index"><i class="icon-star"></i> Lợi nhuận</a>
+                            </li>
+                        </ul>
+                    </li>
+
 
 
                     <li class="divider"></li>
 
-                    <li class="nav-item mt-auto">
-                        <a class="nav-link nav-link-success" href="http://coreui.io/" target="_top"><i class="icon-cloud-download"></i> Download CoreUI</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-danger" href="http://coreui.io/pro/" target="_top"><i class="icon-layers"></i> Try CoreUI <strong>PRO</strong></a>
-                    </li>
+                    @*<li class="nav-item mt-auto">
+            <a class="nav-link nav-link-success" href="http://coreui.io/" target="_top"><i class="icon-cloud-download"></i> Download CoreUI</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link nav-link-danger" href="http://coreui.io/pro/" target="_top"><i class="icon-layers"></i> Try CoreUI <strong>PRO</strong></a>
+        </li>*@
 
                 </ul>
-            </nav>
+</nav>
             <button class="sidebar-minimizer brand-minimizer" type="button"></button>
         </div>
         <div class="main">
