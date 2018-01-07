@@ -10,7 +10,7 @@ namespace MobileStore.Models
     public class WarrantyCard : BaseModel
     {
 
-        [DisplayName("Mã phiếu đổi trả")]
+        [DisplayName("Mã phiếu bảo hành")]
         public int WarrantyCardID { get; set; }
 
         #region WarrantyCard Info

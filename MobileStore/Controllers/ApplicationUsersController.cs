@@ -115,7 +115,7 @@ namespace MobileStore.Controllers
                     break;
             }
 
-            return View(await PaginatedList<ApplicationUser>.CreateAsync(applicationUsers.AsNoTracking(), page ?? 1, pageSize ?? 10));
+            return View(await PaginatedList<ApplicationUser>.CreateAsync(applicationUsers.AsNoTracking(), page ?? 1, pageSize ?? 12));
 
         }
 

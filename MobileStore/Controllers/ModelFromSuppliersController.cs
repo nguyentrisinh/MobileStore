@@ -242,7 +242,7 @@ namespace MobileStore.Controllers
                     modelFromSuppliers = modelFromSuppliers.OrderBy(s => s.Date).Include(m => m.Model);
                     break;
             }
-            int pageSize = 1;
+            int pageSize = 12;
 
             return View(await PaginatedList<ModelFromSupplier>.CreateAsync(modelFromSuppliers.AsNoTracking(), page ?? 1, pageSize));
            
@@ -327,7 +327,7 @@ namespace MobileStore.Controllers
             stockReceivingDetailVM.ModelFromSupplier = item;
 
             #region Paging
-            int pageSize = 1;
+            int pageSize = 6;
             PaginatedList<Item> pagesItems = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), page ?? 1, pageSize);
             stockReceivingDetailVM.Items = pagesItems;
             #endregion
