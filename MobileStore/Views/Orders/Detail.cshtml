@@ -175,12 +175,12 @@
                             @Html.DisplayNameFor(model => model.OrderDetails.First().Item.ModelID)
                         </a>
 </th>
-                    <th>
+                    @*<th>
                         <a asp-action="Detail" asp-route-id="@Model.Order.OrderID" asp-route-sortOrder="@ViewData["ItemNameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                              
                             @Html.DisplayNameFor(model => model.OrderDetails.First().Item.Name)
                         </a>
-                    </th>
+                    </th>*@
                     <th>
                         <a asp-action="Detail" asp-route-id="@Model.Order.OrderID" asp-route-sortOrder="@ViewData["IMEISortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
 
@@ -213,11 +213,11 @@
                             
                                 @Html.DisplayFor(modelItem => item.Item.Model.Name)
 </td>
-                        <td>
+                        @*<td>
 
                               @Html.DisplayFor(modelItem => item.Item.Name)
                            
-</td>
+</td>*@
                         <td>
 
                                @Html.DisplayFor(modelItem => item.Item.IMEI)
