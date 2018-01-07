@@ -1,11 +1,11 @@
-﻿@model MobileStore.Models.Order
+﻿@model MobileStore.Models.WarrantyCard
 @{
-    ViewData["Title"] = "Hóa đơn bán hàng";
+    ViewData["Title"] = "Phiếu bảo hành";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="card">
     <div class="card-header d-print-none">
-        <strong>Hóa đơn bán hàng</strong>
+        <strong>Phiếu bảo hành</strong>
     </div>
     <div class="card-body">
 
@@ -20,54 +20,37 @@
                 <h6>Các thiết bị và phụ kiện điện thoại di động</h6>
             </div>
             <h1 class="col-lg-12 mt-4 mb-2 text-center">
-                HÓA ĐƠN BÁN LẺ
+                PHIẾU BẢO HÀNH
             </h1>
-            <p class="mb-4 text-center col-lg-12 font-italic">
-                <strong>Số hóa đơn:</strong> @Model.OrderID 
+            <p class="mb-1 text-center col-lg-12 font-italic">
+                <strong>Mã bảo hành:</strong> @Model.WarrantyCardID
             </p>
-            <div class="col-12">
-                <div>
-                    Họ tên khách hàng: @Model.Customer.Name
-                </div>
-                <div>
-                    Số điện thoại:@Model.Customer.Phone
-                </div>
-                <div>
-                    Địa chỉ: @Model.Customer.Address
-                </div>
-            </div>
-            <div class="col-12 mt-4">
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Số lượng</th>
-                        <th>Giá</th>
-                        <th>Thành tiền</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @{
-                        foreach (var o in Model.OrderDetails)
-                        {
-                            <tr>
-                                <td>1</td>
-                                <td>@o.Item.Model.Name</td>
-                                <td>1</td>
-                                <td>@o.PriceSold</td>
-                                <td>@o.PriceSold</td>
-                            </tr>
-                        }
-                        <tr>
-                            <td colspan="4"><strong>Tổng tiền</strong></td>
-                            <td>@Model.Total</td>
-                        </tr>
-                    }
+            <p class="mb-4 text-center col-lg-12 font-italic">
+                <strong>Ngày lập:</strong> @Model.StartDate
+            </p>
+            <div class="offset-1 col-11">
+                <p>
+                    Tên sản phẩm: @Model.Item.Model.Name
+                </p>
+                <p>
+                   Hãng sản xuất:@Model.Item.Model.Brand.Name
+                </p>
+                <p>
+                    Số Seri: @Model.Item.SerializerNumber
+                </p>
+                <p>
+                    Số IMEI: @Model.Item.IMEI
+                </p>
+                <p>
+                    Ngày bắt đầu bảo hành: @Model.StartDate
+                </p>
+                <p>
+                    Ngày kết thúc bảo hành: @Model.EndDate
+                </p>
+                <p>
+                   Thời gian bảo hành: @Model.Item.ModelFromSupplier.Period tháng
+                </p>
 
-                    </tbody>
-                </table>
-                <p><strong>Thảnh tiền (bằng chữ):</strong> @Model.ReadMoney()</p>
             </div>
             <div class="col-12 mt-4 text-right">
                 @{
@@ -118,18 +101,18 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button onClick="onClickPrint()" class="btn btn-danger js-print" ><i class="fa fa-print"></i> Tiếp tục In</button>
-    
+                <button onClick="onClickPrint()" class="btn btn-danger js-print"><i class="fa fa-print"></i> Tiếp tục In</button>
+
             </div>
         </div>
     </div>
 </div>
-               
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        
+
         function onClickPrint() {
             var beforePrint = function () {
                 $('#comfirmedPrint').modal('hide');
@@ -138,8 +121,8 @@
             var afterPrint = function () {
                 $.ajax({
                     method: 'post',
-                    url: '/Orders/Print/',
-                    data: { id: @Model.OrderID }
+                    url: '/WarrantyCards/PrintWarrantyCard/',
+                    data: { id: @Model.WarrantyCardID }
                 }).done(function () {
                     location.reload();
                 });

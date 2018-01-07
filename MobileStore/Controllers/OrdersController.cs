@@ -120,7 +120,7 @@ namespace MobileStore.Controllers
                     orders = orders.OrderBy(s => s.Date).Include(m => m.Customer).Include(m => m.ApplicationUser);
                     break;
             }
-            int pageSize = 1;
+            int pageSize = 12;
 
             return View(await PaginatedList<Order>.CreateAsync(orders.AsNoTracking(), page ?? 1, pageSize));
         }
@@ -301,7 +301,7 @@ namespace MobileStore.Controllers
             sellViewModel.NewItems = _context.Item.Where(m => m.Status == ItemStatus.InStock).Include(m=>m.Model).Include(m=>m.ModelFromSupplier);
             sellViewModel.Models = _context.Model;
             #region Paging
-            int pageSize = 1;
+            int pageSize = 12;
             PaginatedList<OrderDetail> pagesOrderDetails = await PaginatedList<OrderDetail>.CreateAsync(orderDetails.AsNoTracking(), page ?? 1, pageSize);
             sellViewModel.OrderDetails = pagesOrderDetails;
             #endregion
