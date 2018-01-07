@@ -1,1 +1,12 @@
 ﻿
+@media print {
+    @page {
+        margin: 0mm;
+    }
+    .modal-backdrop {
+        display: none;
+    }
+    .card {
+        border: none;
+    }
+}
