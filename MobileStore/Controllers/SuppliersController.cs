@@ -78,7 +78,7 @@ namespace MobileStore.Controllers
                     suppliers = suppliers.OrderBy(s => s.Name);
                     break;
             }
-            int pageSize = 1;
+            int pageSize = 12;
 
             return View(await PaginatedList<Supplier>.CreateAsync(suppliers.AsNoTracking(),page??1,pageSize));
         }

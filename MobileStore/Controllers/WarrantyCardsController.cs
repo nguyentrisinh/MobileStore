@@ -154,7 +154,7 @@ namespace MobileStore.Controllers
                     warrantyCards = warrantyCards.OrderBy(s => s.WarrantyCardID).Include(m => m.Item).ThenInclude(m => m.Model).Include(m => m.ApplicationUser);
                     break;
             }
-            int pageSize = 1;
+            int pageSize = 12;
 
             return View(await PaginatedList<WarrantyCard>.CreateAsync(warrantyCards.AsNoTracking(), page ?? 1, pageSize));
         }

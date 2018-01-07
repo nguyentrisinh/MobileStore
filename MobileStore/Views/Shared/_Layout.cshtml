@@ -78,9 +78,7 @@
         <div class="sidebar d-print-none">
             <nav class="sidebar-nav">
                 <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html"><i class="icon-speedometer"></i> Dashboard <span class="badge badge-primary">NEW</span></a>
-                    </li>
+                   
 
                     <li class="nav-title">
                         QUẢN LÝ CỬA HÀNG
@@ -138,15 +136,6 @@
                 <a class="breadcrumb-item" asp-area="" asp-action="Index" asp-controller="@ViewContext.RouteData.Values["controller"].ToString()">@ViewContext.RouteData.Values["controller"].ToString()</a>
                 <a asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"].ToString()" asp-action="@ViewContext.RouteData.Values["action"].ToString()" class="breadcrumb-item">@ViewContext.RouteData.Values["action"].ToString()</a>
 
-
-                <!-- Breadcrumb Menu-->
-                <li class="breadcrumb-menu d-md-down-none">
-                    <div class="btn-group" role="group" aria-label="Button group">
-                        <a class="btn" href="#"><i class="icon-speech"></i></a>
-                        <a class="btn" href="./"><i class="icon-graph"></i> &nbsp;Dashboard</a>
-                        <a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>
-                    </div>
-                </li>
             </ol>
             <div class="container-fluid">
                 <div class="animated fadeIn">

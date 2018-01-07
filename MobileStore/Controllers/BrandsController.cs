@@ -64,7 +64,7 @@ namespace MobileStore.Controllers
 
             }
             //return View(await brand.ToListAsync());
-            int pageSize = 2;
+            int pageSize = 12;
             return View(await PaginatedList<Brand>.CreateAsync(brand.AsNoTracking(), page ?? 1, pageSize));
         }
 
