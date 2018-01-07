@@ -294,29 +294,29 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    <button disabled class="btn btn-secondary" >
+                                                                    <button disabled class="btn btn-secondary">
                                                                         <i class="fa fa-info"></i>&nbsp; Hoàn thành bảo hành
                                                                     </button>
                                                                 }
                                                             }
                                                         }
-                                                        
+
                                                     }
-                                                    <a asp-action="PrintWarrantyDetail" asp-route-id="@item.WarrantyDetailID" class="btn @(item.IsPrinted ? "btn-secondary" : "btn-success")" ><i class="fa fa-print"></i>@(item.IsPrinted ? " Đã In" : " In")</a>
-                                                    
-                                                    
-                                                   
+                                                    <a asp-action="PrintWarrantyDetail" asp-route-id="@item.WarrantyDetailID" class="btn @(item.IsPrinted ? "btn-secondary" : "btn-success")"><i class="fa fa-print"></i>@(item.IsPrinted ? " Đã In" : " In")</a>
+
+
+
                                                 </div>
 
                                             </td>
                                         </tr>
-                                    }
+                                                        }
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-            }
+                                                        }
         }
 
         @{
@@ -329,8 +329,7 @@
                     <div class="card-body">
                         <div class=" table-striped table-responsive">
                             <table class="table">
-                                <th>
-                                    <tr>
+                                <tr>
                                     <th>
                                         @Html.DisplayNameFor(model => model.ReturnItem.DefectInfo)
                                     </th>
@@ -342,13 +341,11 @@
                                         @Html.DisplayNameFor(model => model.ReturnItem.ReturnDate)
                                     </th>
                                     <th>
-                                        
+
                                     </th>
 
-                                    </tr>
-                                </th>
+                                </tr>
                                 <tbody>
-
                                     <tr>
                                         <td>
                                             @Model.ReturnItem.DefectInfo
