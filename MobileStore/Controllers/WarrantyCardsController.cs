@@ -38,7 +38,22 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
-            var warrantyCard = await _context.WarrantyCard.SingleAsync(m => m.WarrantyCardID == id);
+            var warrantyCard = await _context.WarrantyCard.Include(m=>m.Item).ThenInclude(m=>m.ModelFromSupplier).ThenInclude(m=>m.Model).ThenInclude(m=>m.Brand).SingleAsync(m => m.WarrantyCardID == id);
+            if (warrantyCard == null)
+            {
+                return NotFound();
+            }
+            return View(warrantyCard);
+        }
+        [HttpPost, ActionName("PrintWarrantyCard")]
+        [Authorize(Roles = "Technical,Sale,Admin")]
+        public async Task<IActionResult> PrintWarrantyCardConfirmed(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var warrantyCard = await _context.WarrantyCard.Include(m => m.Item).ThenInclude(m => m.Model).ThenInclude(m => m.Brand).SingleAsync(m => m.WarrantyCardID == id);
             if (warrantyCard == null)
             {
                 return NotFound();
@@ -48,6 +63,7 @@ namespace MobileStore.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Detail", new { id });
         }
+
         [Authorize(Roles = "Technical,Sale,Admin")]
         public async Task<IActionResult> PrintWarrantyDetail(int? id)
         {
@@ -55,7 +71,23 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
-            var warrantyDetail = await _context.WarrantyDetail.SingleAsync(m => m.WarrantyDetailID == id);
+            var warrantyDetail = await _context.WarrantyDetail.Include(m=>m.WarrantyCard).ThenInclude(m=>m.Item).ThenInclude(m => m.ModelFromSupplier).ThenInclude(m=>m.Model).ThenInclude(m=>m.Brand).SingleAsync(m => m.WarrantyDetailID == id);
+            if (warrantyDetail == null)
+            {
+                return NotFound();
+            }
+            return View(warrantyDetail);
+        }
+        [HttpPost,ActionName("PrintWarrantyDetail")]
+
+        [Authorize(Roles = "Technical,Sale,Admin")]
+        public async Task<IActionResult> PrintWarrantyDetailConfirmed(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var warrantyDetail = await _context.WarrantyDetail.Include(m => m.WarrantyCard).ThenInclude(m => m.Item).ThenInclude(m => m.ModelFromSupplier).ThenInclude(m => m.Model).ThenInclude(m => m.Brand).SingleAsync(m => m.WarrantyDetailID == id);
             if (warrantyDetail == null)
             {
                 return NotFound();
@@ -65,6 +97,7 @@ namespace MobileStore.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Detail", new { id = warrantyDetail.WarrantyCardID });
         }
+
 
         // GET: WarrantyCards
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
