@@ -7,20 +7,16 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="jumbotron-heading">Thống kê hàng hóa đã bán </h4>
+                <h4 class="jumbotron-heading" id="Title">Thống kê hàng hóa đã bán trong tháng @ViewData["MonthText"]</h4>
                 <form asp-action="Index">
                     <div class="form-group row">
                         <div class="col-md-3">
-                            <select class="form-control" id="TimeUnit" name="TimeUnit">
-                                <option value="Month">Tháng</option>
-                                <option value="Quarter">Quý</option>
-                                <option value="Year">Năm</option>
+                            <select class="form-control" id="Months" name="Months"
+                                    asp-items="ViewBag.Months"
+                                    onchange="this.form.submit()">
+                                <option>Chọn tháng...</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <select class="form-control" id="MQYValue" name="MQYValue" asp-items="ViewBag.MonthsQuatersYears"></select>
-                        </div>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i></button>
                     </div>
                 </form>
                 <div class="table-striped table-responsive">

@@ -24,21 +24,16 @@ namespace MobileStore.Controllers
         public async Task<IActionResult> Index()
         {
             var soldItems = GetSoldItems();
+            var months = soldItems.Select(i =>
+                new
+                {
+                    month = i.DateSold.Month,
+                    year = i.DateSold.Year
+                }).Distinct();
+            ViewData["Months"] = new SelectList(months.Select(i => i.month.ToString() + "/" + i.year.ToString()));
+            ViewData["MonthText"] = "...";
 
-            var months = soldItems.Select(i => i.DateSold.Month).Distinct();
-            var quater = months.Select(i => QuarterCalculate(i)).Distinct();
-            var year = soldItems.Select(i => i.DateSold.Year).Distinct();
-            ViewData["MonthsQuatersYears"] = new SelectList(months);
-
-            // Total calculate
-            ViewData["TotalNumberSold"] = soldItems.Sum(i => i.NumberSold);
-            ViewData["TotalPriceBought"] = soldItems.Sum(i => i.PriceBought * i.NumberSold);
-            ViewData["TotalPriceSold"] = soldItems.Sum(i => i.PriceSold);
-            ViewData["TotalActualPriceSold"] = soldItems.Sum(i => i.ActualPriceSold * i.NumberSold);
-            ViewData["TotalDiffInPrice"] = soldItems.Sum(i => i.DiffInPrice * i.NumberSold);
-            ViewData["TotalRevenue"] = soldItems.Sum(i => i.Revenue * i.NumberSold);
-
-            return View(soldItems);
+            return View(new List<SoldAnalytic>());
         }
 
         private IEnumerable<SoldAnalytic> GetSoldItems()
@@ -80,45 +75,47 @@ namespace MobileStore.Controllers
             return soldItems;
         }
 
-        private string QuarterCalculate(int month)
+        private int QuarterCalculate(int month)
         {
-            string quarter = "Quý 1";
+            int quarter = 1;
             if (month >= 4 && month <= 6)
-                quarter = "Quý 2";
+                quarter = 2;
             else if (month >= 7 && month <= 9)
-                quarter = "Quý 3";
+                quarter = 3;
             else if (month >= 10)
-                quarter = "Quý 4";
+                quarter = 4;
 
             return quarter;
         }
 
         [HttpPost]
-        public ActionResult Index(string TimeUnit, int MQYValue)
+        public ActionResult Index(string Months)
         {
             var soldItems = GetSoldItems();
-            //switch (TimeUnit)
-            //{
-            //    case "Year":
-            //        var year = soldItems.Select(i => i.DateSold.Year).Distinct();
-            //        ViewData["MonthsQuatersYears"] = new SelectList(year);
-            //        break;
+            ViewData["MonthText"] = Months;
 
-            //    case "Quarter":
-            //        var quater = soldItems.Select(i => QuarterCalculate(i.DateSold.Month)).Distinct();
-            //        ViewData["MonthsQuatersYears"] = new SelectList(quater);
-            //        break;
+            var months = soldItems.Select(i =>
+            new
+            {
+                month = i.DateSold.Month,
+                year = i.DateSold.Year
+            }).Distinct();
+            ViewData["Months"] = new SelectList(months.Select(i => i.month.ToString() + "/" + i.year.ToString()));
 
-            //    case "Month":
-            //    default:
-            //        var months = soldItems.Select(i => i.DateSold.Month).Distinct();
-            //        ViewData["MonthsQuatersYears"] = new SelectList(months);
-            //        break;
-            //}
-            var year = soldItems.Select(i => i.DateSold.Year).Distinct();
-            ViewData["MonthsQuatersYears"] = new SelectList(year);
+            var monthSoldObj = Months.Split("/");
+            var returnedSoldItems = soldItems.Select(i => i)
+                .Where(i =>
+                   i.DateSold.Month == Int32.Parse(monthSoldObj[0])
+                   && i.DateSold.Year == Int32.Parse(monthSoldObj[1])
+                );
+            // Total calculate
+            ViewData["TotalNumberSold"] = returnedSoldItems.Sum(i => i.NumberSold);
+            ViewData["TotalPriceBought"] = returnedSoldItems.Sum(i => i.PriceBought * i.NumberSold);
+            ViewData["TotalPriceSold"] = returnedSoldItems.Sum(i => i.PriceSold);
+            ViewData["TotalActualPriceSold"] = returnedSoldItems.Sum(i => i.ActualPriceSold * i.NumberSold);
+            ViewData["TotalDiffInPrice"] = returnedSoldItems.Sum(i => i.DiffInPrice * i.NumberSold);
+            ViewData["TotalRevenue"] = returnedSoldItems.Sum(i => i.Revenue * i.NumberSold);
 
-            var returnedSoldItems = soldItems.Select(i => i).Where(i => i.DateSold.Month == MQYValue);
             return View(returnedSoldItems);
         }
 }
