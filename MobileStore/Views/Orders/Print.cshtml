@@ -1,0 +1,164 @@
+﻿@model MobileStore.Models.Order
+@{
+    ViewData["Title"] = "Hóa đơn bán hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header d-print-none">
+        <strong>Hóa đơn bán hàng</strong>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-8 text-center">
+                <h4>CÔNG TY TNHH MTV</h4>
+                <h3>MobileStore</h3>
+                <h6>Đ/C: Khu phố 6, phường Linh Trung, quận Thủ Đức, TP.Hồ Chí Minh</h6>
+            </div>
+            <div class="col-4 text-center">
+                <h4>Chuyên cung cấp</h4>
+                <h6>Các thiết bị và phụ kiện điện thoại di động</h6>
+            </div>
+            <h1 class="col-lg-12 mt-4 mb-4 text-center">
+                HÓA ĐƠN BÁN LẺ
+            </h1>
+            <div class="col-12">
+                <div>
+                    Họ tên khách hàng: @Model.Customer.Name
+                </div>
+                <div>
+                    Số điện thoại:@Model.Customer.Phone
+                </div>
+                <div>
+                    Địa chỉ: @Model.Customer.Address
+                </div>
+            </div>
+            <div class="col-12 mt-4">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Giá</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @{
+                        foreach (var o in Model.OrderDetails)
+                        {
+                            <tr>
+                                <td>1</td>
+                                <td>@o.Item.Model.Name</td>
+                                <td>1</td>
+                                <td>@o.PriceSold</td>
+                                <td>@o.PriceSold</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="4"><strong>Tổng tiền</strong></td>
+                            <td>@Model.Total</td>
+                        </tr>
+                    }
+
+                    </tbody>
+                </table>
+                <p><strong>Thảnh tiền (bằng chữ):</strong> @Model.ReadMoney()</p>
+            </div>
+            <div class="col-12 mt-4 text-right">
+                @{
+                    var now = new DateTime();
+                    now = DateTime.Now;
+                    @:<strong>Thành phố Hồ Chí Minh</strong>, ngày @now.Day tháng @now.Month năm @now.Year
+                }
+                <div class="row mt-3">
+                    <div class="col-8 text-center">
+                        <strong>Khách hàng</strong>
+                        <p>(Kí và ghi rõ họ tên)</p>
+
+                    </div>
+                    <div class="col-4 text-center">
+                        <strong>Nhân viên</strong>
+                        <p>(Kí vàghi rõ họ tên)</p>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    <div class="card-footer d-print-none">
+        <button data-toggle="modal" data-target="#comfirmedPrint" class="d-print-none btn @(Model.IsPrinted ? "btn-secondary" : "btn-success")"><i class="fa fa-print"></i>@(Model.IsPrinted ? " Đã In" : " In")</button>
+
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade d-print-none" id="comfirmedPrint" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cảnh báo in</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Sau khi chọn In bạn sẽ không thể sửa bất kì thông tin nào nữa. Hãy chắc chắc mọi thông tin đều chính xác
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button onClick="onClickPrint('@Model.OrderID')" class="btn btn-danger js-print" ><i class="fa fa-print"></i> Tiếp tục In</button>
+    
+            </div>
+        </div>
+    </div>
+</div>
+               
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        
+        function onClickPrint(OrderID) {
+            var beforePrint = function () {
+                $('#comfirmedPrint').modal('hide');
+            };
+
+            var afterPrint = function () {
+                $.ajax({
+                    method: 'post',
+                    url: '/Orders/Print/',
+                    data: { id: @Model.OrderID }
+                }).done(function () {
+                    location.reload();
+                });
+            };
+
+            if (window.matchMedia) {
+                var mediaQueryList = window.matchMedia('print');
+
+                mediaQueryList.addListener(function (mql) {
+                    //alert($(mediaQueryList).html());
+                    if (mql.matches) {
+                        beforePrint();
+                    } else {
+                        afterPrint();
+                    }
+                });
+            }
+
+            window.onbeforeprint = beforePrint;
+            window.onafterprint = afterPrint;
+            window.print();
+        }
+    </script>
+}
+
