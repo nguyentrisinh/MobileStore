@@ -32,9 +32,26 @@ namespace MobileStore.Controllers
 
         }
         #region Index
+        public async Task<IActionResult> Print(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var order = await _context.Order.Include(m=>m.Customer).Include(m=>m.OrderDetails).ThenInclude(m=>m.Item).ThenInclude(m=>m.Model).SingleAsync(m => m.OrderID == id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+
+            return View(order);
+        }
+
+        [HttpPost, ActionName("Print")]
         [Authorize(Roles = "Sales,Admin")]
         // GET: Orders
-        public async Task<IActionResult> Print(int? id)
+        public async Task<IActionResult> PrintConfirmed(int? id)
         {
             if (id == null)
             {

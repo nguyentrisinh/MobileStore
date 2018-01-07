@@ -9,7 +9,6 @@
     <environment include="Development">
         @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />*@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css">
-
         <link rel="stylesheet" href="~/css/core-ui.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/liem-custom-style.css" />
@@ -21,7 +20,10 @@
         @*<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
             asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
             asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />*@
-
+        <link rel="stylesheet" asp-append-version="true" href="~/css/liem-custom-style.css" />
+        <link rel="stylesheet" asp-append-version="true" href="~/css/nga-custom-style.css" />
+        <link rel="stylesheet" asp-append-version="true" href="~/css/sinh-custom-style.css" />
+        <link rel="stylesheet"  asp-append-version="true" href="~/css/phuong-custom-style.css" />
         <link rel="stylesheet" href="~/css/core-ui.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
@@ -29,7 +31,7 @@
 
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden  pace-done" data-gr-c-s-loaded="true">
 
-    <header class="app-header navbar">
+    <header class="app-header navbar d-print-none">
         <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -73,7 +75,7 @@
     </header>
 
     <div class="app-body">
-        <div class="sidebar">
+        <div class="sidebar d-print-none">
             <nav class="sidebar-nav">
                 <ul class="nav">
                     <li class="nav-item">
@@ -128,7 +130,7 @@
             <button class="sidebar-minimizer brand-minimizer" type="button"></button>
         </div>
         <div class="main">
-            <ol class="breadcrumb no-print">
+            <ol class="breadcrumb d-print-none">
 
                 <a class="breadcrumb-item" asp-area="" asp-action="Index" asp-controller="@ViewContext.RouteData.Values["controller"].ToString()">@ViewContext.RouteData.Values["controller"].ToString()</a>
                 <a asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"].ToString()" asp-action="@ViewContext.RouteData.Values["action"].ToString()" class="breadcrumb-item">@ViewContext.RouteData.Values["action"].ToString()</a>
