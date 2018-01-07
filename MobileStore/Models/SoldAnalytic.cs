@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace MobileStore.Models
 {
     // This model is used for display static of solded items
     // Not use for store data
-    public class SoldItems
+    public class SoldAnalytic
     {
         [DisplayName("ModelFromSupplierID")] // for test
         public int ModelFromSupplierID { get; set; }
@@ -30,5 +31,8 @@ namespace MobileStore.Models
         public double TotalRevenue { get; set; }
         [DisplayName("Nhà cung cấp")]
         public string SupplierName { get; set; }
+        [DisplayName("Ngày bán")]
+        [DataType(DataType.Date)]
+        public DateTime DateSold { get; set; }
     }
 }

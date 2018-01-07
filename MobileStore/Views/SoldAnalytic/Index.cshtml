@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MobileStore.Models.SoldItems>
+﻿@model IEnumerable<MobileStore.Models.SoldAnalytic>
 @{
     ViewData["Title"] = "Index";
 }
@@ -8,17 +8,21 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="jumbotron-heading">Thống kê hàng hóa đã bán </h4>
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                        Dropdown Example
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">T</a></li>
-                        <li><a href="#">CSS</a></li>
-                        <li><a href="#">JavaScript</a></li>
-                    </ul>
-                </div>
+                <form asp-action="Index">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <select class="form-control" id="TimeUnit" name="TimeUnit">
+                                <option value="Month">Tháng</option>
+                                <option value="Quarter">Quý</option>
+                                <option value="Year">Năm</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" id="MQYValue" name="MQYValue" asp-items="ViewBag.MonthsQuatersYears"></select>
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i></button>
+                    </div>
+                </form>
                 <div class="table-striped table-responsive">
                     <h6>Tổng</h6>
                     <div class="table-striped table-responsive">
@@ -46,19 +50,6 @@
                         </table>
 
                         <h6>Chi tiết</h6>
-                        <form asp-action="Index" method="get" class="form-horizontal">
-                            <div class="form-group row">
-                                <div class="col-lg-6">
-                                    <div class="input-group">
-                                        <span class="input-group-btn">
-                                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
-                                        </span>
-                                        <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
-                                        <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo tên sản phẩm...">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -147,59 +138,12 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.SupplierName)
                                             </td>
-                                            @*<td>
-                                                <div class="btn-group">
-                                                    <a class="btn btn-primary btn-sm" asp-action="Detail" asp-route-id="@item.ItemID">
-                                                        <i class="fa fa-info"></i>&nbsp; Chi tiết
-                                                    </a>
-                                                </div>
-                                            </td>*@
                                         </tr>
                                     }
                                     <tr>
                                 </tbody>
                             </table>
                         </div>
-
-
-                            @*@{
-
-                PaginatedList<MobileStore.Models.Item> PaginatedModel = Model as PaginatedList<MobileStore.Models.Item>;
-
-                string prevDisabled = !PaginatedModel.HasPreviousPage ? "disabled" : "";
-
-                string nextDisabled = !PaginatedModel.HasNextPage ? "disabled" : "";
-
-
-            }
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item @prevDisabled">
-                        <a asp-action="Index"
-                           asp-route-sortOrder="@ViewData["CurrentSort"]"
-                           asp-route-page="@(PaginatedModel.PageIndex - 1)"
-                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                           class="page-link">Previous</a>
-                    </li>
-                    @for (var i = 1; i <= PaginatedModel.TotalPages; i++)
-                    {
-                        <li class="page-item @( @PaginatedModel.PageIndex == i ? "active" : " " )">
-                            <a asp-action="Index"
-                               asp-route-sortOrder="@ViewData["CurrentSort"]"
-                               asp-route-page="@i"
-                               asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
-                        </li>
-
-                    }
-                    <li class="page-item @nextDisabled">
-                        <a asp-action="Index"
-                           asp-route-sortOrder="@ViewData["CurrentSort"]"
-                           asp-route-page="@(PaginatedModel.PageIndex + 1)"
-                           asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                           class="page-link">Next</a>
-                    </li>
-                </ul>
-            </nav>*@
                 </div>
             </div>
         </div>
