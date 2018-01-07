@@ -21,11 +21,12 @@
                     <div class="form-group row">
                         <div class="col-lg-6">
                             <div class="input-group">
+                                
+                                <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
+                                <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo tên...">
                                 <span class="input-group-btn">
                                     <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
                                 </span>
-                                <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
-                                <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo tên...">
                             </div>
                         </div>
                     </div>
@@ -51,19 +52,12 @@
                                 </a>
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Address)
-                            </th>
-                            <th>
                                 @Html.DisplayNameFor(model => model.Phone)
                             </th>
                             <th>
-
                                 <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                     @Html.DisplayNameFor(model => model.Email)
                                 </a>
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Code)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Status)
@@ -74,13 +68,7 @@
                                 </a>
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.PicPhone)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.PicEmail)
-                            </th>
-                            <th>
-
+                                
                             </th>
                            
                         </tr>
@@ -96,28 +84,16 @@
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Address)
-                                </td>
-                                <td>
                                     @Html.DisplayFor(modelItem => item.Phone)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Email)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Code)
-                                </td>
-                                <td>
                                     <span class="@("badge " + (item.Status == SupplierStatus.Active ? "badge-success" : "badge-secondary"))">@Html.DisplayFor(modelItem => item.Status)</span>
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.PicName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PicPhone)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PicEmail)
                                 </td>
                                 <td>
                                     <div class="btn-group">
@@ -187,33 +163,7 @@
                                                     class="page-link" >Next</a></li>
                         </ul>
                     </nav>
-                    @*<a asp-action="Index"
-
-                           asp-route-sortOrder="@ViewData["CurrentSortOrder"]"
-
-                           asp-route-page="@(PaginatedModel.PageIndex - 1)"
-
-                           asp-route-currentFilter="@ViewData["FilterParam"]"
-
-                           class="btn btn-default @prevDisabled">
-
-                            Previous
-
-                        </a>*@
-
-                    @*<a asp-action="Index"
-
-                         asp-route-sortOrder="@ViewData["CurrentSortOrder"]"
-
-                          asp-route-page="@(PaginatedModel.PageIndex + 1)"
-
-                          asp-route-currentFilter="@ViewData["FilterParam"]"
-
-                         class="btn btn-default @nextDisabled">
-
-                          Next
-
-                       </a>*@
+                   
                 </div>
             </div>
         </div>

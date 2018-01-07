@@ -1,57 +1,94 @@
 ﻿@model MobileStore.Models.Model
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Xóa mẫu mã";
 }
 
-<h2>Delete</h2>
 
-<h3>Bạn có chắc muốn xóa Model này?</h3>
-<div>
-    <h4>Model</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Tên model
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            Màu Sắc
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Color)
-        </dd>
-        <dt>
-           Mô tả
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-           Đặc điểm kỹ thuật
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Specification)
-        </dd>
-        <dt>
-           Loại
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt>
-           Nhãn hiệu
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Brand.Name)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="ModelID" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+
+            <div class="card-header">
+                <strong>Thông tin mẫu mã</strong>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class=" col-md-3 form-control-label">Tên mẫu mã</label>
+                    <div class="col-md-9">
+                        <div class="form-control">
+                            @Model.Name &nbsp;
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Màu sắc</label>
+                    <div class="col-md-9">
+                        <div class="form-control">
+                            @Model.Color &nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Mô tả</label>
+                    <div class="col-md-9">
+                        <div class="form-control">
+                            @Model.Description &nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Đặc điểm kỹ thuật</label>
+                    <div class="col-md-9">
+                        <div class="form-control">
+                            @Model.Specification &nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Loại</label>
+                    <div class="col-md-9">
+                        <div class="form-control">
+                            @{
+                                if (Model.Type == ModelType.Accessory)
+                                {
+                                    @:Phụ kiện
+                                    }
+                                else
+                                {
+                                    @:Điện thoại
+                                    }
+                            }
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Nhãn Hiệu</label>
+                    <div class="col-md-9">
+                        <div class="form-control">
+                            @Model.Brand.Name &nbsp;
+                        </div>
+                    </div>
+                </div>
+            </div>'
+            <div class="card-footer">
+                <form asp-action="Delete">
+                    <input hidden asp-for="ModelID"/>
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> Tiếp tục xóa?</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div>
+    <a asp-action="Index">
+        <button type="button" class="btn btn-primary"><i class="fa fa-angle-left"></i>&nbsp; Trở về</button>
+    </a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

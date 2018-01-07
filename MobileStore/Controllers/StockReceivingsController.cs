@@ -11,6 +11,7 @@ using MobileStore.Authorization;
 using MobileStore.Data;
 using MobileStore.Models;
 using MobileStore.Models.StockReceivingViewModels;
+using Remotion.Linq.Clauses;
 
 namespace MobileStore.Controllers
 {
@@ -52,11 +53,12 @@ namespace MobileStore.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                    stockReceivings = stockReceivings.Include(m => m.ApplicationUser).Include(m => m.Supplier).Where(m=>m.StockReceivingID.ToString().Contains(searchString));
+                stockReceivings = stockReceivings.Include(m => m.ApplicationUser).Include(m => m.Supplier).Where(m => m.StockReceivingID.ToString().Contains(searchString));
             }
             switch (sortOrder)
             {
                 case "date_desc":
+                    stockReceivings = stockReceivings.OrderByDescending(s => s.Date).Include(m => m.ApplicationUser).Include(m => m.Supplier);
                     stockReceivings = stockReceivings.OrderByDescending(s => s.Date).Include(m => m.ApplicationUser).Include(m => m.Supplier);
                     break;
                 case "supplier":
@@ -65,7 +67,7 @@ namespace MobileStore.Controllers
                 case "supplier_desc":
                     stockReceivings = stockReceivings.OrderByDescending(s => s.Supplier.Name).Include(m => m.ApplicationUser).Include(m => m.Supplier);
                     break;
-       
+
                 case "staff":
                     stockReceivings = stockReceivings.OrderBy(s => s.ApplicationUser.FirstName).Include(m => m.ApplicationUser).Include(m => m.Supplier);
                     break;
@@ -82,8 +84,10 @@ namespace MobileStore.Controllers
         }
 
         // GET: StockReceivings/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid? id, string sortOrder, string currentFilter, string searchString, int? page)
         {
+            #region Check Exist
+
             if (id == null)
             {
                 return NotFound();
@@ -97,8 +101,87 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
+            #endregion
+            #region Filter and Search
+            ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date" : "";
+            ViewData["QuantitySortParm"] = sortOrder == "quantity" ? "quantity_desc" : "quantity";
+            ViewData["PriceBoughtSortParm"] = sortOrder == "pricebought" ? "pricebought_desc" : "pricebought";
+            ViewData["PriceSoldSortParm"] = sortOrder == "pricesold" ? "pricesold_desc" : "pricesold";
+            ViewData["ModelSortParm"] = sortOrder == "model" ? "model_desc" : "model";
+            ViewData["PeriodSortParm"] = sortOrder == "period" ? "period_desc" : "period";
 
-            return View(stockReceiving);
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var modelsFromSuppliers = _context.ModelFromSupplier.Where(m => m.StockReceivingID == id);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                modelsFromSuppliers = modelsFromSuppliers.Include(m => m.Model).Where(m => m.Model.Name.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "date":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Date).Include(m => m.Model);
+                    break;
+                case "quantity":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Quantity).Include(m => m.Model);
+                    break;
+                case "quantity_desc":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Quantity).Include(m => m.Model);
+                    break;
+                case "period":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Period).Include(m => m.Model);
+                    break;
+                case "period_desc":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Period).Include(m => m.Model);
+                    break;
+
+                case "pricebought":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.PriceBought).Include(m => m.Model);
+                    break;
+                case "pricebought_desc":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.PriceBought).Include(m => m.Model);
+                    break;
+                case "pricesold":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.PriceSold).Include(m => m.Model);
+                    break;
+                case "pricesold_desc":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.PriceSold).Include(m => m.Model);
+                    break;
+                case "model":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Model.Name).Include(m => m.Model);
+                    break;
+                case "model_desc":
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Model.Name).Include(m => m.Model);
+                    break;
+                default:
+                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Date).Include(m => m.Model);
+                    break;
+            }
+            #endregion
+            #region Logic
+            var stockReceivingVm = new StockReceivingViewModel();
+            stockReceivingVm.StockReceiving = stockReceiving;
+            stockReceivingVm.Models = _context.Model;
+            stockReceivingVm.Suppliers = _context.Supplier;
+            #endregion
+            #region Paging
+            int pageSize = 1;
+            PaginatedList<ModelFromSupplier> pagesModelsFromSuppliers = await PaginatedList<ModelFromSupplier>.CreateAsync(modelsFromSuppliers.AsNoTracking(), page ?? 1, pageSize);
+            stockReceivingVm.ModelFromSuppliers = pagesModelsFromSuppliers;
+            #endregion
+            return View(stockReceivingVm);
         }
 
         // GET: StockReceivings/Create
@@ -125,7 +208,7 @@ namespace MobileStore.Controllers
                 stockReceiving.StockReceivingID = Guid.NewGuid();
                 _context.Add(stockReceiving);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = stockReceiving.StockReceivingID });
             }
             ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "Name", stockReceiving.SupplierID);
             return View(stockReceiving);
@@ -153,13 +236,9 @@ namespace MobileStore.Controllers
             {
                 return new ChallengeResult();
             }
-            var modelFromSuppliers = await _context.ModelFromSupplier.Where(m => m.StockReceivingID == id).Include(m => m.Model).ToListAsync();
-            var stockReceivingVM = new StockReceivingViewModel();
-            stockReceivingVM.StockReceiving = stockReceiving;
-            stockReceivingVM.ModelFromSuppliers = modelFromSuppliers;
-            stockReceivingVM.Models = _context.Model;
-            stockReceivingVM.Suppliers = _context.Supplier;
-            return View(stockReceivingVM);
+
+            ViewData["SupplierID"] = _context.Supplier;
+            return View(stockReceiving);
         }
 
         // POST: StockReceivings/Edit/5
@@ -168,9 +247,9 @@ namespace MobileStore.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "WarehouseManager, Admin")]
-        public async Task<IActionResult> Edit(Guid id, StockReceivingViewModel stockReceivingVM)
+        public async Task<IActionResult> Edit(Guid id, StockReceiving stockReceiving)
         {
-            if (id != stockReceivingVM.StockReceiving.StockReceivingID)
+            if (id != stockReceiving.StockReceivingID)
             {
                 return NotFound();
             }
@@ -181,7 +260,7 @@ namespace MobileStore.Controllers
             {
                 try
                 {
-                    var item = MakeNewStockReceiving(stockReceivingVM).Result;
+                    var item = MakeNewStockReceiving(stockReceiving).Result;
                     var timeSpan = DateTime.Now - item.Date;
                     if (timeSpan.Hours > 2)
                     {
@@ -199,7 +278,7 @@ namespace MobileStore.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StockReceivingExists(stockReceivingVM.StockReceiving.StockReceivingID))
+                    if (!StockReceivingExists(stockReceiving.StockReceivingID))
                     {
                         return NotFound();
                     }
@@ -209,7 +288,7 @@ namespace MobileStore.Controllers
                     }
                 }
             }
-            return RedirectToAction(nameof(Edit), new { id = stockReceivingVM.StockReceiving.StockReceivingID });
+            return RedirectToAction(nameof(Details), new { id = stockReceiving.StockReceivingID });
         }
 
         // GET: StockReceivings/Delete/5
@@ -248,8 +327,14 @@ namespace MobileStore.Controllers
             {
                 return new ChallengeResult();
             }
+            var modelFromSuppliers = await _context.ModelFromSupplier.Where(m => m.StockReceivingID == id).Include(m => m.Model).ToListAsync();
+            var stockReceivingVM = new StockReceivingViewModel();
+            stockReceivingVM.StockReceiving = stockReceiving;
+            stockReceivingVM.ModelFromSuppliers = modelFromSuppliers;
+            stockReceivingVM.Models = _context.Model;
+            stockReceivingVM.Suppliers = _context.Supplier;
 
-            return View(stockReceiving);
+            return View(stockReceivingVM);
         }
 
         // POST: StockReceivings/Delete/5
@@ -297,7 +382,7 @@ namespace MobileStore.Controllers
             {
                 var stockReceiving = await _context.StockReceiving.SingleAsync(m => m.StockReceivingID == stockReceivingVM.ModelFromSupplier.StockReceivingID);
 
-                
+
                 var timeSpan = DateTime.Now - stockReceiving.Date;
                 if (timeSpan.Hours > 2)
                 {
@@ -305,10 +390,11 @@ namespace MobileStore.Controllers
                     return View("ErrorPage");
                 }
                 stockReceivingVM.ModelFromSupplier.Date = DateTime.Now;
+                stockReceivingVM.ModelFromSupplier.Quantity = 0;
                 _context.Add(stockReceivingVM.ModelFromSupplier);
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction(nameof(Edit), new { id = stockReceivingVM.ModelFromSupplier.StockReceivingID });
+            return RedirectToAction(nameof(Details), new { id = stockReceivingVM.ModelFromSupplier.StockReceivingID });
         }
 
 
@@ -321,11 +407,11 @@ namespace MobileStore.Controllers
             return _context.StockReceiving.Any(e => e.StockReceivingID == id);
         }
 
-        private async Task<StockReceiving> MakeNewStockReceiving(StockReceivingViewModel stockReceivingVM)
+        private async Task<StockReceiving> MakeNewStockReceiving(StockReceiving stockReceiving)
         {
             var newStockReceiving = await _context.StockReceiving
-                .Where(m => m.StockReceivingID == stockReceivingVM.StockReceiving.StockReceivingID).Include(m=>m.Supplier).SingleOrDefaultAsync();
-            newStockReceiving.SupplierID = stockReceivingVM.StockReceiving.SupplierID;
+                .Where(m => m.StockReceivingID == stockReceiving.StockReceivingID).Include(m => m.Supplier).SingleOrDefaultAsync();
+            newStockReceiving.SupplierID = stockReceiving.SupplierID;
             return newStockReceiving;
         }
     }

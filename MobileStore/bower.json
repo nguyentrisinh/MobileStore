@@ -7,7 +7,8 @@
     "jquery-validation": "1.14.0",
     "jquery-validation-unobtrusive": "3.2.6",
     "PACE": "pace#v1.0.2",
-    "popper.js": "v1.12.6"
+    "popper.js": "v1.12.6",
+    "chart.js": "Chart.js#v2.7.1"
   },
   "resolutions": {
     "bootstrap": "v4.0.0-alpha.6",

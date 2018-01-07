@@ -19,11 +19,12 @@
                             <div class="form-group row">
                                 <div class="col-lg-6">
                                     <div class="input-group">
+                                        
+                                        <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
+                                        <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo ID...">
                                         <span class="input-group-btn">
                                             <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
                                         </span>
-                                        <input name="sortOrder" hidden value="@ViewData["CurrentSort"]" type="text" class="form-control">
-                                        <input name="SearchString" value="@ViewData["CurrentFilter"]" type="text" class="form-control" placeholder="Tìm kiếm theo ID...">
                                     </div>
                                 </div>
                             </div>

@@ -1,5 +1,4 @@
 ﻿@model PaginatedList<MobileStore.Models.ApplicationUser>
-@using MobileStore.Models;
 
 @{
     ViewData["Title"] = "Index";
@@ -69,7 +68,7 @@
                                         Email
                                     </a>
                                 </th>
-                                <th>Action</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,7 +96,7 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Email)
                                     </td>
-                                    <td>
+                                    <td class="btn-group">
                                         <a asp-action="Edit" asp-route-id="@item.Id">
                                             <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i> Sửa</button>
                                         </a>
@@ -118,26 +117,65 @@
                         var nextDisabled = !Model.HasNextPage ? "disabled" : "";
                     }
 
-                    <a asp-action="Index"
-                       asp-route-sortOrder="@ViewData["CurrentSort"]"
-                       asp-route-page="@(Model.PageIndex - 1)"
-                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                       class="@prevDisabled">
-                        <button type="button" class="btn btn-primary btn-sm @prevDisabled"><i class="fa fa-arrow-left"></i></button>
-                    </a>
-                    <a asp-action="Index"
-                       asp-route-sortOrder="@ViewData["CurrentSort"]"
-                       asp-route-page="@(Model.PageIndex + 1)"
-                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                       class="@nextDisabled">
-                        <button type="button" class="btn btn-primary btn-sm @nextDisabled"><i class="fa fa-arrow-right"></i></button>
-                    </a>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item @prevDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(Model.PageIndex - 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Previous</a>
+                            </li>
+                            @for (var i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @( @Model.PageIndex == i ? "active" : " " )">
+                                    <a asp-action="Index"
+                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                       asp-route-page="@i"
+                                       asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link">@(i)</a>
+                                </li>
+
+                            }
+                            <li class="page-item @nextDisabled">
+                                <a asp-action="Index"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-page="@(Model.PageIndex + 1)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                                   class="page-link">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    @*<div class="no-print">
+                        <button onclick="AlertName('Sinh')">Test</button>
+                    </div>*@
                 </div>
             </div>
         </div>
     </div>
     <!--/.col-->
+    <script type="text/javascript">
+        function AlertName(name) {
+
+            window.print()
+            var printEvent = window.matchMedia('print');
+            printEvent.addListener(function (printEnd) {
+                if (printEnd.matches) {
+                    // do whatever you wish to do
+                    console.log(this)
+                };
+            });
+
+        }
+    </script>
+    <script>
+        document.getElementsByTagName("BODY")[0].onafterprint = function () { myFunction("Sinh") };
+
+        function myFunction(name) {
+            alert("This document is now being printed" + name);
+        }
+    </script>
 </div>
+
 <!--/.row-->
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

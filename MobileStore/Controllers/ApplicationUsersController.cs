@@ -205,7 +205,7 @@ namespace MobileStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("FirstName,LastName,Birthday,Phone,Address,Role,Id,Email,ConcurrencyStamp")] ApplicationUser applicationUser)
+        public async Task<IActionResult> Edit(string id, ApplicationUser applicationUser)
         {
             if (id != applicationUser.Id)
             {
@@ -232,11 +232,14 @@ namespace MobileStore.Controllers
                         _logger.LogInformation("Create UserRole successfully");
                     }
 
-                    
+
                     // -------------------------------------------End-----------------------------------------
 
                     _context.Update(applicationUser);
                     await _context.SaveChangesAsync();
+
+                    //await _userManager.UpdateAsync(applicationUser);
+                    //await _context.SaveChangesAsync();
 
                 }
                 catch (DbUpdateConcurrencyException)

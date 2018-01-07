@@ -16,7 +16,7 @@ namespace MobileStore.Models
 
     public class WarrantyDetail : BaseModel
     {
-        [DisplayName("Mã số bảo hành")]
+        [DisplayName("Mã chi tiết phiếu bảo hành")]
         public int WarrantyDetailID { get; set; }
         [DisplayName("Ngày mua hàng")]
         public DateTime Date { get; set; } // Ngày khách hàng đến yêu cầu bảo hành
@@ -28,12 +28,19 @@ namespace MobileStore.Models
         public DateTime? ReturnedDate { get; set; } // Ngày khách hàng lấy sản phẩm về
         [DisplayName("Lỗi")]
         public string DefectInfo { get; set; }
+
+        [DisplayName("Đã xuất phiếu hẹn")]
         public bool IsPrinted { get; set; }
 
+        [DisplayName("Trạng thái")]
         public WarrantyDetailStatus Status { get; set; }
 
         #region Warranty ForeignKey
+
+        [DisplayName("Nằm trong phiếu bảo hành")]
         public int WarrantyCardID { get; set; }
+
+        [DisplayName("Nằm trong phiếu bảo hành")]
         public virtual WarrantyCard WarrantyCard { get; set; }
         #endregion
 

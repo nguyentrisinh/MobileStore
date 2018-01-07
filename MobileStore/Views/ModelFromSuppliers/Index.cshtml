@@ -64,16 +64,6 @@
                                             @Html.DisplayNameFor(model => model.ModelID)
                                         </a>
                                     </th>
-                                    <th>
-                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["SupplierSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                            @Html.DisplayNameFor(model => model.SupplierID)
-                                        </a>
-                                    </th>
-                                    <th>
-                                        <a asp-action="Index" asp-route-sortOrder="@ViewData["StaffSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
-                                            @Html.DisplayNameFor(model => model.ApplicationUserID)
-                                        </a>
-                                    </th>
                                     <th></th>
 
                                 </tr>
@@ -100,14 +90,6 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Model.Name)
                                         </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Supplier.Name)
-                                        </td>
-                                        
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
-                                        </td>
-
                                         <td>
                                             @*@if (await AuthorizationService.AuthorizeAsync(User,item, OrderOperations.Update))
                                                 {

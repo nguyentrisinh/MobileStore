@@ -505,13 +505,13 @@ namespace MobileStore.Migrations
 
                     b.Property<bool>("IsPrinted");
 
-                    b.Property<DateTime>("ReturnedDate");
+                    b.Property<DateTime?>("ReturnedDate");
 
                     b.Property<int>("Status");
 
                     b.Property<int>("WarrantyCardID");
 
-                    b.Property<DateTime>("WarrantyDate");
+                    b.Property<DateTime?>("WarrantyDate");
 
                     b.HasKey("WarrantyDetailID");
 
