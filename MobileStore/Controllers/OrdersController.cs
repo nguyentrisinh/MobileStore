@@ -325,8 +325,9 @@ namespace MobileStore.Controllers
             {
                 return View(order);
             }
+            var newOrder = ViewModelToOrder(order).Result;
 
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, order,
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, newOrder,
                 OrderOperations.Update);
             if (!isAuthorized.Succeeded)
             {
@@ -334,7 +335,7 @@ namespace MobileStore.Controllers
             }
             try
             {
-                var newOrder = ViewModelToOrder(order).Result;
+                
                // Kiem tra in thi k cho
                 if (newOrder.IsPrinted)
                 {
