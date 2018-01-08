@@ -49,7 +49,7 @@ namespace MobileStore.Controllers
         }
 
         [HttpPost, ActionName("Print")]
-        [Authorize(Roles = "Sales,Admin")]
+        [Authorize(Roles = "Sale,Admin")]
         // GET: Orders
         public async Task<IActionResult> PrintConfirmed(int? id)
         {
