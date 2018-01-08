@@ -38,7 +38,7 @@ namespace MobileStore.Controllers
             }
 
             var timeSpan = DateTime.Now - item.ModelFromSupplier.StockReceiving.Date;
-            if (timeSpan.Hours > 2)
+            if (timeSpan.TotalHours > 2)
             {
                 ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
                 return View("ErrorPage");
@@ -64,7 +64,7 @@ namespace MobileStore.Controllers
                 .ThenInclude(m => m.StockReceiving)
                 .SingleOrDefaultAsync(m => m.ItemID == id);
             var timeSpan = DateTime.Now - item.ModelFromSupplier.StockReceiving.Date;
-            if (timeSpan.Hours > 2)
+            if (timeSpan.TotalHours > 2)
             {
                 ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
                 return View("ErrorPage");
@@ -101,7 +101,7 @@ namespace MobileStore.Controllers
             }
 
             var timeSpan = DateTime.Now - item.ModelFromSupplier.StockReceiving.Date;
-            if (timeSpan.Hours > 2)
+            if (timeSpan.TotalHours > 2)
             {
                 ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
                 return View("ErrorPage");
@@ -150,7 +150,7 @@ namespace MobileStore.Controllers
                 {
                     var newItem = ViewModelToItem(item).Result;
                     var timeSpan = DateTime.Now - newItem.ModelFromSupplier.StockReceiving.Date;
-                    if (timeSpan.Hours > 2)
+                    if (timeSpan.TotalHours > 2)
                     {
                         ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
                         return View("ErrorPage");
@@ -351,7 +351,7 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
             var timeSpan = DateTime.Now - item.StockReceiving.Date;
-            if (timeSpan.Hours > 2)
+            if (timeSpan.TotalHours > 2)
             {
                 ViewData["ErrorText"] = "Không thể sửa sản phẩm sau 2 giờ";
                 return View("ErrorPage");
@@ -387,7 +387,7 @@ namespace MobileStore.Controllers
             {
                 var item = ViewModelToModelFromSupplier(modelFromSupplier).Result;
                 var timeSpan = DateTime.Now - item.StockReceiving.Date;
-                if (timeSpan.Hours > 2)
+                if (timeSpan.TotalHours > 2)
                 {
                     ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
                     return View("ErrorPage");
@@ -433,7 +433,7 @@ namespace MobileStore.Controllers
             if (ModelState.IsValid)
             {
                 var timeSpan = DateTime.Now - modelFromSupplier.StockReceiving.Date;
-                if (timeSpan.Hours > 2)
+                if (timeSpan.TotalHours > 2)
                 {
                     ViewData["ErrorText"] = "Không thể tạo sản phẩm sau 2 giờ";
                     return View("ErrorPage");
@@ -467,7 +467,7 @@ namespace MobileStore.Controllers
             }
 
             var timeSpan = DateTime.Now - item.StockReceiving.Date;
-            if (timeSpan.Hours > 2)
+            if (timeSpan.TotalHours > 2)
             {
                 ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
                 return View("ErrorPage");
@@ -502,7 +502,7 @@ namespace MobileStore.Controllers
             var modelFromSupplier = await _context.ModelFromSupplier.Include(m=>m.StockReceiving).SingleOrDefaultAsync(m => m.ModelFromSupplierID == id);
 
             var timeSpan = DateTime.Now - modelFromSupplier.StockReceiving.Date;
-            if (timeSpan.Hours > 2)
+            if (timeSpan.TotalHours > 2)
             {
                 ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
                 return View("ErrorPage");
