@@ -1,0 +1,150 @@
+﻿@model MobileStore.Models.WarrantyCard
+@{
+    ViewData["Title"] = "Phiếu bảo hành";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-header d-print-none">
+        <strong>Phiếu bảo hành</strong>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-8 text-center">
+                <h4>CÔNG TY TNHH MTV</h4>
+                <h3>MobileStore</h3>
+                <h6>Đ/C: Khu phố 6, phường Linh Trung, quận Thủ Đức, TP.Hồ Chí Minh</h6>
+            </div>
+            <div class="col-4 text-center">
+                <h4>Chuyên cung cấp</h4>
+                <h6>Các thiết bị và phụ kiện điện thoại di động</h6>
+            </div>
+            <h1 class="col-lg-12 mt-4 mb-2 text-center">
+                PHIẾU BẢO HÀNH
+            </h1>
+            <p class="mb-1 text-center col-lg-12 font-italic">
+                <strong>Mã bảo hành:</strong> @Model.WarrantyCardID
+            </p>
+            <p class="mb-4 text-center col-lg-12 font-italic">
+                <strong>Ngày lập:</strong> @Model.StartDate
+            </p>
+            <div class="offset-1 col-11">
+                <p>
+                    Tên sản phẩm: @Model.Item.Model.Name
+                </p>
+                <p>
+                   Hãng sản xuất:@Model.Item.Model.Brand.Name
+                </p>
+                <p>
+                    Số Seri: @Model.Item.SerializerNumber
+                </p>
+                <p>
+                    Số IMEI: @Model.Item.IMEI
+                </p>
+                <p>
+                    Ngày bắt đầu bảo hành: @Model.StartDate
+                </p>
+                <p>
+                    Ngày kết thúc bảo hành: @Model.EndDate
+                </p>
+                <p>
+                   Thời gian bảo hành: @Model.Item.ModelFromSupplier.Period tháng
+                </p>
+
+            </div>
+            <div class="col-12 mt-4 text-right">
+                @{
+                    var now = new DateTime();
+                    now = DateTime.Now;
+                    @:<strong>Thành phố Hồ Chí Minh</strong>, ngày @now.Day tháng @now.Month năm @now.Year
+                }
+                <div class="row mt-3">
+                    <div class="col-8 text-center">
+                        <strong>Khách hàng</strong>
+                        <p>(Kí và ghi rõ họ tên)</p>
+
+                    </div>
+                    <div class="col-4 text-center">
+                        <strong>Nhân viên</strong>
+                        <p>(Kí và ghi rõ họ tên)</p>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    <div class="card-footer d-print-none">
+        <button data-toggle="modal" data-target="#comfirmedPrint" class="d-print-none btn @(Model.IsPrinted ? "btn-secondary" : "btn-success")"><i class="fa fa-print"></i>@(Model.IsPrinted ? " Đã In" : " In")</button>
+
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade d-print-none" id="comfirmedPrint" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cảnh báo in</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Sau khi chọn In bạn sẽ không thể sửa bất kì thông tin nào nữa. Hãy chắc chắc mọi thông tin đều chính xác
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button onClick="onClickPrint()" class="btn btn-danger js-print"><i class="fa fa-print"></i> Tiếp tục In</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+        function onClickPrint() {
+            var beforePrint = function () {
+                $('#comfirmedPrint').modal('hide');
+            };
+
+            var afterPrint = function () {
+                $.ajax({
+                    method: 'post',
+                    url: '/WarrantyCards/PrintWarrantyCard/',
+                    data: { id: @Model.WarrantyCardID }
+                }).done(function () {
+                    location.reload();
+                });
+            };
+
+            if (window.matchMedia) {
+                var mediaQueryList = window.matchMedia('print');
+
+                mediaQueryList.addListener(function (mql) {
+                    //alert($(mediaQueryList).html());
+                    if (mql.matches) {
+                        beforePrint();
+                    } else {
+                        afterPrint();
+                    }
+                });
+            }
+
+            window.onbeforeprint = beforePrint;
+            window.onafterprint = afterPrint;
+            window.print();
+        }
+    </script>
+}
+

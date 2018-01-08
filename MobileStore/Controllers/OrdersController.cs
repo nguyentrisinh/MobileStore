@@ -32,9 +32,26 @@ namespace MobileStore.Controllers
 
         }
         #region Index
+        public async Task<IActionResult> Print(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var order = await _context.Order.Include(m=>m.Customer).Include(m=>m.OrderDetails).ThenInclude(m=>m.Item).ThenInclude(m=>m.Model).SingleAsync(m => m.OrderID == id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+
+            return View(order);
+        }
+
+        [HttpPost, ActionName("Print")]
         [Authorize(Roles = "Sales,Admin")]
         // GET: Orders
-        public async Task<IActionResult> Print(int? id)
+        public async Task<IActionResult> PrintConfirmed(int? id)
         {
             if (id == null)
             {
@@ -103,7 +120,7 @@ namespace MobileStore.Controllers
                     orders = orders.OrderBy(s => s.Date).Include(m => m.Customer).Include(m => m.ApplicationUser);
                     break;
             }
-            int pageSize = 1;
+            int pageSize = 12;
 
             return View(await PaginatedList<Order>.CreateAsync(orders.AsNoTracking(), page ?? 1, pageSize));
         }
@@ -284,7 +301,7 @@ namespace MobileStore.Controllers
             sellViewModel.NewItems = _context.Item.Where(m => m.Status == ItemStatus.InStock).Include(m=>m.Model).Include(m=>m.ModelFromSupplier);
             sellViewModel.Models = _context.Model;
             #region Paging
-            int pageSize = 1;
+            int pageSize = 12;
             PaginatedList<OrderDetail> pagesOrderDetails = await PaginatedList<OrderDetail>.CreateAsync(orderDetails.AsNoTracking(), page ?? 1, pageSize);
             sellViewModel.OrderDetails = pagesOrderDetails;
             #endregion

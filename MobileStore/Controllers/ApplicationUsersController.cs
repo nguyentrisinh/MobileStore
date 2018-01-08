@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.NodeServices;
 
 namespace MobileStore.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ApplicationUsersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -115,7 +116,7 @@ namespace MobileStore.Controllers
                     break;
             }
 
-            return View(await PaginatedList<ApplicationUser>.CreateAsync(applicationUsers.AsNoTracking(), page ?? 1, pageSize ?? 10));
+            return View(await PaginatedList<ApplicationUser>.CreateAsync(applicationUsers.AsNoTracking(), page ?? 1, pageSize ?? 12));
 
         }
 
