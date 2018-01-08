@@ -97,8 +97,9 @@
                                                     }*@
                                             <div class="btn-group">
                                                 @{
+                                                    TimeSpan timeSpan = DateTime.Now.Subtract(item.Date);
                                                     var isCreateAuthorize = await AuthorizationService.AuthorizeAsync(User, item, OrderOperations.Update);
-                                                    if (isCreateAuthorize.Succeeded)
+                                                    if (isCreateAuthorize.Succeeded && timeSpan.TotalHours<=2)
                                                     {
                                                         <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.StockReceivingID">
                                                             <i class="fa fa-pencil-square-o"></i>&nbsp; Sửa
@@ -114,7 +115,7 @@
 
                                                 @{
                                                     var isDeleteAuthorize = await AuthorizationService.AuthorizeAsync(User, item, OrderOperations.Delete);
-                                                    if (isDeleteAuthorize.Succeeded)
+                                                    if (isDeleteAuthorize.Succeeded && timeSpan.TotalHours <= 2)
                                                     {
                                                         <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.StockReceivingID">
                                                             <i class="fa fa-trash-o"></i>&nbsp; Xóa
