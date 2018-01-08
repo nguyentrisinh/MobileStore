@@ -103,7 +103,7 @@ namespace MobileStore.Controllers
             var timeSpan = DateTime.Now - item.ModelFromSupplier.StockReceiving.Date;
             if (timeSpan.TotalHours > 2)
             {
-                ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
+                ViewData["ErrorText"] = "Không thể sửa sản phẩm sau 2 giờ";
                 return View("ErrorPage");
             }
 
