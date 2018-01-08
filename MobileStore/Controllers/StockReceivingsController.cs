@@ -229,6 +229,12 @@ namespace MobileStore.Controllers
             {
                 return NotFound();
             }
+            var timeSpan = DateTime.Now - stockReceiving.Date;
+            if (timeSpan.Hours > 2)
+            {
+                ViewData["ErrorText"] = "Không thể sửa đơn nhập hàng sau 2 giờ";
+                return View("ErrorPage");
+            }
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, stockReceiving,
                 OrderOperations.Update);
