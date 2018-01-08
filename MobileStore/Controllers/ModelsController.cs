@@ -78,6 +78,14 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
 
+            ViewData["TotalItems"] = await _context.Item.Where(m => m.ModelID == id).CountAsync();
+
+            ViewData["InstockItems"] =await _context.Item.Where(m => m.ModelID == id && m.Status==ItemStatus.InStock).CountAsync();
+
+            ViewData["SoldItems"] = await _context.Item.Where(m => m.ModelID == id && m.Status == ItemStatus.Sold).CountAsync();
+
+            ViewData["ReturnedItems"] = await _context.Item.Where(m => m.ModelID == id && m.Status == ItemStatus.Returned).CountAsync();
+
             return View(model);
         }
 
