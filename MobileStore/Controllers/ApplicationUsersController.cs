@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.NodeServices;
 
 namespace MobileStore.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ApplicationUsersController : Controller
     {
         private readonly ApplicationDbContext _context;
