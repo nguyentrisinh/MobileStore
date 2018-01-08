@@ -123,50 +123,50 @@ namespace MobileStore.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            var modelsFromSuppliers = _context.ModelFromSupplier.Where(m => m.StockReceivingID == id);
+            var modelsFromSuppliers = _context.ModelFromSupplier.Include(m=>m.StockReceiving).Where(m => m.StockReceivingID == id);
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                modelsFromSuppliers = modelsFromSuppliers.Include(m => m.Model).Where(m => m.Model.Name.Contains(searchString));
+                modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).Include(m => m.Model).Where(m => m.Model.Name.Contains(searchString));
             }
             switch (sortOrder)
             {
                 case "date":
-                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Date).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderBy(s => s.Date).Include(m => m.Model);
                     break;
                 case "quantity":
-                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Quantity).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderBy(s => s.Quantity).Include(m => m.Model);
                     break;
                 case "quantity_desc":
-                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Quantity).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderByDescending(s => s.Quantity).Include(m => m.Model);
                     break;
                 case "period":
-                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Period).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderBy(s => s.Period).Include(m => m.Model);
                     break;
                 case "period_desc":
-                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Period).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderByDescending(s => s.Period).Include(m => m.Model);
                     break;
 
                 case "pricebought":
-                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.PriceBought).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderBy(s => s.PriceBought).Include(m => m.Model);
                     break;
                 case "pricebought_desc":
-                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.PriceBought).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderByDescending(s => s.PriceBought).Include(m => m.Model);
                     break;
                 case "pricesold":
-                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.PriceSold).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderBy(s => s.PriceSold).Include(m => m.Model);
                     break;
                 case "pricesold_desc":
-                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.PriceSold).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderByDescending(s => s.PriceSold).Include(m => m.Model);
                     break;
                 case "model":
-                    modelsFromSuppliers = modelsFromSuppliers.OrderBy(s => s.Model.Name).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderBy(s => s.Model.Name).Include(m => m.Model);
                     break;
                 case "model_desc":
-                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Model.Name).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderByDescending(s => s.Model.Name).Include(m => m.Model);
                     break;
                 default:
-                    modelsFromSuppliers = modelsFromSuppliers.OrderByDescending(s => s.Date).Include(m => m.Model);
+                    modelsFromSuppliers = modelsFromSuppliers.Include(m => m.StockReceiving).OrderByDescending(s => s.Date).Include(m => m.Model);
                     break;
             }
             #endregion

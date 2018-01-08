@@ -522,6 +522,7 @@ namespace MobileStore.Controllers
            
             var orderDetail = await _context.OrderDetail
                 .Include(o => o.Item)
+                .ThenInclude(m=>m.Model)
                 .Include(o => o.Order)
                 .SingleOrDefaultAsync(m => m.OrderDetailID == id);
             if (orderDetail == null)

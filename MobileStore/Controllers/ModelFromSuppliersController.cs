@@ -221,25 +221,25 @@ namespace MobileStore.Controllers
             }
             ViewData["CurrentFilter"] = searchString;
 
-            var modelFromSuppliers = from m in _context.ModelFromSupplier select m;
+            var modelFromSuppliers = from m in _context.ModelFromSupplier.Include(m=>m.StockReceiving) select m;
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                modelFromSuppliers = modelFromSuppliers.Include(m => m.Model).Where(s => s.ModelFromSupplierID.ToString()==searchString);
+                modelFromSuppliers = modelFromSuppliers.Include(m => m.Model).Include(m => m.StockReceiving).Where(s => s.ModelFromSupplierID.ToString()==searchString);
             }
             switch (sortOrder)
             {
                 case "date_desc":
-                    modelFromSuppliers = modelFromSuppliers.OrderByDescending(s => s.Date).Include(m => m.Model);
+                    modelFromSuppliers = modelFromSuppliers.Include(m => m.StockReceiving).OrderByDescending(s => s.Date).Include(m => m.Model);
                     break;
                 case "model":
-                    modelFromSuppliers = modelFromSuppliers.OrderBy(s => s.Model.Name).Include(m => m.Model);
+                    modelFromSuppliers = modelFromSuppliers.Include(m => m.StockReceiving).OrderBy(s => s.Model.Name).Include(m => m.Model);
                     break;
                 case "model_desc":
-                    modelFromSuppliers = modelFromSuppliers.OrderByDescending(s => s.Model.Name).Include(m => m.Model);
+                    modelFromSuppliers = modelFromSuppliers.Include(m => m.StockReceiving).OrderByDescending(s => s.Model.Name).Include(m => m.Model);
                     break;
                default:
-                    modelFromSuppliers = modelFromSuppliers.OrderBy(s => s.Date).Include(m => m.Model);
+                    modelFromSuppliers = modelFromSuppliers.Include(m => m.StockReceiving).OrderBy(s => s.Date).Include(m => m.Model);
                     break;
             }
             int pageSize = 12;
@@ -472,6 +472,14 @@ namespace MobileStore.Controllers
                 ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
                 return View("ErrorPage");
             }
+
+            var blockDelete =
+                await _context.Item.AnyAsync(m => m.ModelFromSupplierID == id && m.Status != ItemStatus.InStock);
+            if (blockDelete)
+            {
+                ViewData["ErrorText"] = "Đã có sản phẩm bán ra không thể xóa";
+                return View("ErrorPage");
+            }
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, item.StockReceiving,
                 OrderOperations.Delete);
             if (!isAuthorized.Succeeded)
@@ -507,6 +515,15 @@ namespace MobileStore.Controllers
                 ViewData["ErrorText"] = "Không thể xóa sản phẩm sau 2 giờ";
                 return View("ErrorPage");
             }
+
+            var blockDelete =
+                await _context.Item.AnyAsync(m => m.ModelFromSupplierID == id && m.Status != ItemStatus.InStock);
+            if (blockDelete)
+            {
+                ViewData["ErrorText"] = "Đã có sản phẩm bán ra không thể xóa";
+                return View("ErrorPage");
+            }
+
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, modelFromSupplier.StockReceiving,
                 OrderOperations.Delete);
             if (!isAuthorized.Succeeded)
