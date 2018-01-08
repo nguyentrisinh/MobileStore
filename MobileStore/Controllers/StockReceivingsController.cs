@@ -230,7 +230,7 @@ namespace MobileStore.Controllers
                 return NotFound();
             }
             var timeSpan = DateTime.Now - stockReceiving.Date;
-            if (timeSpan.Hours > 2)
+            if (timeSpan.TotalHours > 2)
             {
                 ViewData["ErrorText"] = "Không thể sửa đơn nhập hàng sau 2 giờ";
                 return View("ErrorPage");
@@ -268,7 +268,7 @@ namespace MobileStore.Controllers
                 {
                     var item = MakeNewStockReceiving(stockReceiving).Result;
                     var timeSpan = DateTime.Now - item.Date;
-                    if (timeSpan.Hours > 2)
+                    if (timeSpan.TotalHours > 2)
                     {
                         ViewData["ErrorText"] = "Không thể sửa đơn nhập hàng sau 2 giờ";
                         return View("ErrorPage");
@@ -316,7 +316,7 @@ namespace MobileStore.Controllers
             }
 
             var timeSpan = DateTime.Now - stockReceiving.Date;
-            if (timeSpan.Hours > 2)
+            if (timeSpan.TotalHours > 2)
             {
                 ViewData["ErrorText"] = "Không thể xóa xóa đơn nhập hàng sau 2 giờ";
                 return View("ErrorPage");
@@ -352,7 +352,7 @@ namespace MobileStore.Controllers
             var stockReceiving = await _context.StockReceiving.SingleOrDefaultAsync(m => m.StockReceivingID == id);
 
             var timeSpan = DateTime.Now - stockReceiving.Date;
-            if (timeSpan.Hours > 2)
+            if (timeSpan.TotalHours > 2)
             {
                 ViewData["ErrorText"] = "Không thể xóa đơn nhập hàng sau 2 giờ";
                 return View("ErrorPage");
@@ -390,7 +390,7 @@ namespace MobileStore.Controllers
 
 
                 var timeSpan = DateTime.Now - stockReceiving.Date;
-                if (timeSpan.Hours > 2)
+                if (timeSpan.TotalHours > 2)
                 {
                     ViewData["ErrorText"] = "Bạn không thể sửa sau 2h";
                     return View("ErrorPage");
