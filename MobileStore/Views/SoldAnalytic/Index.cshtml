@@ -77,11 +77,11 @@
                                             @Html.DisplayNameFor(item => item.ActualPriceSold)
                                         </a>
                                     </th>
-                                    <th>
+                                    @*<th>
                                         <a asp-action="Index" asp-route-sortOrder="@ViewData["DiffInPriceSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                             @Html.DisplayNameFor(item => item.DiffInPrice)
                                         </a>
-                                    </th>
+                                    </th>*@
                                     <th>
                                         <a asp-action="Index" asp-route-sortOrder="@ViewData["RevenueSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                             @Html.DisplayNameFor(item => item.Revenue)
@@ -122,9 +122,9 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.ActualPriceSold)
                                             </td>
-                                            <td>
+                                            @*<td>
                                                 @Html.DisplayFor(modelItem => item.DiffInPrice)
-                                            </td>
+                                            </td>*@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Revenue)
                                             </td>

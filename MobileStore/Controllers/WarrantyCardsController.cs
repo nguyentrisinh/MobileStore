@@ -123,7 +123,7 @@ namespace MobileStore.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                warrantyCards = warrantyCards.Include(m => m.Item).ThenInclude(m=>m.Model).Include(m => m.ApplicationUser).Where(s => s.WarrantyCardID.ToString().Contains(searchString));
+                warrantyCards = warrantyCards.Include(m => m.Item).ThenInclude(m=>m.Model).Include(m => m.ApplicationUser).Where(s => s.WarrantyCardID.ToString().Contains(searchString) || s.Item.IMEI.ToString().Contains(searchString));
             }
             switch (sortOrder)
             {
