@@ -42,7 +42,8 @@ namespace MobileStore.Controllers
                             .Include(i => i.Item)
                             .ThenInclude(i => i.ModelFromSupplier)
                             .ThenInclude(i => i.StockReceiving)
-                            .ThenInclude(i => i.Supplier);
+                            .ThenInclude(i => i.Supplier)
+                            .Include(i => i.Item).ThenInclude(i => i.Model);
 
             // Nhóm theo nhà cung cấp và theo giá bán thực,
             // vì item có thể có nhiều nhà cung cấp với giá mua khác nhau
@@ -60,7 +61,7 @@ namespace MobileStore.Controllers
                 soldItems.Add(new SoldAnalytic()
                 {
                     ModelFromSupplierID = first.Item.ModelFromSupplierID,
-                    Name = first.Item.Name,
+                    Name = first.Item.Model.Name,
                     NumberSold = numberSold,
                     PriceBought = priceBought,
                     PriceSold = priceSold,

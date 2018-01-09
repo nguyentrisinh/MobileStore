@@ -52,11 +52,11 @@
                                     @*<th>
                                         @Html.DisplayNameFor(item => item.ModelFromSupplierID)
                                     </th>*@
-                                    @*<th>
+                                    <th>
                                         <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                             @Html.DisplayNameFor(item => item.Name)
                                         </a>
-                                    </th>*@
+                                    </th>
                                     <th>
                                         <a asp-action="Index" asp-route-sortOrder="@ViewData["NumberSoldSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">
                                             @Html.DisplayNameFor(item => item.NumberSold)
@@ -107,9 +107,9 @@
                                             @*<td>
                                                 @Html.DisplayFor(modelItem => item.ModelFromSupplierID)
                                             </td>*@
-                                            @*<td>
+                                            <td>
                                                 @Html.DisplayFor(modelItem => item.Name)
-                                            </td>*@
+                                            </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.NumberSold)
                                             </td>
