@@ -44,29 +44,32 @@
         <ul class="nav navbar-nav d-md-down-none">
             <li class="nav-item px-3">
 
-                <a  asp-controller="StockReceivings" asp-action="Index" class="nav-link">Nhập hàng</a>
-                
+                <a asp-controller="StockReceivings" asp-action="Index" class="nav-link">Nhập hàng</a>
+
             </li>
             <li class="nav-item px-3">
-            
+
                 <a asp-controller="Orders" asp-action="Index" class="nav-link">Bán hàng</a>
             </li>
             <li class="nav-item px-3">
                 <a asp-controller="WarrantyCards" asp-action="Index" class="nav-link">Bảo hành/ Đổi trả</a>
             </li>
+            <li class="nav-item px-3">
+                <a asp-controller="Manage" asp-action="ChangePassword" class="nav-link">Thay đổi password</a>
+            </li>
             @*<li class="nav-item px-3">
 
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item px-3">
-                    <a asp-area="" asp-controller="Home" asp-action="About" class="nav-link">About</a>
-                </li>
-                <li class="nav-item px-3">
-                    <a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a>
-                </li>*@
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item px-3">
+            <a asp-area="" asp-controller="Home" asp-action="About" class="nav-link">About</a>
+        </li>
+        <li class="nav-item px-3">
+            <a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a>
+        </li>*@
             @*<li class="nav-item px-3">
-                    <a asp-area="" asp-controller="ApplicationUsers" asp-action="Index" class="nav-link" >Users</a>
-                </li>*@
+            <a asp-area="" asp-controller="ApplicationUsers" asp-action="Index" class="nav-link" >Users</a>
+        </li>*@
         </ul>
         @await Html.PartialAsync("_LoginPartial")
 
